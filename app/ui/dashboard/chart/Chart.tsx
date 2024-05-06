@@ -63,9 +63,9 @@ const Page: React.FC = () => {
 
   return (
     <div className="bg-white rounded-md">
-      <div className="h-[450px] p-[20px] rounded-md">
-        <h2 className="mb-[40px] text-2xl font-semibold">Order Activity</h2>
-        <ResponsiveContainer width="100%" height="90%">
+      <div className="h-[350px] p-[20px] rounded-md">
+        <h2 className="text-2xl font-semibold ">Order Activity</h2>
+        <ResponsiveContainer width="100%" height="90%" className="mt-4">
           <AreaChart
             data={menus}
             margin={{

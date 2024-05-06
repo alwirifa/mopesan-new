@@ -1,41 +1,34 @@
 "use client";
 
-import axios, { AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
+type Merchant = {
+  id: number;
+  merchant_name: string;
+  address: string;
+  email: string;
+  phone_number: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
 
-interface Menu {
-  order_day: string;
-  total_earnings: number;
-}
-
-interface ServerResponse {
-  data: Menu[];
-}
-
-const MerchantBar = () => {
-  const [menus, setMenus] = useState<Menu[]>([]);
+const MerchantBar: React.FC = () => {
+  const router = useRouter();
+  const [merchants, setMerchants] = useState<Merchant[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const adminToken = localStorage.getItem("admin_token");
-
-        if (adminToken) {
-          const response: AxiosResponse<ServerResponse> = await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/weekly-stats`,
-            {
-              headers: {
-                Authorization: `Bearer ${adminToken}`,
-              },
-            }
-          );
-          const { data } = response.data;
-
-          setMenus(data);
-        } else {
-          console.error("Admin token not found in local storage");
-        }
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/merchants`
+        );
+        const { data } = response.data;
+        console.log("Merchants data:", data);
+        setMerchants(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -46,56 +39,37 @@ const MerchantBar = () => {
     return () => {};
   }, []);
 
+  const renderMerchantStatus = (isActive: boolean) => {
+    return isActive ? (
+      <div className="px-4 py-2 rounded-full text-sm bg-buttonGreen text-textGreen">
+        Open
+      </div>
+    ) : (
+      <div className="px-4 py-2 rounded-full bg-buttonRed text-textRed">
+        Close
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white rounded-md p-6 w-full h-full">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold">Merchants</h1>
-        <p className="italic text-xs underline text-maroon">View All</p>
+        <Link href="/dashboard/merchants">
+          <p className="italic text-xs underline text-maroon">View All</p>
+        </Link>
       </div>
+      <div className="flex flex-col gap-4 mt-4">
+        {merchants.map((merchant, index) => (
+          <div key={merchant.id} className="flex items-center justify-between">
+           <div className="flex gap-4 items-center">
 
-      {/* card */}
-      <div className="mt-6 flex flex-col gap-4">
-        <div className=" border border-grayBorder rounded-md p-4 w-full flex flex-start justify-between items-center gap-4">
-          <div className="flex gap-4 items-center">
-            <img
-              src="/icons/kokurukIcon.png"
-              alt=""
-              className="h-12 w-12 rounded-full"
-            />
-            <p className="capitalize text-lg font-semibold">Kokuruk Kemang</p>
+            <img src="/icons/merchants.svg" alt="" className="h-16 w-16" />
+            <div className="text-lg font-semibold">{merchant.merchant_name}</div>
+           </div>
+            {renderMerchantStatus(merchant.is_active)}
           </div>
-          <div className="text-textGreen bg-buttonGreen px-4 py-2 rounded-full text-sm">
-            Open
-          </div>
-        </div>
-
-        <div className=" border border-grayBorder rounded-md p-4 w-full flex flex-start justify-between items-center gap-4">
-          <div className="flex gap-4 items-center">
-            <img
-              src="/icons/kokurukIcon.png"
-              alt=""
-              className="h-12 w-12 rounded-full"
-            />
-            <p className="capitalize text-lg font-semibold">Kokuruk Kemang</p>
-          </div>
-          <div className="text-textGreen bg-buttonGreen px-4 py-2 rounded-full text-sm">
-            Open
-          </div>
-        </div>
-
-        <div className=" border border-grayBorder rounded-md p-4 w-full flex flex-start justify-between items-center gap-4">
-          <div className="flex gap-4 items-center">
-            <img
-              src="/icons/kokurukIcon.png"
-              alt=""
-              className="h-12 w-12 rounded-full"
-            />
-            <p className="capitalize text-lg font-semibold">Kokuruk Kemang</p>
-          </div>
-          <div className="text-textGreen bg-buttonGreen px-4 py-2 rounded-full text-sm">
-            Open
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
