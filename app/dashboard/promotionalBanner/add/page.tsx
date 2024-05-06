@@ -1,11 +1,30 @@
-import React from 'react'
+"use client";
 
-type Props = {}
+import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-const page = (props: Props) => {
+
+
+const Page = () => {
+  const router = useRouter()
+
+  const handleClose = () => {
+    router.push('/dashboard/promotionalBanner')
+  }
+
   return (
-    <div>page</div>
-  )
-}
+    <div className="p-8 rounded-lg bg-white">
+      <div className="flex justify-between pb-4">
+        <h1 className="text-4xl font-semibold">Add Promotional Banner</h1>
+        <div onClick={handleClose} className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer">
+          <img src="/icons/close.svg" alt="close"  className="h-full w-full"/>
+        </div>
+      </div>
 
-export default page
+    
+    </div>
+  );
+};
+
+export default Page;

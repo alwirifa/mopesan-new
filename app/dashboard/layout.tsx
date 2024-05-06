@@ -8,12 +8,12 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <div className="flex h-screen overflow-hidden w-full">
-      <div className="flex-none w-1/4 p-8">
+    <div className="flex h-full w-full">
+      <div className="h-screen w-1/4 p-8 sticky top-0">
         <Sidebar />
       </div>
       <div className="flex-1 p-8 bg-bgGray">
-        {/* <Navbar /> */}
+        
         {children}
       </div>
     </div>

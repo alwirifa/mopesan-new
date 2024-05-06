@@ -23,24 +23,20 @@ type Voucher = {
   updated_at: string;
 };
 
-const Page: React.FC = ({searchParams}) => {
+const Page: React.FC = () => {
   const router = useRouter();
 
-  const q = searchParams?.search || "";
-  const page = searchParams?.page || 1;
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
-  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/vouchers?search=${q}&page=${page}`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/vouchers`
         );
-        const { data, total } = response.data; 
-        console.log("Search results:", data); 
+        const { data, total } = response.data;
+        console.log("Search results:", data);
         setVouchers(data);
-        setCount(total);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -48,14 +44,39 @@ const Page: React.FC = ({searchParams}) => {
 
     fetchData();
 
-    return () => {
-
-    };
-  }, [q, page]);
+    return () => {};
+  }, []);
 
   const addVoucher = () => {
     router.push("/dashboard/voucher/add");
   };
+
+  const handleDelete = async (id: number) => {
+    const token = localStorage.getItem("admin_token");
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/vouchers/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log('data deleted');
+      
+      // Menghapus voucher dari state setelah penghapusan
+      setVouchers(prevVouchers => prevVouchers.filter(voucher => voucher.id !== id));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleEdit = (id: number) => {
+    router.push(`/dashboard/voucher/edit/${id}`);
+  };
+  
+  
 
   return (
     <div className="flex flex-col gap-6 ">
@@ -145,7 +166,14 @@ const Page: React.FC = ({searchParams}) => {
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                       {voucher.max_discount}{" "}
                     </td>
-                    <td className="border-t  border-black px-4 py-2"></td>
+                    <td className="border-t  border-black px-4 py-2">
+                    <button onClick={() => handleEdit(voucher.id)}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(voucher.id)}>
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

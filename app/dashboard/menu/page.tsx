@@ -1,114 +1,82 @@
-import React from "react";
+"use client";
 
-type Props = {};
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-const Menu = (props: Props) => {
-  const dataImage = [
-    {
-      name: "Dosirak Dakgalbi",
-      description: "Baso Description",
-      imageUrl: "/images/baso.svg",
-    },
-    {
-      name: "Dosirak Dakgalbi",
-      description: "Sate Description",
-      imageUrl: "/images/sate.svg",
-    },
-    {
-      name: "Dosirak Dakgalbi",
-      description: "Tumpeng Description",
-      imageUrl: "/images/tumpeng.svg",
-    },
-  ];
+type Menu = {
+  id: number;
+  product_name: string;
+  price: number;
+  description: string;
+  product_code: string;
+  product_image: string;
+  customization_keys: string[];
+};
 
-  const dataMenu = [
-    {
-      title: "All",
-    },
-    {
-      title: "Dosirak",
-    },
-    {
-      title: "Rice Bowl",
-    },
-    {
-      title: "Rice & Noodle",
-    },
-    {
-      title: "Teopoki",
-    },
-    {
-      title: "Scnak & Sharing",
-    },
-    {
-      title: "Drinks",
-    },
-    {
-      title: "Ready to Cook",
-    },
-    {
-      title: "Extra",
-    },
-  ];
+const page = () => {
+  const [menus, setMenus] = useState<Menu[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/menu`
+        );
+        const { data } = response.data;
+        console.log("Search results:", data);
+        setMenus(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {};
+  }, []);
 
   return (
-    <div className="h-screen w-full pl-4">
-      <div className="bg-gray h-full w-full ">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-4xl font-semibold text-maroon">Menus</h1>
-          <p className="text-sm">List of all menu</p>
-        </div>
+    <div>
+      <div className="flex flex-col gap-4">
+        <h1 className="text-4xl font-semibold">Menus</h1>
+        <p>List of all menu</p>
+      </div>
 
-        <div className="mt-8 flex gap-4 max-w-max">
-        {dataMenu.map((menu, index) => (
-            <div
-              key={index}
-              className="px-4 py-2 rounded-md border border-maroon text-maroon"
-            >
-              {menu.title}
+      <div className="pt-6 grid grid-cols-3 gap-x-8 gap-y-6">
+        {menus.map((menu, index) => (
+          <div
+            className="flex flex-col gap-4 p-8  bg-white rounded-md relative"
+            key={index}
+          >
+            <div className="flex justify-center  ">
+              <img
+                src={menu.product_image}
+                alt=""
+                className="h-[300px] w-[300px] rounded-md"
+              />
             </div>
+            <div className="w-full flex justify-between">
+              <div className="w-full">
+                <p className="text-lg font-semibold">{menu.product_name}</p>
+              </div>
+
+              <div className="w-[40%] flex justify-end translate-y-1">
+                <p className="text-sm font-semibold text-textRed">
+                  Rp. {menu.price}
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-textGray">{menu.description}</p>
+            <div className="h-full w-full flex flex-col justify-end items-end translate-x-1">
+              <button className="px-8 py-2 rounded-md text-sm text-white  bg-bgRed">
+                Details
+              </button>
+            </div>
+          </div>
         ))}
-        </div>
-
-        <div className="mt-8 grid grid-cols-5 gap-4">
-          {dataImage.map((imageData, index) => (
-            <div
-              key={index}
-              className="p-6 rounded-md flex flex-col gap-2  bg-white shadow-md"
-            >
-              <div className="w-full flex justify-center">
-                <img
-                  src={imageData.imageUrl}
-                  alt={imageData.description}
-                  className="h-56 w-56"
-                />
-              </div>
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-semibold">{imageData.name}</p>
-                  {/* Menampilkan deskripsi jika ada */}
-                  {imageData.description && (
-                    <p className="text-[10px] italic text-textGray">
-                      {imageData.description}
-                    </p>
-                  )}
-                </div>
-                <p className="text-maroon font-semibold">Rp. 45.000</p>
-              </div>
-              <p className="mt-2 text-sm text-textGray">
-                Fried Chicken with spicy gojuchang sauce. Tender and sweet!
-              </p>
-              <div className="mt-2 w-full flex justify-end">
-                <div className="px-6 py-2 rounded-md text-sm text-white bg-maroon">
-                  Details
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
 };
 
-export default Menu;
+export default page;
