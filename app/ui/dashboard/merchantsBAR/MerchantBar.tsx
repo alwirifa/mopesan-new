@@ -1,8 +1,51 @@
-import React from 'react'
+"use client";
 
-type Props = {}
+import axios, { AxiosResponse } from "axios";
+import React, { useEffect, useState } from "react";
 
-const MerchantBar = (props: Props) => {
+
+interface Menu {
+  order_day: string;
+  total_earnings: number;
+}
+
+interface ServerResponse {
+  data: Menu[];
+}
+
+const MerchantBar = () => {
+  const [menus, setMenus] = useState<Menu[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const adminToken = localStorage.getItem("admin_token");
+
+        if (adminToken) {
+          const response: AxiosResponse<ServerResponse> = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/weekly-stats`,
+            {
+              headers: {
+                Authorization: `Bearer ${adminToken}`,
+              },
+            }
+          );
+          const { data } = response.data;
+
+          setMenus(data);
+        } else {
+          console.error("Admin token not found in local storage");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {};
+  }, []);
+
   return (
     <div className="bg-white rounded-md p-6 w-full h-full">
       <div className="flex justify-between items-center">
@@ -53,11 +96,9 @@ const MerchantBar = (props: Props) => {
             Open
           </div>
         </div>
-
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MerchantBar
+export default MerchantBar;

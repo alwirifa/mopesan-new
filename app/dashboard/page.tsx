@@ -12,7 +12,7 @@ const page = (props: Props) => {
     <div className="h-full pb-16">
       <div className="w-full flex justify-between items-center">
         <h1 className="text-4xl font-semibold">Dashboard</h1>
-        <Search placeholder="Search ..." />
+        {/* <Search placeholder="Search ..." /> */}
       </div>
       <div className="flex flex-col gap-5 mt-8  h-full">
         <div className="flex gap-8 w-full ">

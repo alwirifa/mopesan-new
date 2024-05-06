@@ -162,7 +162,7 @@ const Page = () => {
                     })
                   }
                 />
-                <p>Fixed</p>
+                <p>Persen</p>
               </div>
               <div className="flex gap-2">
                 <input
@@ -178,7 +178,7 @@ const Page = () => {
                     })
                   }
                 />
-                <p>Persen</p>
+                <p>Fixed</p>
               </div>
             </div>
 
