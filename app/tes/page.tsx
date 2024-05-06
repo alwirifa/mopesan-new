@@ -1,45 +1,40 @@
 "use client"
 
-import axios from "axios";
+// Import statements
 import React, { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import axios from "axios";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-interface Menu {
-  order_day: string;
-  total_earnings: number; // Menyesuaikan dengan properti yang benar
-}
+type Menu = {
+  id: number;
+  product_name: string;
+  price: number;
+  description: string;
+  product_code: string;
+  product_image: string;
+};
+
+type Category = {
+  id: number;
+  category_name: string;
+  menus: Menu[];
+};
 
 const Page: React.FC = () => {
-  const [menus, setMenus] = useState<Menu[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams.get("category") || "All";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const adminToken = localStorage.getItem("admin_token");
-
-        if (adminToken) {
-          const response = await axios.get<{ data: Menu[] }>(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/weekly-stats`,
-            {
-              headers: {
-                Authorization: `Bearer ${adminToken}`,
-              },
-            }
-          );
-          const { data } = response.data;
-          setMenus(data);
-          console.log(data)
-        } else {
-          console.error("Admin token not found in local storage");
-        }
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category-full`
+        );
+        const { data } = response.data;
+        setCategories(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -50,32 +45,40 @@ const Page: React.FC = () => {
     return () => {};
   }, []);
 
+  const filteredMenus = selectedCategory === "All"
+    ? categories.flatMap((category) => category.menus) // Flatten all menus for "All"
+    : categories
+        .find((category) => category.category_name === selectedCategory) // Find matching category
+        ?.menus || []; // Extract menus from the matching category or return empty array
+
   return (
     <div>
-      <div className="h-[450px] p-[20px] rounded-md">
-        <h2 className="mb-[20px]">Order Activity</h2>
-        <ResponsiveContainer width="100%" height="90%">
-          <LineChart
-            data={menus}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <XAxis dataKey="order_day" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="total_earnings" // Menyesuaikan dengan properti yang benar
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="flex gap-4">
+        
+        {categories.map((category, index) => (
+          <li key={index}>
+         
+            <Link
+              href={`?category=${category.category_name}`}
+              className={`${
+                selectedCategory === category.category_name ? "text-blue-500" : ""
+              }`}
+            >
+              {category.category_name}
+            </Link>
+          </li>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {filteredMenus.map((menu) => (
+          <div key={menu.id} className="menu-item">
+            <h3>{menu.product_name}</h3>
+            <p>{menu.description}</p>
+            <p>Price: ${menu.price}</p>
+            <img src={menu.product_image} alt={menu.product_name} />
+          </div>
+        ))}
       </div>
     </div>
   );
