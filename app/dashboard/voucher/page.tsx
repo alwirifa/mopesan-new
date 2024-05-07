@@ -65,7 +65,6 @@ const Page: React.FC = () => {
   
       console.log('data deleted');
       
-      // Menghapus voucher dari state setelah penghapusan
       setVouchers(prevVouchers => prevVouchers.filter(voucher => voucher.id !== id));
     } catch (error) {
       console.error('Error:', error);
