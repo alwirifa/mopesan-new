@@ -56,10 +56,22 @@ const Page: React.FC = () => {
         )?.menus || [];
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex flex-col gap-4">
-        <h1 className="text-4xl text-textRed font-semibold">Menus</h1>
-        <p>List of all menus</p>
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-4">
+            <h1 className="text-4xl text-textRed font-semibold">Menus</h1>
+            <p>List of all menus</p>
+          </div>
+          <div>
+            <Link
+              href="/dashboard/menu/add"
+              className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+            >
+              + Add Menu
+            </Link>
+          </div>
+        </div>
 
         <div className="flex gap-4">
           <Link
@@ -89,9 +101,9 @@ const Page: React.FC = () => {
 
         <div className="mt-4 grid grid-cols-3 gap-4">
           {filteredMenus.map((menu) => {
-            // Menmapilkan category sesuai dengan menu 
-            const menuCategory = categories.find(category =>
-              category.menus.some(m => m.id === menu.id)
+            // Menmapilkan category sesuai dengan menu
+            const menuCategory = categories.find((category) =>
+              category.menus.some((m) => m.id === menu.id)
             );
             return (
               <div
@@ -100,7 +112,7 @@ const Page: React.FC = () => {
               >
                 <div className="flex justify-center ">
                   <img
-                    src={menu.product_image}
+                    src={menu.product_image || "/icons/bowl.svg"}
                     alt=""
                     className="h-[300px] w-[300px] rounded-md"
                   />
@@ -108,7 +120,9 @@ const Page: React.FC = () => {
                 <div className="w-full flex justify-between">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg font-semibold">{menu.product_name}</p>
-                    <p className="text-xs text-textGray italic">{menuCategory?.category_name}</p>
+                    <p className="text-xs text-textGray italic">
+                      {menuCategory?.category_name}
+                    </p>
                   </div>
                   <div className="w-[40%] flex justify-end translate-y-1">
                     <p className="text-sm font-semibold text-textRed">
@@ -118,9 +132,12 @@ const Page: React.FC = () => {
                 </div>
                 <p className="text-xs text-textGray">{menu.description}</p>
                 <div className="h-full w-full flex flex-col justify-end items-end translate-x-1">
-                  <button className="px-8 py-2 rounded-md text-sm text-white bg-bgRed">
+                  <Link
+                    href={`/dashboard/menu/${menu.id}`}
+                    className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
+                  >
                     Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             );

@@ -100,7 +100,7 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      <section className="flex gap-6 p-8">
+      <section className="flex gap-6">
         <div className="grid grid-cols-3 gap-4 w-full">
           {admins.length > 0 ? (
             admins.map((admin) => (

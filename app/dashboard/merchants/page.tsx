@@ -47,6 +47,10 @@ const Page: React.FC = () => {
     setMerchantStatus(!merchantStatus);
   };
 
+  const goToMerchantDetail = (merchantId: number) => {
+    router.push(`/dashboard/merchants/${merchantId}`);
+  };
+
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex justify-between">
@@ -68,7 +72,10 @@ const Page: React.FC = () => {
         <div className=" w-full grid grid-cols-2 gap-4">
           {merchants.length > 0 ? (
             merchants.map((merchant) => (
-              <div key={merchant.merchant_name} className="p-6 flex flex-col gap-4 rounded-md bg-white">
+              <div
+                key={merchant.merchant_name}
+                className="p-6 flex flex-col gap-4 rounded-md bg-white"
+              >
                 <div className="flex items-center gap-4 relative">
                   <img
                     src="/icons/store.svg"
@@ -84,24 +91,33 @@ const Page: React.FC = () => {
                     </p>
                   </div>
 
-                  <button onClick={changeMerchantStatus} className="absolute right-0 max-h-max px-4 py-2 rounded-full text-sm bg-buttonGreen text-textGreen">
+                  <button
+                    onClick={changeMerchantStatus}
+                    className="absolute right-0 max-h-max px-4 py-2 rounded-full text-sm bg-buttonGreen text-textGreen"
+                  >
                     Open
                   </button>
                 </div>
                 <p className="text-sm text-textGray">{merchant.address}</p>
+                {/* <Link
+                  href={{
+                    pathname: `/dashboard/merchants/${merchant.id}`,
+                    query: {
+                      id: `${merchant.id}`,
+                    },
+                  }}
+                >
+                  <button>View</button>
+                </Link> */}
                 <Link href={`/dashboard/merchants/${merchant.id}`}>
-                    <button >
-                      View
-                    </button>
-                  </Link>
+                  <button>View</button>
+                </Link>
               </div>
             ))
           ) : (
             <p>No merchants available</p>
           )}
         </div>
-       
-        
       </section>
     </div>
   );

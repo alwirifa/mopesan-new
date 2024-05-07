@@ -75,10 +75,10 @@ const Page: React.FC = ({ searchParams }) => {
               <img src="/icons/filter.svg" alt="" />
               <p>Filter</p>
             </div>
-            <div className="flex gap-3 px-4 py-3 rounded-lg shadow-md">
+            {/* <div className="flex gap-3 px-4 py-3 rounded-lg shadow-md">
               <img src="/icons/sort.svg" alt="" />
               <p>Sort</p>
-            </div>
+            </div> */}
           </div>
           {/* Search component */}
           <Search placeholder="Search ..." />
