@@ -51,6 +51,20 @@ export const createMerchant = async (
 
 // READ
 
+export const getMerchants = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/merchants`
+    );
+    const { data } = response.data;
+    console.log("Merchants data:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw new Error("Failed to fetch merchants");
+  }
+};
+
 // UPDATE
 export const updateMerchant = async (
   event: React.FormEvent<HTMLFormElement>,
@@ -103,29 +117,3 @@ export const updateMerchant = async (
 
 
 // DELETE
-export async function deleteMenu(menuId: string): Promise<void> {
-  try {
-    const token = localStorage.getItem("admin_token");
-    if (!token) {
-      throw new Error("Admin token not found");
-    }
-
-    const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu/${menuId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.status === 200) {
-      console.log("Menu deleted successfully!");
-    } else {
-      console.error("Unexpected response status:", response.status);
-      throw new Error("Failed to delete menu");
-    }
-  } catch (error) {
-    console.error("Error deleting menu:", error);
-  }
-}

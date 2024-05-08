@@ -1,3 +1,15 @@
+export type Merchant = {
+    id: number;
+    merchant_name: string;
+    address: string;
+    email: string;
+    phone_number: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    is_open: boolean;
+  };
+
 export type Banner = {
     created_at: string;
     updated_at: string;

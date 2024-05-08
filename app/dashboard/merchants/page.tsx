@@ -3,18 +3,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-type Merchant = {
-  id: number;
-  merchant_name: string;
-  address: string;
-  email: string;
-  phone_number: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  is_open: boolean;
-};
+import { getMerchants } from "@/app/lib/actions/merchantsActions"; 
+import { Merchant } from '@/app/lib/types/index'
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -23,12 +13,8 @@ const Page: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/merchants`
-        );
-        const { data } = response.data;
-        console.log("Merchants data:", data);
-        setMerchants(data);
+        const merchantsData = await getMerchants();
+        setMerchants(merchantsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -36,22 +22,21 @@ const Page: React.FC = () => {
 
     fetchData();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const addMerchant = () => {
     router.push("/dashboard/merchants/add");
   };
 
-  const changeMerchantStatus = (merchantId: number) => {
-    setMerchants(prevMerchants =>
-      prevMerchants.map(merchant =>
-        merchant.id === merchantId ? { ...merchant, is_open: !merchant.is_open } : merchant
-      )
-    );
-  };
+  // const changeMerchantStatus = (merchantId: number) => {
+  //   setMerchants(prevMerchants =>
+  //     prevMerchants.map(merchant =>
+  //       merchant.id === merchantId ? { ...merchant, is_open: !merchant.is_open } : merchant
+  //     )
+  //   );
+  // };
 
-  
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex justify-between">
@@ -94,9 +79,8 @@ const Page: React.FC = () => {
 
                   <button
                     // onClick={() => changeMerchantStatus(merchant.id)}
-                    className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${
-                      merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-buttonRed text-textRed"
-                    }`}
+                    className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-buttonRed text-textRed"
+                      }`}
                   >
                     {merchant.is_open ? "Open" : "Closed"}
                   </button>
