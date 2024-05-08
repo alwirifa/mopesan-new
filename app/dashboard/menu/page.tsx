@@ -33,6 +33,7 @@ const Page: React.FC = () => {
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category-full`
         );
         const { data } = response.data;
+        console.log(response.data)
         setCategories(data);
       } catch (error) {
         console.error("Error fetching data:", error);

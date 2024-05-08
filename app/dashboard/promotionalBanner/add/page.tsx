@@ -1,12 +1,11 @@
 "use client"
 
 import React, { useState } from 'react';
-import { createMenu } from '@/app/lib/actions/menuActions';
+import { createBanner } from '@/app/lib/actions/BannerActions';
 
-const MenuForm: React.FC = () => {
+const bannerForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [productName, setProductName] = useState('');
-  const [price, setPrice] = useState('');
+  const [bannerName, setBannerName] = useState('');
   const [description, setDescription] = useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,26 +16,18 @@ const MenuForm: React.FC = () => {
 
   return (
     <div>
-      <h1>Add Menu</h1>
-      <form onSubmit={(e) => createMenu(e, file, productName, price, description)} encType="multipart/form-data">
+      <h1>Add banner</h1>
+      <form onSubmit={(e) => createBanner(e, file, bannerName,  description)} encType="multipart/form-data">
         <div>
-          <label htmlFor="product_name">Product Name:</label>
+          <label htmlFor="banner_name">banner Name:</label>
           <input
             type="text"
-            id="product_name"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            id="banner_name"
+            value={bannerName}
+            onChange={(e) => setBannerName(e.target.value)}
           />
         </div>
-        <div>
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
+
         <div>
           <label htmlFor="description">Description:</label>
           <input
@@ -50,10 +41,10 @@ const MenuForm: React.FC = () => {
           <label htmlFor="image">Image:</label>
           <input type="file" id="image" onChange={handleFileChange} />
         </div>
-        <button type="submit">Add Menu</button>
+        <button type="submit">Add banner</button>
       </form>
     </div>
   );
 };
 
-export default MenuForm;
+export default bannerForm;

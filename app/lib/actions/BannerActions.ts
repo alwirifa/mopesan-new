@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 // CREATE
-export const createMenu = async (
+export const createBanner = async (
   event: React.FormEvent<HTMLFormElement>,
   file: File | null,
-  productName: string,
-  price: string,
+  bannerName: string,
   description: string
 ) => {
   event.preventDefault();
@@ -15,8 +14,7 @@ export const createMenu = async (
     formData.append(
       'menu',
       JSON.stringify({
-        product_name: productName,
-        price: parseFloat(price),
+        banner_name: bannerName,
         description: description
       })
     );
@@ -33,7 +31,7 @@ export const createMenu = async (
       }
     };
 
-    await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu`, formData, config);
+    await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner`, formData, config);
     alert('Menu added successfully!');
   } catch (error) {
     console.error('Error adding menu:', error);
@@ -42,6 +40,16 @@ export const createMenu = async (
 };
 
 // READ
+
+export const getBanner = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
+    return response.data; 
+  } catch (error) {
+    console.error('Error fetching banners:', error);
+    throw new Error('Failed to fetch banners');
+  }
+};
 
 // UPDATE
 export const updateMenu = async (
