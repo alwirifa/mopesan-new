@@ -20,6 +20,7 @@ const Page: React.FC = () => {
   return (
     <div>
       <h1>Banners</h1>
+      <Link href='/dashboard/promotionalBanner/add'>+Add</Link>
       <ul>
         {banners.map(banner => (
           <li key={banner.id}>

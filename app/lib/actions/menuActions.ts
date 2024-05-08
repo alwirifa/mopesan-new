@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Category, Menu } from '@/app/lib/types/index'
+
 // CREATE
 export const createMenu = async (
   event: React.FormEvent<HTMLFormElement>,
@@ -126,9 +127,11 @@ export async function deleteMenu(menuId: string): Promise<void> {
 
     if (response.status === 200) {
       console.log("Menu deleted successfully!");
+      alert("Menu deleted successfully!")
     } else {
       console.error("Unexpected response status:", response.status);
       throw new Error("Failed to delete menu");
+      
     }
   } catch (error) {
     console.error("Error deleting menu:", error);

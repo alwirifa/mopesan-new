@@ -72,9 +72,9 @@ const Page: React.FC = () => {
       <section className="flex gap-6">
         <div className=" w-full grid grid-cols-2 gap-4">
           {merchants.length > 0 ? (
-            merchants.map((merchant) => (
+            merchants.map((merchant, index) => (
               <div
-                key={merchant.merchant_name}
+                key={index}
                 className="p-6 flex flex-col gap-4 rounded-md bg-white"
               >
                 <div className="flex items-center gap-4 relative">
@@ -93,7 +93,7 @@ const Page: React.FC = () => {
                   </div>
 
                   <button
-                    onClick={() => changeMerchantStatus(merchant.id)}
+                    // onClick={() => changeMerchantStatus(merchant.id)}
                     className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${
                       merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-buttonRed text-textRed"
                     }`}
