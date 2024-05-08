@@ -1,60 +1,50 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import Link from "next/link";
-
-type Menu = {
-  id: number;
-  product_name: string;
-  price: number;
-  description: string;
-  product_code: string;
-  product_image: string;
-};
-
-type Category = {
-  id: number;
-  category_name: string;
-  menus: Menu[];
-};
+import { Category, Menu } from '@/app/lib/types/index'
+import { getCategories, getMenus } from  '@/app/lib/actions/menuActions';
 
 const Page: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All"); // Default selected category is "All"
-  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string>('All'); 
+  const [menus, setMenus] = useState<Menu[]>([]);
+
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category-full`
-        );
-        const { data } = response.data;
-        console.log(response.data)
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      const fetchedCategories = await getCategories();
+      setCategories(fetchedCategories);
+
+      const fetchedMenus = await getMenus(); 
+      setMenus(fetchedMenus);
+
+      // Set selected category from URL parameter, or default to "All"
+      const categoryParam = searchParams.get('category');
+      setSelectedCategory(categoryParam || 'All');
     };
 
     fetchData();
-
-    // Set selected category from URL parameter, or default to "All"
-    const categoryParam = searchParams.get("category");
-    setSelectedCategory(categoryParam || "All");
-
-    return () => {};
   }, [searchParams]);
 
+
+  // const filteredMenus =
+  //   selectedCategory === "All"
+  //     ? categories.flatMap((category) => category.menus)
+  //     : categories.find(
+  //         (category) => category.category_name === selectedCategory
+  //       )?.menus || [];
+
   const filteredMenus =
-    selectedCategory === "All"
-      ? categories.flatMap((category) => category.menus)
-      : categories.find(
-          (category) => category.category_name === selectedCategory
-        )?.menus || [];
+  selectedCategory === 'All'
+    ? menus
+    : menus.filter((menu) =>
+        categories
+          .find((category) => category.category_name === selectedCategory)
+          ?.menus.some((m) => m.id === menu.id)
+      );
 
   return (
     <div className="w-full">

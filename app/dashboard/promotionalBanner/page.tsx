@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getBanners } from '@/app/lib/actions/BannerActions';
+import { getBanners } from '@/app/lib/actions/bannerActions';
 import { Banner } from '@/app/lib/types/index'
 
 const Page: React.FC = () => {

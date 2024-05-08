@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { createBanner } from '@/app/lib/actions/BannerActions';
+import { createBanner } from '@/app/lib/actions/bannerActions';
 
 const bannerForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);

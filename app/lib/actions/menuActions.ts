@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { Category, Menu } from '@/app/lib/types/index'
 // CREATE
 export const createMenu = async (
   event: React.FormEvent<HTMLFormElement>,
@@ -42,15 +42,26 @@ export const createMenu = async (
 };
 
 // READ
-// export const getBanners = async (): Promise<Banner[]> => {
-//   try {
-//     const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
-//     return response.data.data;
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//     return [];
-//   }
-// };
+export const getCategories = async (): Promise<Category[]> => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category-full`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+};
+
+export const getMenus = async (): Promise<Menu[]> => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/menu`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching menus:', error);
+    return [];
+  }
+};
+
 
 // UPDATE
 export const updateMenu = async (

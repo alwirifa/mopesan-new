@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { updatebanner } from "@/app/lib/actions/BannerActions"
+import { updatebanner } from "@/app/lib/actions/bannerActions"
 
 const UpdatebannerForm  = ({ params }: { params: { id: string } }) => {
   const [file, setFile] = useState<File | null>(null);

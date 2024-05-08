@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBanner } from "@/app/lib/actions/BannerActions";
+import { deleteBanner } from "@/app/lib/actions/bannerActions";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
