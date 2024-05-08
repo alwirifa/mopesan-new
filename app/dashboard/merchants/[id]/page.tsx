@@ -71,7 +71,11 @@ const page = ({ params }: { params: { id: string } }) => {
               <p className="text-sm font-semibold text-textRed">
                 Back to merchant list
               </p>
+              
             </Link>
+            <div>
+            <Link href={`/dashboard/merchants/edit/${params.id}`}>EDIT</Link>
+              </div>
             <h1 className="text-4xl font-semibold">{merchant.merchant_name}</h1>
             <p className="italic text-textGray">{merchant.address}</p>
             <div className="flex justify-between">
@@ -117,7 +121,7 @@ const page = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 p-6 rounded-md bg-white">
+        {/* <div className="flex flex-col gap-4 p-6 rounded-md bg-white">
           <div className="flex justify-between">
             <div>
               <h1 className="text-2xl font-semibold">Order History</h1>
@@ -144,7 +148,7 @@ const page = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
           <MerchantOrder />
-        </div>
+        </div> */}
       </div>
     </div>
   );
