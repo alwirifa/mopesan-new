@@ -1,7 +1,8 @@
 "use client";
 
-import { deleteMenu } from "@/app/lib/actions";
+import { deleteMenu } from "@/app/lib/actions/menuActions";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 type Menu = {
@@ -56,7 +57,7 @@ const page = ({ params }: { params: { id: string } }) => {
       {menu.product_name}
       <img src={menu.product_image} alt="" />
       <p>{menu.price}</p>
-      <button>EDIT</button>
+      <Link href={`/dashboard/menu/edit/${menu.id}`}>EDIT</Link>
       <button onClick={() => deleteMenu(String(menu.id))}>DELETE</button>
     </div>
   );

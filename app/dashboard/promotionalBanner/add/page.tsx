@@ -1,30 +1,59 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import React, { useState } from 'react';
+import { createMenu } from '@/app/lib/actions/menuActions';
 
+const MenuForm: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [productName, setProductName] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
 
-
-const Page = () => {
-  const router = useRouter()
-
-  const handleClose = () => {
-    router.push('/dashboard/promotionalBanner')
-  }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]);
+    }
+  };
 
   return (
-    <div className="p-8 rounded-lg bg-white">
-      <div className="flex justify-between pb-4">
-        <h1 className="text-4xl font-semibold">Add Promotional Banner</h1>
-        <div onClick={handleClose} className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer">
-          <img src="/icons/close.svg" alt="close"  className="h-full w-full"/>
+    <div>
+      <h1>Add Menu</h1>
+      <form onSubmit={(e) => createMenu(e, file, productName, price, description)} encType="multipart/form-data">
+        <div>
+          <label htmlFor="product_name">Product Name:</label>
+          <input
+            type="text"
+            id="product_name"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+          />
         </div>
-      </div>
-
-    
+        <div>
+          <label htmlFor="price">Price:</label>
+          <input
+            type="number"
+            id="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="description">Description:</label>
+          <input
+            type="text"
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="image">Image:</label>
+          <input type="file" id="image" onChange={handleFileChange} />
+        </div>
+        <button type="submit">Add Menu</button>
+      </form>
     </div>
   );
 };
 
-export default Page;
+export default MenuForm;

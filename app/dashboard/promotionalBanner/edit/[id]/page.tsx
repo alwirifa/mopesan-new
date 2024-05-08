@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState } from 'react';
-import { createMenu } from '@/app/lib/actions/menuActions';
+import React, { useState, useEffect } from 'react';
 
-const MenuForm: React.FC = () => {
+import { updateMenu } from '@/app/lib/actions/menuActions'; 
+
+const UpdateMenuForm  = ({ params }: { params: { id: string } }) => {
   const [file, setFile] = useState<File | null>(null);
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
@@ -15,10 +16,20 @@ const MenuForm: React.FC = () => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    updateMenu(e, params.id, file, productName, price, description);
+    // Reset form fields
+    setFile(null);
+    setProductName('');
+    setPrice('');
+    setDescription('');
+  };
+
   return (
     <div>
-      <h1>Add Menu</h1>
-      <form onSubmit={(e) => createMenu(e, file, productName, price, description)} encType="multipart/form-data">
+      <h1>Update Menu</h1>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
           <label htmlFor="product_name">Product Name:</label>
           <input
@@ -50,10 +61,10 @@ const MenuForm: React.FC = () => {
           <label htmlFor="image">Image:</label>
           <input type="file" id="image" onChange={handleFileChange} />
         </div>
-        <button type="submit">Add Menu</button>
+        <button type="submit">Update Menu</button>
       </form>
     </div>
   );
 };
 
-export default MenuForm;
+export default UpdateMenuForm;
