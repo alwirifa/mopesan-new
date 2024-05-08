@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Banner } from '@/app/lib/types/index'
 
 // CREATE
 export const createBanner = async (
@@ -40,14 +41,13 @@ export const createBanner = async (
 };
 
 // READ
-
-export const getBanner = async () => {
+export const getBanners = async (): Promise<Banner[]> => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
-    return response.data; 
+    return response.data.data;
   } catch (error) {
-    console.error('Error fetching banners:', error);
-    throw new Error('Failed to fetch banners');
+    console.error('Error fetching data:', error);
+    return [];
   }
 };
 

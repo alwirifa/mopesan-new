@@ -1,31 +1,17 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Link from 'next/link';
-
-type Banner = {
-  created_at: string;
-  updated_at: string;
-  banner_name: string;
-  banner_image: string;
-  description: string;
-  id: number;
-  is_active: boolean;
-};
+import { getBanners } from '@/app/lib/actions/BannerActions';
+import { Banner } from '@/app/lib/types/index'
 
 const Page: React.FC = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
-        setBanners(response.data.data);
-        console.log(response.data)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+      const data = await getBanners(); 
+      setBanners(data);
     };
 
     fetchData();

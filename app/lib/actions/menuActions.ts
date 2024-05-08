@@ -42,6 +42,15 @@ export const createMenu = async (
 };
 
 // READ
+// export const getBanners = async (): Promise<Banner[]> => {
+//   try {
+//     const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
+//     return response.data.data;
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//     return [];
+//   }
+// };
 
 // UPDATE
 export const updateMenu = async (
