@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { updateMenu } from '@/app/lib/actions/menuActions'; 
+import { updatebanner } from "@/app/lib/actions/BannerActions"
 
-const UpdateMenuForm  = ({ params }: { params: { id: string } }) => {
+const UpdatebannerForm  = ({ params }: { params: { id: string } }) => {
   const [file, setFile] = useState<File | null>(null);
-  const [productName, setProductName] = useState('');
-  const [price, setPrice] = useState('');
+  const [bannerName, setbannerName] = useState('');
   const [description, setDescription] = useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,36 +17,27 @@ const UpdateMenuForm  = ({ params }: { params: { id: string } }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateMenu(e, params.id, file, productName, price, description);
+    updatebanner(e, params.id, file, bannerName,  description);
     // Reset form fields
     setFile(null);
-    setProductName('');
-    setPrice('');
+    setbannerName('');
     setDescription('');
   };
 
   return (
     <div>
-      <h1>Update Menu</h1>
+      <h1>Update banner</h1>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
-          <label htmlFor="product_name">Product Name:</label>
+          <label htmlFor="banner_name">banner Name:</label>
           <input
             type="text"
-            id="product_name"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            id="banner_name"
+            value={bannerName}
+            onChange={(e) => setbannerName(e.target.value)}
           />
         </div>
-        <div>
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
+     
         <div>
           <label htmlFor="description">Description:</label>
           <input
@@ -61,10 +51,10 @@ const UpdateMenuForm  = ({ params }: { params: { id: string } }) => {
           <label htmlFor="image">Image:</label>
           <input type="file" id="image" onChange={handleFileChange} />
         </div>
-        <button type="submit">Update Menu</button>
+        <button type="submit">Update banner</button>
       </form>
     </div>
   );
 };
 
-export default UpdateMenuForm;
+export default UpdatebannerForm;

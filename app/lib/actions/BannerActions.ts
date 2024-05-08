@@ -12,7 +12,7 @@ export const createBanner = async (
     const formData = new FormData();
     formData.append('image', file as Blob);
     formData.append(
-      'menu',
+      'banner',
       JSON.stringify({
         banner_name: bannerName,
         description: description
@@ -32,10 +32,10 @@ export const createBanner = async (
     };
 
     await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner`, formData, config);
-    alert('Menu added successfully!');
+    alert('banner added successfully!');
   } catch (error) {
-    console.error('Error adding menu:', error);
-    alert('Failed to add menu');
+    console.error('Error adding banner:', error);
+    alert('Failed to add banner');
   }
 };
 
@@ -52,12 +52,11 @@ export const getBanner = async () => {
 };
 
 // UPDATE
-export const updateMenu = async (
+export const updatebanner = async (
   event: React.FormEvent<HTMLFormElement>,
   id: string,
   file: File | null,
   productName: string,
-  price: string,
   description: string
 ) => {
   event.preventDefault();
@@ -67,10 +66,9 @@ export const updateMenu = async (
       formData.append('image', file as Blob);
     }
     formData.append(
-      'menu',
+      'banner',
       JSON.stringify({
         product_name: productName,
-        price: parseFloat(price),
         description: description
       })
     );
@@ -87,11 +85,11 @@ export const updateMenu = async (
       }
     };
 
-    await axios.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu/${id}`, formData, config);
-    alert('Menu updated successfully!');
+    await axios.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner/${id}`, formData, config);
+    alert('banner updated successfully!');
   } catch (error) {
-    console.error('Error updating menu:', error);
-    alert('Failed to update menu');
+    console.error('Error updating banner:', error);
+    alert('Failed to update banner');
   }
 };
 
@@ -113,13 +111,13 @@ export const deleteBanner = async (id: string): Promise<void> => {
     );
 
     if (response.status === 200) {
-      console.log("Menu deleted successfully!");
-      alert("Menu deleted successfully!")
+      console.log("banner deleted successfully!");
+      alert("banner deleted successfully!")
     } else {
       console.error("Unexpected response status:", response.status);
-      throw new Error("Failed to delete menu");
+      throw new Error("Failed to delete banner");
     }
   } catch (error) {
-    console.error("Error deleting menu:", error);
+    console.error("Error deleting banner:", error);
   }
 }
