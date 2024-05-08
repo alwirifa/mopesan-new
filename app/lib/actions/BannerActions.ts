@@ -96,7 +96,7 @@ export const updateMenu = async (
 };
 
 // DELETE
-export async function deleteMenu(menuId: string): Promise<void> {
+export const deleteBanner = async (id: string): Promise<void> => {
   try {
     const token = localStorage.getItem("admin_token");
     if (!token) {
@@ -104,7 +104,7 @@ export async function deleteMenu(menuId: string): Promise<void> {
     }
 
     const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu/${menuId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -114,6 +114,7 @@ export async function deleteMenu(menuId: string): Promise<void> {
 
     if (response.status === 200) {
       console.log("Menu deleted successfully!");
+      alert("Menu deleted successfully!")
     } else {
       console.error("Unexpected response status:", response.status);
       throw new Error("Failed to delete menu");

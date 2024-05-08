@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteBanner } from "@/app/lib/actions/BannerActions";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -46,6 +47,7 @@ const page = ({ params }: { params: { id: string } }) => {
       <img src={banners.banner_image} alt="" />
       <p>{banners.banner_name}</p>
       <p>{banners.description}</p>
+      <button onClick={() => deleteBanner(String(banners.id))}>DELETE</button>
     </div>
   );
 };
