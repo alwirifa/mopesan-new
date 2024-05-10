@@ -35,7 +35,7 @@ const MenuForm: React.FC = () => {
           encType="multipart/form-data"
           className='flex flex-col gap-6 w-full'
         >
-          <div>
+          <div className="flex flex-col gap-2">
             <label
               htmlFor="product_name"
               className="block font-medium leading-6 text-gray-900"
