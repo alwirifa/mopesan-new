@@ -56,7 +56,7 @@ const Page = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="p-4 border-b border-t border-bgRed flex gap-4">
+        <div className="p-4 pb-8 border-b border-t border-bgRed flex gap-4">
           <div className="flex flex-1 flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label className="block font-medium leading-6 text-gray-900">
