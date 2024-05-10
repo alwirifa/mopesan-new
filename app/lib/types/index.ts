@@ -34,3 +34,21 @@ export type Category = {
     category_name: string;
     menus: Menu[];
 };
+
+type Voucher = {
+    id: number;
+    voucher_name: string;
+    description: string;
+    code: string;
+    minimum_order: number;
+    valid_from: string;
+    valid_until: string;
+    merchant_id: number;
+    value: number;
+    type_voucher: string;
+    max_discount: number;
+    total_voucher_number: number;
+    voucher_used_count: number;
+    created_at: string;
+    updated_at: string;
+  };

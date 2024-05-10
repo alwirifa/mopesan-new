@@ -75,7 +75,7 @@ const Page: React.FC = () => {
     router.push(`/dashboard/voucher/edit/${id}`);
   };
   
-  
+
 
   return (
     <div className="flex flex-col gap-6 ">
