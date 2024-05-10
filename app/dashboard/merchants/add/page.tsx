@@ -46,7 +46,7 @@ const MerchantForm: React.FC = () => {
           onSubmit={handleSubmit}
           className='flex flex-col gap-6 w-full'
         >
-          <div>
+            <div className="flex flex-col gap-2">
             <label
               htmlFor="merchant_name"
               className="block font-medium leading-6 text-gray-900"
@@ -61,7 +61,7 @@ const MerchantForm: React.FC = () => {
               className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label 
             htmlFor="location_lat"
             className="block font-medium leading-6 text-gray-900"
@@ -77,7 +77,7 @@ const MerchantForm: React.FC = () => {
 
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label 
             htmlFor="location_long"
             className="block font-medium leading-6 text-gray-900"
@@ -93,7 +93,7 @@ const MerchantForm: React.FC = () => {
 
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label 
             htmlFor="email"
             className="block font-medium leading-6 text-gray-900"
@@ -109,7 +109,7 @@ const MerchantForm: React.FC = () => {
 
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label 
             htmlFor="password"
             className="block font-medium leading-6 text-gray-900"
@@ -125,7 +125,7 @@ const MerchantForm: React.FC = () => {
 
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label 
             htmlFor="phone_number"
             className="block font-medium leading-6 text-gray-900"
@@ -141,7 +141,7 @@ const MerchantForm: React.FC = () => {
 
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label
               htmlFor="address"
               className="block font-medium leading-6 text-gray-900"
@@ -157,7 +157,7 @@ const MerchantForm: React.FC = () => {
 
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label
               htmlFor="pic_name"
               className="block font-medium leading-6 text-gray-900"

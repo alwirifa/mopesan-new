@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Admin = {
   id: number;
@@ -49,7 +50,7 @@ const Page: React.FC = () => {
     router.push("/dashboard/admin/add");
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | number | Date) => {
     // Ubah string tanggal ke objek Date
     const date = new Date(dateString);
 
@@ -116,23 +117,12 @@ const Page: React.FC = () => {
                   </p>
                 </div>
                 <div>
-                  {adminStatus ? (
-                    <button
-                      onClick={changeAdminStatus}
-                      className="px-4 py-2 rounded-full bg-buttonGreen text-textGreen transition-all duration-300 ease-in-out "
-                      style={{ width: adminStatus ? "8rem" : "10rem" }}
-                    >
-                      Active
-                    </button>
-                  ) : (
-                    <button
-                      onClick={changeAdminStatus}
-                      className="px-4 py-2 rounded-full bg-buttonRed text-textRed transition-all duration-300 ease-in-out "
-                      style={{ width: adminStatus ? "8rem" : "10rem" }}
-                    >
-                      Deactivated
-                    </button>
-                  )}
+                <Link
+                    href={`/dashboard/admin/${admin.id}`}
+                    className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
+                  >
+                    Details
+                  </Link>
                 </div>
               </div>
             ))
