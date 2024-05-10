@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createVoucher } from "@/app/lib/actions/voucherAction";
+import MerchantPicker from "@/app/ui/dashboard/voucher/MerchantsPicker";
 
 const Page = () => {
   const router = useRouter();
@@ -38,6 +39,12 @@ const Page = () => {
   const handleClose = () => {
     router.push('/dashboard/voucher');
   };
+
+  const handleMerchantSelect = (merchantId: string | null) => {
+    setMerchantId(merchantId ?? '');
+  };
+
+  // console.log(merchantId)
 
   return (
     <div className="p-8 rounded-lg bg-white">
@@ -95,17 +102,9 @@ const Page = () => {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="block font-medium leading-6 text-gray-900">
-                Merchant ID
-              </label>
-              <input
-                type="number"
-                name="minimum_order"
-                placeholder="Minimum Order"
-                value={merchantId}
-                onChange={(e) => setMerchantId(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
-              />
+
+              <MerchantPicker onMerchantSelect={handleMerchantSelect} />
+
             </div>
 
             <div className="flex flex-col gap-2">

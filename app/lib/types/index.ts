@@ -1,4 +1,5 @@
 export type Merchant = {
+    value: any;
     id: number;
     merchant_name: string;
     address: string;

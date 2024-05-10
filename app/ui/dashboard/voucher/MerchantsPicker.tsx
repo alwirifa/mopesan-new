@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { getMerchants } from '../lib/actions/merchantsActions';
+import { getMerchants } from '@/app/lib/actions/merchantsActions';
 import { Merchant } from '@/app/lib/types/index';
 
-export default function MerchantPicker() {
+interface MerchantPickerProps {
+  onMerchantSelect: (merchantId: string | null) => void; // Define prop for handling merchant selection
+}
+
+const MerchantPicker: React.FC<MerchantPickerProps> = ({ onMerchantSelect }) => {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
   const [selectedMerchantId, setSelectedMerchantId] = useState<string | null>(null);
 
@@ -25,19 +29,18 @@ export default function MerchantPicker() {
   }, []);
 
   const handleMerchantSelect = (selectedOption: any) => {
-    setSelectedMerchantId(selectedOption ? selectedOption.value : null);
+    const merchantId = selectedOption ? selectedOption.value : null;
+    setSelectedMerchantId(merchantId);
+    onMerchantSelect(merchantId); // Call the prop function with the selected merchant ID
   };
 
-  // Map merchants to options compatible with Select component
   const merchantOptions = [
     { value: '0', label: 'Semua Merchant' }, // Option for "Semua Merchant"
     ...merchants.map(merchant => ({
       value: merchant.id,
-      label: merchant.merchant_name // Ensure merchant_name is used for the label
+      label: merchant.merchant_name 
     }))
   ];
-
-  console.log(selectedMerchantId)
 
   return (
     <div className="mx-auto container py-8">
@@ -60,3 +63,4 @@ export default function MerchantPicker() {
   );
 }
 
+export default MerchantPicker;
