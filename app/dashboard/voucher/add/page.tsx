@@ -101,11 +101,10 @@ const Page = () => {
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
-            <div className="flex flex-col gap-2">
 
               <MerchantPicker onMerchantSelect={handleMerchantSelect} />
 
-            </div>
+        
 
             <div className="flex flex-col gap-2">
               <label className="font-medium">Jenis Potongan</label>
