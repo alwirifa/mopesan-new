@@ -8,15 +8,21 @@ const MerchantForm: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter()
+  const router = useRouter();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    createAdmin(event, {
-      name,
-      email,
-      password,
-    });
+    try {
+      await createAdmin(event, {
+        name,
+        email,
+        password,
+      });
+      alert('admin added successfully!');
+      router.push('/dashboard/admin');
+    } catch (error) {
+      console.error("Error creating admin:", error);
+    }
   };
 
   const handleClose = () => {
@@ -31,11 +37,8 @@ const MerchantForm: React.FC = () => {
           <img src="/icons/close.svg" alt="close" className="h-full w-full" />
         </div>
       </div>
-      <div className="p-4 pb-8 border-b border-t border-bgRed flex gap-4">
-        <form
-          onSubmit={handleSubmit}
-          className='flex flex-col gap-6 w-full'
-        >
+      <form onSubmit={handleSubmit}>
+        <div className=" py-4 pb-10  flex flex-col gap-4 w-full border-b border-t border-bgRed ">
           <div className="flex flex-col gap-2">
             <label
               htmlFor="name"
@@ -64,7 +67,6 @@ const MerchantForm: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
-
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -80,21 +82,21 @@ const MerchantForm: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
-
             />
           </div>
-
-        </form>
-      </div>
-
-      <div className="mt-4 flex justify-end">
-        <button
-          type="submit" className="px-4 py-2 rounded-md bg-bgRed font-semibold text-white">
-          Add New Admin
-        </button>
-      </div>
+        </div>
+        <div className="mt-4 flex justify-end">
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-md bg-bgRed font-semibold text-white"
+          >
+            Add New Admin
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
 
 export default MerchantForm;
+

@@ -3,7 +3,7 @@ import axios from 'axios';
 // CREATE
 export const createAdmin = async (
   event: React.FormEvent<HTMLFormElement>,
-  merchantData: {
+  adminData: {
     name: string,
     email: string,
     password: string,
@@ -11,7 +11,7 @@ export const createAdmin = async (
 ) => {
   event.preventDefault();
   try {
-    const { name, email, password, } = merchantData;
+    const { name, email, password, } = adminData;
 
     const requestData = {
       name,
@@ -32,57 +32,78 @@ export const createAdmin = async (
     };
 
     await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins`, requestData, config);
-    alert('Merchant added successfully!');
+   
   } catch (error) {
-    console.error('Error adding merchant:', error);
-    alert('Failed to add merchant');
+    console.error('Error adding admin:', error);
+    alert('Failed to add admin');
   }
 };
 
 // READ
-
-export const getMerchants = async () => {
+export const getAdmins = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/merchants`
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/admins`
     );
     const { data } = response.data;
-    console.log("Merchants data:", data);
+    console.log("admins data:", data);
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw new Error("Failed to fetch merchants");
+    throw new Error("Failed to fetch admins");
   }
 };
 
+// GET DATA BY ID 
+export async function getAdmin(adminId: string): Promise<void> {
+  try {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      throw new Error("Admin token not found");
+    }
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/${adminId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      console.log("get by id successfully!");
+      const { data } = response.data;
+      return data;
+   
+    } else {
+      console.error("Unexpected response status:", response.status);
+      throw new Error("Failed to fetch admin");
+      
+    }
+  } catch (error) {
+    console.error("Error get data by id:", error);
+  }
+}
+
 // UPDATE
-export const updateMerchant = async (
+export const updateAdmin = async (
   event: React.FormEvent<HTMLFormElement>,
   id: string,
-  merchantData: {
-    merchant_name: string,
-    location_lat: string,
-    location_long: string,
+  adminData: {
+    name: string,
     email: string,
     password: string,
-    phone_number: string,
-    address: string,
-    pic_name: string
   }
 ) => {
   event.preventDefault();
   try {
-    const { merchant_name, location_lat, location_long, email, password, phone_number, address, pic_name } = merchantData;
+    const { name, email, password, } = adminData;
 
     const requestData = {
-      merchant_name,
-      location_lat: parseFloat(location_lat),
-      location_long: parseFloat(location_long),
+      name,
       email,
       password,
-      phone_number,
-      address,
-      pic_name
     };
 
     const token = localStorage.getItem('admin_token');
@@ -97,13 +118,41 @@ export const updateMerchant = async (
       }
     };
 
-    await axios.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/merchants/${id}`, requestData, config);
-    alert('Merchant updated successfully!');
+    await axios.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/${id}`, requestData, config);
+    alert('admin updated successfully!');
   } catch (error) {
-    console.error('Error updating merchant:', error);
-    alert('Failed to update merchant');
+    console.error('Error updating admin:', error);
+    alert('Failed to update admin');
   }
 };
 
 
 // DELETE
+export async function deleteAdmin(adminId: string): Promise<void> {
+  try {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      throw new Error("Admin token not found");
+    }
+
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/${adminId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      console.log("Admin deleted successfully!");
+      alert("Admin deleted successfully!")
+    } else {
+      console.error("Unexpected response status:", response.status);
+      throw new Error("Failed to delete Admin");
+      
+    }
+  } catch (error) {
+    console.error("Error deleting Admin:", error);
+  }
+}

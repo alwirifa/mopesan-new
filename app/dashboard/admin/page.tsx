@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { getAdmins } from "@/app/lib/actions/adminActions";
 
 type Admin = {
   id: number;
@@ -20,22 +21,12 @@ const Page: React.FC = () => {
   const router = useRouter();
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [adminStatus, setAdminStatus] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/admins`
-        );
-        const { data } = response.data;
-        console.log("Admins data:", data);
-
-        // Convert last_login to the desired format
-        const formattedAdmins = data.map((admin: Admin) => ({
-          ...admin,
-          last_login: formatDate(admin.last_login),
-        }));
-
-        setAdmins(formattedAdmins);
+        const merchantsData = await getAdmins();
+        setAdmins(merchantsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,7 +34,7 @@ const Page: React.FC = () => {
 
     fetchData();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const addAdmin = () => {
@@ -102,7 +93,7 @@ const Page: React.FC = () => {
       </div>
 
       <section className="flex gap-6">
-        <div className="grid grid-cols-3 gap-4 w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 w-full">
           {admins.length > 0 ? (
             admins.map((admin) => (
               <div

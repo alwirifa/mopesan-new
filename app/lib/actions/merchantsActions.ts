@@ -50,7 +50,6 @@ export const createMerchant = async (
 };
 
 // READ
-
 export const getMerchants = async () => {
   try {
     const response = await axios.get(
