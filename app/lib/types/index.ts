@@ -53,3 +53,15 @@ type Voucher = {
     created_at: string;
     updated_at: string;
   };
+
+ export type Admin = {
+    id: number;
+    name: string;
+    email: string;
+    permission: string;
+    is_active: boolean;
+    last_login: string;
+    created_at: string;
+    updated_at: string;
+  };
+  

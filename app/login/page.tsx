@@ -34,23 +34,24 @@ const Login = () => {
       // save in cookies
       // document.cookie = `admin_token=${token}; path=/`;
 
-      // router.push("/dashboard");
+      
 
       const { token } = response.data.data;
-      const {  permission } = response.data.data.admin
+      // const {  permission } = response.data.data.admin
 
       // Simpan token di localStorage
       localStorage.setItem("admin_token", token);
+      // localStorage.setItem("permission", permission)
 
-      if (permission === "super_admin") {
-        router.push("/dashboard");
-      } else if (permission === "admin") {
-        router.push("/tes");
-      } else {
-        console.error("Invalid permission:", permission);
-      }
-
-      console.log(permission)
+      // if (permission === "super_admin") {
+      //   router.push("/dashboard");
+      // } else if (permission === "admin") {
+      //   router.push("/tes");
+      // } else {
+      //   console.error("Invalid permission:", permission);
+      // }
+      router.push("/dashboard");
+      // console.log(permission)
     } catch (error) {
       console.error("Error logging in:", error);
     }
