@@ -9,20 +9,7 @@ type NumberData = {
   daily_order_delivered: number;
 };
 
-const cardsData = [
-  {
-    title: "Daily Earnings",
-    iconSrc: "/icons/discount-2.svg",
-  },
-  {
-    title: "Total Active Orders",
-    iconSrc: "/icons/pizza.svg",
-  },
-  {
-    title: "Finished Order (Today)",
-    iconSrc: "/icons/shield-check.svg",
-  },
-];
+
 
 const OrderDataComponent: React.FC = () => {
   const [orderData, setOrderData] = useState<NumberData | null>(null);

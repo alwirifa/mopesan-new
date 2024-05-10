@@ -36,7 +36,7 @@ const MerchantBar: React.FC = () => {
 
     fetchData();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const renderMerchantStatus = (isActive: boolean) => {
@@ -52,25 +52,19 @@ const MerchantBar: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-md p-6 w-full h-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Merchants</h1>
-        <Link href="/dashboard/merchants">
-          <p className="italic text-xs underline text-maroon">View All</p>
-        </Link>
-      </div>
-      <div className="flex flex-col gap-4 mt-4">
-        {merchants.map((merchant, index) => (
-          <div key={merchant.id} className="flex items-center justify-between">
-           <div className="flex gap-4 items-center">
 
+
+    <div className="grid grid-cols-3 gap-4">
+      {merchants.slice(0, 3).map((merchant, index) => (
+        <div key={merchant.id} className="bg-white flex items-center justify-between p-4 rounded-md">
+          <div className="flex gap-4 items-center">
             <img src="/icons/merchants.svg" alt="" className="h-16 w-16" />
             <div className="text-lg font-semibold">{merchant.merchant_name}</div>
-           </div>
-            {renderMerchantStatus(merchant.is_active)}
           </div>
-        ))}
-      </div>
+          {renderMerchantStatus(merchant.is_active)}
+        </div>
+      ))}
+
     </div>
   );
 };
