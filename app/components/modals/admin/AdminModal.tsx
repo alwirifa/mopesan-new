@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Modal from '../Modal';
-import { useAdminModal } from '@/app/hooks/create/useAdminModal';
-import AdminForm from '../../form/createForm/AdminForm';
+
+import AdminForm from '../../form/admin/AdminForm';
+import { useAdminModal } from '@/app/hooks/admin/useAdminModal';
 
 
 const AdminModal = () => {

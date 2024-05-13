@@ -26,7 +26,7 @@ const Page: React.FC = ({ searchParams }) => {
   const q = searchParams?.search || "";
   const [page, setPage] = useState(1);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const itemsPerPage = 5;
+
 
   useEffect(() => {
     fetchData();
@@ -34,7 +34,7 @@ const Page: React.FC = ({ searchParams }) => {
 
   const fetchData = async () => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/customers?search=${q}&limit=${itemsPerPage}&offset=${(page - 1) * itemsPerPage}`;
+      const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/customers?search=${q}`;
       console.log("Fetching data from:", url);
       const response = await axios.get(url);
       const data = response.data.data;

@@ -64,3 +64,39 @@ export const createVoucher = async (
         alert('Failed to add merchant');
     }
 };
+
+// READ
+export const getVouchers = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/vouchers`
+      );
+      const { data } = response.data;
+      console.log("vouchers data:", data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw new Error("Failed to fetch vouchers");
+    }
+  };
+
+//   DELETE
+export const deleteVoucher = async (id: number) => {
+    const token = localStorage.getItem("admin_token");
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/vouchers/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Data deleted successfully");
+      return id; // Mengembalikan id yang dihapus
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      throw error; // Melempar error agar bisa ditangkap di tempat penggunaan
+    }
+  };
+

@@ -1,19 +1,14 @@
 import create from 'zustand';
 
-interface BannerModalStore {
+interface MenuModalStore {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }
 
-export const useBannerModal = create<BannerModalStore>((set) => ({
+export const useMenuDetailModal = create<MenuModalStore>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
-
-// useMenuModal.subscribe(isOpen => {
-//   console.log(isOpen);
-// });
-
 

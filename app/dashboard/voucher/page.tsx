@@ -1,45 +1,30 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import Search from "@/app/ui/dashboard/search/Search";
-import { useVoucherModal } from "@/app/hooks/useVoucherModal";
+import { PaginationControls } from '@/app/tes/PaginationControl';
+import { useEffect, useState } from 'react';
+import { Voucher } from '@/app/lib/types';
+import { getVouchers } from '@/app/lib/actions/voucherAction';
+import { useVoucherModal } from '@/app/hooks/useVoucherModal';
 
-type Voucher = {
-  id: number;
-  voucher_name: string;
-  description: string;
-  code: string;
-  minimum_order: number;
-  valid_from: string;
-  valid_until: string;
-  merchant_id: number;
-  value: number;
-  type_voucher: string;
-  max_discount: number;
-  total_voucher_number: number;
-  voucher_used_count: number;
-  created_at: string;
-  updated_at: string;
-};
+export default function Home({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const page = searchParams['page'] ?? '1';
+  const per_page = searchParams['per_page'] ?? '2';
 
-const Page: React.FC = () => {
-  const router = useRouter();
-  const voucherModal = useVoucherModal()
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0); // State to hold total items count
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/vouchers`
-        );
-        const { data, total } = response.data;
-        console.log("Search results:", data);
-        setVouchers(data);
+        const vouchersData = await getVouchers();
+        setVouchers(vouchersData);
+        setTotalItems(vouchersData.length); // Update total items count
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
@@ -48,34 +33,10 @@ const Page: React.FC = () => {
     return () => { };
   }, []);
 
-  const addVoucher = () => {
-    router.push("/dashboard/voucher/add");
-  };
+  const start = (Number(page) - 1) * Number(per_page);
+  const end = start + Number(per_page);
 
-  const handleDelete = async (id: number) => {
-    const token = localStorage.getItem("admin_token");
-    try {
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/vouchers/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log('data deleted');
-
-      setVouchers(prevVouchers => prevVouchers.filter(voucher => voucher.id !== id));
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const handleEdit = (id: number) => {
-    router.push(`/dashboard/voucher/edit/${id}`);
-  };
-
+  const voucherModal = useVoucherModal()
 
   return (
     <div className="flex flex-col gap-6 ">
@@ -85,12 +46,6 @@ const Page: React.FC = () => {
           <p>All available vouchers</p>
         </div>
         <div>
-          {/* <button
-            onClick={addVoucher}
-            className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
-          >
-            + Add Voucher
-          </button> */}
           <button
             onClick={voucherModal.onOpen}
             className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
@@ -101,8 +56,8 @@ const Page: React.FC = () => {
       </div>
 
       <section className="flex flex-col gap-6 p-8 bg-white rounded-lg">
-        {/* Filter and sort section */}
-        <div className="flex justify-between">
+         {/* Filter and sort section */}
+         <div className="flex justify-between">
           <div className="flex gap-4">
             <div className="flex gap-3 px-4 py-3 rounded-lg shadow-md">
               <img src="/icons/filter.svg" alt="" />
@@ -113,15 +68,15 @@ const Page: React.FC = () => {
               <p>Sort</p>
             </div>
           </div>
-
-          <Search placeholder="Search ..." />
+{/* 
+          <Search placeholder="Search ..." /> */}
         </div>
 
-        {/* Voucher list */}
         <div className="w-full overflow-hidden rounded-lg border border-black shadow-md">
           <div className="w-full overflow-x-auto">
             <table className="w-full">
               <thead>
+
                 <tr className="text-base font-semibold text-left text-gray-900 bg-gray-100  border-b border-black">
                   <th className="border-r border-black px-4 py-4 text-center">
                     No.
@@ -146,9 +101,10 @@ const Page: React.FC = () => {
                   </th>
                   <th className=" border-black px-4 py-4 text-left"></th>
                 </tr>
+
               </thead>
-              <tbody className="bg-white">
-                {vouchers.map((voucher, index) => (
+              <tbody>
+                {vouchers.slice(start, end).map((voucher, index) => (
                   <tr key={voucher.id} className="hover:bg-gray-100 ">
                     <td className="border-t border-r border-black px-4 py-2 font-semibold text-center">
                       {index + 1}.
@@ -172,22 +128,25 @@ const Page: React.FC = () => {
                       {voucher.max_discount}{" "}
                     </td>
                     <td className="border-t  border-black px-4 py-2">
-                      <button onClick={() => handleEdit(voucher.id)}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(voucher.id)}>
-                        Delete
-                      </button>
+
                     </td>
                   </tr>
+
                 ))}
               </tbody>
             </table>
+
+
           </div>
         </div>
+
       </section>
+      <PaginationControls
+        hasNextPage={end < totalItems}
+        hasPrevPage={start > 0}
+        totalItems={totalItems}
+      />
     </div>
   );
-};
+}
 
-export default Page;

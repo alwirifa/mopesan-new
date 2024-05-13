@@ -1,11 +1,9 @@
 "use client"
 
 import React from 'react';
-import { useMenuModal } from '@/app/hooks/useMenuModal';
-import MenuForm from '../../form/MenuForm';
 import Modal from '../Modal';
-import { useBannerModal } from '@/app/hooks/useBannerModal';
-import BannerForm from '../../form/BannerForm';
+import BannerForm from '../../form/banner/BannerForm';
+import { useBannerModal } from '@/app/hooks/banner/useBannerModal';
 
 
 const BannerModal = () => {

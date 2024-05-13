@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Modal from '../Modal';
-import { useVoucherModal } from '@/app/hooks/useVoucherModal';
-import VoucherForm from '../../form/createForm/VoucherForm';
+import VoucherForm from '../../form/voucher/VoucherForm';
+import { useVoucherModal } from '@/app/hooks/voucher/useVoucherModal';
 
 
 const VoucherModal = () => {
@@ -16,7 +16,7 @@ const VoucherModal = () => {
   )
 
   const bodyContent = (
-    <div><VoucherForm/></div>
+    <div><VoucherForm /></div>
   )
   return (
     <Modal isOpen={voucherModal.isOpen} onClose={voucherModal.onClose} title={titleContent} body={bodyContent} />

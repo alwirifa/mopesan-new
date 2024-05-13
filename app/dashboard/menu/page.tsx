@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {  useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Category, Menu } from '@/app/lib/types/index'
-import { getCategories, getMenus } from  '@/app/lib/actions/menuActions';
-import { useMenuModal } from "@/app/hooks/useMenuModal";
+import { getCategories, getMenus } from '@/app/lib/actions/menuActions';
+import { useMenuModal } from "@/app/hooks/menu/useMenuModal";
+import { useMenuDetailModal } from "@/app/hooks/menu/useMenuDetailModal";
 
 const Page: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All'); 
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [menus, setMenus] = useState<Menu[]>([]);
   const menuModal = useMenuModal();
+  const menuDetailModal = useMenuDetailModal()
 
+  const [menuId, setMenuId] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -20,7 +23,7 @@ const Page: React.FC = () => {
       const fetchedCategories = await getCategories();
       setCategories(fetchedCategories);
 
-      const fetchedMenus = await getMenus(); 
+      const fetchedMenus = await getMenus();
       setMenus(fetchedMenus);
 
       // Set selected category from URL parameter, or default to "All"
@@ -39,10 +42,16 @@ const Page: React.FC = () => {
   //         (category) => category.category_name === selectedCategory
   //       )?.menus || [];
 
+  const handleDetailsClick = (menuId: string) => {
+    console.log("Menu ID clicked:", menuId);
+    menuDetailModal.onOpen(); // Open the modal
+    setMenuId(menuId); // Set the menuId directly using useState
+  };
+  
   const filteredMenus =
-  selectedCategory === 'All'
-    ? menus
-    : menus.filter((menu) =>
+    selectedCategory === 'All'
+      ? menus
+      : menus.filter((menu) =>
         categories
           .find((category) => category.category_name === selectedCategory)
           ?.menus.some((m) => m.id === menu.id)
@@ -75,11 +84,10 @@ const Page: React.FC = () => {
         <div className="flex gap-4">
           <Link
             href={`?category=All`}
-            className={`${
-              selectedCategory === "All"
-                ? "px-4 py-2 rounded-md text-white bg-bgRed"
-                : "px-4 py-2 rounded-md text-textRed border border-bgRed"
-            }`}
+            className={`${selectedCategory === "All"
+              ? "px-4 py-2 rounded-md text-white bg-bgRed"
+              : "px-4 py-2 rounded-md text-textRed border border-bgRed"
+              }`}
           >
             All
           </Link>
@@ -87,11 +95,10 @@ const Page: React.FC = () => {
             <Link
               href={`?category=${category.category_name}`}
               key={index}
-              className={`${
-                selectedCategory === category.category_name
-                  ? "px-4 py-2 rounded-md text-white bg-bgRed"
-                  : "px-4 py-2 rounded-md text-textRed border border-bgRed"
-              }`}
+              className={`${selectedCategory === category.category_name
+                ? "px-4 py-2 rounded-md text-white bg-bgRed"
+                : "px-4 py-2 rounded-md text-textRed border border-bgRed"
+                }`}
             >
               {category.category_name}
             </Link>
@@ -131,12 +138,18 @@ const Page: React.FC = () => {
                 </div>
                 <p className="text-xs text-textGray">{menu.description}</p>
                 <div className="h-full w-full flex flex-col justify-end items-end translate-x-1">
-                  <Link
+                  {/* <Link
                     href={`/dashboard/menu/${menu.id}`}
                     className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
                   >
                     Details
-                  </Link>
+                  </Link> */}
+                  <button
+                    onClick={handleDetailsClick}
+                    className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
+                  >
+                    Details
+                  </button>
                 </div>
               </div>
             );

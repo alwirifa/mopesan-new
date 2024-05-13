@@ -1,10 +1,11 @@
 "use client"
 
 import React from 'react';
-import MenuForm from '../../form/MenuForm';
+import MenuForm from '../../form/menu/MenuForm';
 import Modal from '../Modal';
-import { useMerchantModal } from '@/app/hooks/create/useMerchantModal';
+
 import MerchantForm from '../../form/merchant/MerchantForm';
+import { useMerchantModal } from '@/app/hooks/merchant/useMerchantModal';
 
 
 const MerchantModal = () => {

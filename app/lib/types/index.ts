@@ -36,7 +36,7 @@ export type Category = {
     menus: Menu[];
 };
 
-type Voucher = {
+export type Voucher = {
     id: number;
     voucher_name: string;
     description: string;
@@ -64,4 +64,5 @@ type Voucher = {
     created_at: string;
     updated_at: string;
   };
+  
   

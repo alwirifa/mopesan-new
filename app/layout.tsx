@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/authContex";
-import Modal from "./components/modals/Modal";
-import MenuModal from "./components/modals/MenuModal";
-import BannerModal from "./components/modals/bannerModal/BannerModal";
-import VoucherModal from "./components/modals/voucherModal/VoucherModal";
-import AdminModal from "./components/modals/adminModal/AdminModal";
+import BannerModal from "./components/modals/banner/BannerModal";
+import VoucherModal from "./components/modals/voucher/VoucherModal";
+import AdminModal from "./components/modals/admin/AdminModal";
 import MerchantModal from "./components/modals/merchant/MerchantModal";
+import MenuModal from "./components/modals/menu/MenuModal";
+import MenuDetailModal from "./components/modals/menu/MenuDetailModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +31,7 @@ export default function RootLayout({
           <VoucherModal />
           <AdminModal />
           <MerchantModal />
+          <MenuDetailModal />
           {children}</body>
       </AuthProvider>
     </html>

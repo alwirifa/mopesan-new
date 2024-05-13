@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { createBanner } from '@/app/lib/actions/bannerActions';
 import { useRouter } from 'next/navigation';
-import { useBannerModal } from '@/app/hooks/useBannerModal';
+import { useBannerModal } from '@/app/hooks/banner/useBannerModal';
+
 
 const BannerForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);

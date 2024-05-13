@@ -52,7 +52,7 @@ const Profile = ({ adminId }: { adminId: number }) => {
 
   const logoutAction = () => {
     localStorage.removeItem("admin_token");
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
