@@ -21,6 +21,7 @@ const config: Config = {
         "textRed": "#9A031E",
         "buttonGreen": "#D4DBD4",
         "buttonRed": "#EBCDD2",
+        "primary": "#F57E20"
       },
     },
   },

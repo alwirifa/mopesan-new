@@ -1,19 +1,16 @@
 "use client"
 
-// UserTypeDisplay.tsx
-import React from 'react';
-import { useAuth, UserRole } from '@/app/context/authContex';
+import { useMenuModal } from '../hooks/useMenuModal';
 
-const UserTypeDisplay: React.FC = () => {
-  const { userRole } = useAuth();
+const App = () => {
+  const menuModal = useMenuModal();
 
+  console.log(menuModal.isOpen)
   return (
     <div>
-      {userRole !== null && (
-        <p>User type: {userRole === UserRole.Admin ? 'Admin' : 'Superadmin'}</p>
-      )}
+      <button onClick={menuModal.onOpen}>Open Modal</button>
     </div>
   );
 };
 
-export default UserTypeDisplay;
+export default App;
