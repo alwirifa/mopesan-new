@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getBanners } from '@/app/lib/actions/bannerActions';
 import { Banner } from '@/app/lib/types/index';
+import { useBannerModal } from '@/app/hooks/useBannerModal';
 
 const Page: React.FC = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
+  const bannerModal = useBannerModal()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,9 +27,12 @@ const Page: React.FC = () => {
           <p>Activate & Deactivate promotional banner for customer</p>
         </div>
         <div>
-          <Link href='/dashboard/promotionalBanner/add'>
+          {/* <Link href='/dashboard/promotionalBanner/add'>
             <p className="px-6 py-4 bg-buttonRed text-textRed rounded-lg"> + Add Promotional Banner</p>
-          </Link>
+          </Link> */}
+          <button className="px-6 py-4 bg-buttonRed text-textRed rounded-lg" onClick={bannerModal.onOpen}>
+            + Add Promotional Banner
+          </button>
         </div>
       </div>
       <div className="flex justify-between mt-4">

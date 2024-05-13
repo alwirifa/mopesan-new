@@ -24,11 +24,10 @@ const MenuForm: React.FC = () => {
   return (
     <div className="rounded-lg bg-white">
 
-      <div className="border-b border-t border-bgRed py-6">
         <form
           onSubmit={(e) => createMenu(e, file, productName, price, description)}
           encType="multipart/form-data"
-          className='flex flex-col gap-6 w-full'
+          className='py-4 border-t border-bgRed  flex flex-col gap-6 w-full'
         >
           <div className="flex flex-col gap-2">
             <label
@@ -90,7 +89,7 @@ const MenuForm: React.FC = () => {
               className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-sm font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-bgRed file:text-white file:px-3 file:py-[0.32rem] file: file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-nonedark :file:text-neutral-100 " />
           </div>
         </form>
-      </div>
+    
       <div className="mt-8 flex justify-end">
         <button
           type="submit" className="px-4 py-2 rounded-md bg-bgRed font-semibold text-white">

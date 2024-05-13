@@ -88,11 +88,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, title, disabled })
                 </div>
               </div>
               {/*body*/}
-              <div className="relative px-6 flex-auto">
+              <div className="relative px-6 pb-6 flex-auto">
                 {body}
               </div>
               {/*footer*/}
-              <div className="flex flex-col gap-2 p-6">
+              {/* <div className="flex flex-col gap-2 p-6">
                 <div
                   className="
                 flex 
@@ -104,8 +104,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, title, disabled })
                 >
 
                 </div>
-                {/* footer */}
-              </div>
+                footer
+              </div> */}
             </div>
           </div>
         </div>

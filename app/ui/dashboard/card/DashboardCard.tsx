@@ -7,6 +7,7 @@ type NumberData = {
   daily_earning: number;
   daily_order_active: number;
   daily_order_delivered: number;
+  daily_merchant_active: number;
 };
 
 
@@ -95,7 +96,7 @@ const OrderDataComponent: React.FC = () => {
             alt=""
             className="absolute top-0 right-0"
           />
-          <p className="mt-10 text-3xl font-medium">25 <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
+          <p className="mt-10 text-3xl font-medium">{orderData.daily_merchant_active} <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
         </div>
       </div>
     </div>

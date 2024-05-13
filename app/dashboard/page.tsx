@@ -41,12 +41,8 @@ const page = (props: Props) => {
         </div>
         <DashboardCard />
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold">Merchants</h1>
-          <MerchantBar />
-        </div>
-        <div className="flex flex-col gap-2">
           <div className="w-full flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">Order Activity</h1>
+            <h1 className="text-2xl font-semibold">Merchants</h1>
             <Link
               className="italic"
               href={'/dashboard/merchants'}
@@ -54,6 +50,13 @@ const page = (props: Props) => {
               View All
             </Link>
           </div>
+          <MerchantBar />
+        </div>
+        <div className="flex flex-col gap-2">
+
+          <h1 className="text-2xl font-semibold">Order Activity</h1>
+
+
           <Chart />
         </div>
         <div className="flex flex-col gap-4">
