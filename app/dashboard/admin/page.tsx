@@ -7,6 +7,7 @@ import { getAdmins } from "@/app/lib/actions/adminActions";
 import { Admin } from "@/app/lib/types/index";
 import { formatDate } from "@/app/lib/formatDate";
 import { checkUserToken } from "@/app/lib/tokenChecker";
+import { useAdminModal } from "@/app/hooks/create/useAdminModal";
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -32,6 +33,8 @@ const Page: React.FC = () => {
     router.push("/dashboard/admin/add");
   };
 
+  const adminModal = useAdminModal()
+
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex justify-between">
@@ -40,8 +43,14 @@ const Page: React.FC = () => {
           <p>List of Admin</p>
         </div>
         <div>
-          <button
+          {/* <button
             onClick={addAdmin}
+            className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+          >
+            + Add Admin
+          </button> */}
+          <button
+            onClick={adminModal.onOpen}
             className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
           >
             + Add Admin
