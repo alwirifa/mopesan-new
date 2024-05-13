@@ -5,11 +5,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 interface ModalProps {
   isOpen?: boolean;
   onClose: () => void;
+  title?: React.ReactElement;
   body?: React.ReactElement;
   disabled?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, disabled }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, title, disabled }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, disabled }) => {
     if (disabled) {
       return;
     }
-  
+
     setShowModal(false);
     setTimeout(() => {
       onClose();
@@ -39,13 +40,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, disabled }) => {
       items-center 
       flex 
       overflow-x-hidden 
-      overflow-y-auto 
+    overflow-hidden
       fixed 
       inset-0 
       z-50 
       outline-none 
       focus:outline-none
       bg-neutral-800/70
+    
     "
       >
         <div className="
@@ -69,53 +71,24 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, disabled }) => {
         ${showModal ? 'translate-y-0' : 'translate-y-full'}
         ${showModal ? 'opacity-100' : 'opacity-0'}
       `}>
-            <div className="
-          translate
-          h-full
-          lg:h-auto
-          md:h-auto
-          border-0 
-          rounded-lg 
-          shadow-lg 
-          relative 
-          flex 
-          flex-col 
-          w-full 
-          bg-white 
-          outline-none 
-          focus:outline-none
-        "
+            <div className="translateh-full lg:h-auto md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"
             >
               {/*header*/}
-              <div className="
-            flex 
-            items-center 
-            p-6
-            rounded-t
-            justify-center
-            relative
-            border-b-[1px]
-            "
-              >
+              <div className="flex items-center p-6 rounded-t justify-start relative">
                 <button
-                  className="
-                p-1
-                border-0 
-                hover:opacity-70
-                transition
-                absolute
-                left-9
-              "
+                  className="p-1 border-0 hover:opacity-70 transition absolute right-6"
                   onClick={handleClose}
                 >
-                  close
+                  <div  className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer">
+                    <img src="/icons/close.svg" alt="close" className="h-full w-full" />
+                  </div>
                 </button>
                 <div className="text-lg font-semibold">
-                  {/* {title} */}
+                  {title}
                 </div>
               </div>
               {/*body*/}
-              <div className="relative p-6 flex-auto">
+              <div className="relative px-6 flex-auto">
                 {body}
               </div>
               {/*footer*/}

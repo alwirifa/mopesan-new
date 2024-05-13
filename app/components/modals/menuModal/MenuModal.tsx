@@ -1,9 +1,10 @@
 "use client"
 
 import React from 'react';
-import Modal from './Modal';
 import { useMenuModal } from '@/app/hooks/useMenuModal';
-import MenuForm from '../form/MenuForm';
+import MenuForm from '../../form/MenuForm';
+import Modal from '../Modal';
+
 
 const MenuModal = () => {
   const menuModal = useMenuModal()

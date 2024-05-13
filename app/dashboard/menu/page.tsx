@@ -5,11 +5,13 @@ import {  useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Category, Menu } from '@/app/lib/types/index'
 import { getCategories, getMenus } from  '@/app/lib/actions/menuActions';
+import { useMenuModal } from "@/app/hooks/useMenuModal";
 
 const Page: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All'); 
   const [menus, setMenus] = useState<Menu[]>([]);
+  const menuModal = useMenuModal();
 
   const searchParams = useSearchParams();
 
@@ -55,12 +57,18 @@ const Page: React.FC = () => {
             <p>List of all menus</p>
           </div>
           <div>
-            <Link
+            {/* <Link
               href="/dashboard/menu/add"
               className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
             >
               + Add Menu
-            </Link>
+            </Link> */}
+            <button
+              onClick={menuModal.onOpen}
+              className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+            >
+              + Add Menu
+            </button>
           </div>
         </div>
 
