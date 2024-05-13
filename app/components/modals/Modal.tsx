@@ -76,7 +76,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, body, title, disabled })
               {/*header*/}
               <div className="flex items-center p-6 rounded-t justify-start relative">
                 <button
-                  className="p-1 border-0 hover:opacity-70 transition absolute right-6"
+                  className="p-1 border-0 hover:opacity-70 transition absolute right-4"
                   onClick={handleClose}
                 >
                   <div  className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer">

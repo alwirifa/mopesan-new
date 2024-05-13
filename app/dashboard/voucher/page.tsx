@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Search from "@/app/ui/dashboard/search/Search";
+import { useVoucherModal } from "@/app/hooks/useVoucherModal";
 
 type Voucher = {
   id: number;
@@ -25,7 +26,7 @@ type Voucher = {
 
 const Page: React.FC = () => {
   const router = useRouter();
-
+  const voucherModal = useVoucherModal()
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const Page: React.FC = () => {
 
     fetchData();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const addVoucher = () => {
@@ -62,9 +63,9 @@ const Page: React.FC = () => {
           },
         }
       );
-  
+
       console.log('data deleted');
-      
+
       setVouchers(prevVouchers => prevVouchers.filter(voucher => voucher.id !== id));
     } catch (error) {
       console.error('Error:', error);
@@ -74,8 +75,8 @@ const Page: React.FC = () => {
   const handleEdit = (id: number) => {
     router.push(`/dashboard/voucher/edit/${id}`);
   };
-  
-  
+
+
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex justify-between">
@@ -84,8 +85,14 @@ const Page: React.FC = () => {
           <p>All available vouchers</p>
         </div>
         <div>
-          <button
+          {/* <button
             onClick={addVoucher}
+            className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+          >
+            + Add Voucher
+          </button> */}
+          <button
+            onClick={voucherModal.onOpen}
             className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
           >
             + Add Voucher
@@ -165,7 +172,7 @@ const Page: React.FC = () => {
                       {voucher.max_discount}{" "}
                     </td>
                     <td className="border-t  border-black px-4 py-2">
-                    <button onClick={() => handleEdit(voucher.id)}>
+                      <button onClick={() => handleEdit(voucher.id)}>
                         Edit
                       </button>
                       <button onClick={() => handleDelete(voucher.id)}>

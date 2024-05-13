@@ -1,10 +1,9 @@
 "use client"
 
 import React from 'react';
-import { useMenuModal } from '@/app/hooks/useMenuModal';
-import MenuForm from '../../form/MenuForm';
 import Modal from '../Modal';
 import { useVoucherModal } from '@/app/hooks/useVoucherModal';
+import VoucherForm from '../../form/createForm/VoucherForm';
 
 
 const VoucherModal = () => {
@@ -17,7 +16,7 @@ const VoucherModal = () => {
   )
 
   const bodyContent = (
-    <div><MenuForm /></div>
+    <div><VoucherForm/></div>
   )
   return (
     <Modal isOpen={voucherModal.isOpen} onClose={voucherModal.onClose} title={titleContent} body={bodyContent} />

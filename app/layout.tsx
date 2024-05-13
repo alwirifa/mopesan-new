@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/authContex";
 import Modal from "./components/modals/Modal";
 import MenuModal from "./components/modals/MenuModal";
 import BannerModal from "./components/modals/bannerModal/BannerModal";
+import VoucherModal from "./components/modals/voucherModal/VoucherModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <MenuModal />
           <BannerModal/>
+          <VoucherModal/>
           {children}</body>
       </AuthProvider>
     </html>
