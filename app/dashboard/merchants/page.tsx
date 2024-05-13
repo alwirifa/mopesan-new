@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getMerchants } from "@/app/lib/actions/merchantsActions"; 
 import { Merchant } from '@/app/lib/types/index'
+import { useMerchantModal } from "@/app/hooks/create/useMerchantModal";
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -37,6 +38,8 @@ const Page: React.FC = () => {
   //   );
   // };
 
+  const merchantModal = useMerchantModal()
+
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex justify-between">
@@ -45,11 +48,17 @@ const Page: React.FC = () => {
           <p>List of Merchants</p>
         </div>
         <div>
-          <button
+          {/* <button
             onClick={addMerchant}
             className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
           >
             + Add Merchant
+          </button> */}
+          <button
+             onClick={merchantModal.onOpen}
+             className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+          >
+          + Add Merchant
           </button>
         </div>
       </div>
