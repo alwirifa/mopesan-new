@@ -4,7 +4,7 @@ import { decodeToken } from './authUtils'; // Impor fungsi untuk mendekode token
 // Tipe untuk role pengguna
 export enum UserRole {
   Admin = 'admin',
-  Superadmin = 'superadmin',
+  super_admin = 'super_admin',
 }
 
 // Fungsi untuk memeriksa token pengguna dan mengembalikan tipe pengguna
@@ -20,8 +20,9 @@ export const checkUserToken = async (): Promise<UserRole | null> => {
       // Mengakses informasi pengguna dari token
       const { role } = decodedAdminToken;
 
+      console.log("role token", role)
       // Lakukan pengecekan berdasarkan informasi pengguna
-      if (role === UserRole.Admin || role === UserRole.Superadmin) {
+      if (role === UserRole.Admin || role === UserRole.super_admin) {
         return role;
       }
     }
