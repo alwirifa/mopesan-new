@@ -36,6 +36,25 @@ export type Category = {
     menus: Menu[];
 };
 
+export type Customer = {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  birth_date: string;
+  location_lat: number;
+  location_long: number;
+  google_uid: string;
+  profile_image: string;
+  stamp_count: number;
+  last_stamp_date: string;
+  rewards_redeemed_count: number;
+  monthly_spend_amount: number;
+  created_at: string;
+  updated_at: string;
+};
+
+
 export type Voucher = {
     id: number;
     voucher_name: string;

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getBanners } from '@/app/lib/actions/bannerActions';
 import { Banner } from '@/app/lib/types/index';
-import { useBannerModal } from '@/app/hooks/useBannerModal';
+import { useBannerModal } from '@/app/hooks/banner/useBannerModal';
 
 const Page: React.FC = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
