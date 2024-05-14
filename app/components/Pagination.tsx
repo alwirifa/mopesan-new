@@ -27,7 +27,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       >
         Previous
       </Link>
-      <div className='flex gap-1'>
+      <div className='flex gap-1 items-center'>
 
        {pageNumbers.map((pageNumber) => (
          <Link
