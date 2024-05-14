@@ -3,9 +3,8 @@ import Search from '@/app/components/Search'
 import { GetVoucher } from '@/app/lib/actions/_actions'
 import React, { Suspense } from 'react'
 import Table from './Table'
-import ModalButton from './ModalButton'
 
-export default async function page({
+export default async function Container({
   searchParams,
 }: {
   searchParams?: {
@@ -22,20 +21,25 @@ export default async function page({
   const { data, totalPages } = await GetVoucher({ offset, limit, search })
 
   return (
-    <div className="flex flex-col gap-6 h-full">
+    <div className="flex flex-col gap-6 ">
       <div className="flex justify-between">
         <div className="flex flex-col gap-4">
           <h1 className="text-4xl font-semibold">Vouchers</h1>
           <p>All available vouchers</p>
         </div>
         <div>
-          <ModalButton />
+          <button
+            // onClick={voucherModal.onOpen}
+            className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+          >
+            + Add Voucher
+          </button>
         </div>
       </div>
-      <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
+      <section className="flex flex-col gap-6 p-8 bg-white rounded-lg">
 
         <div className="flex justify-between">
-          {/* <div className="flex gap-4">
+          <div className="flex gap-4">
             <div className="flex gap-3 px-4 py-3 rounded-lg shadow-md">
               <img src="/icons/filter.svg" alt="" />
               <p>Filter</p>
@@ -44,18 +48,14 @@ export default async function page({
               <img src="/icons/sort.svg" alt="" />
               <p>Sort</p>
             </div>
-          </div> */}
-          <div></div>
+          </div>
           <Search placeholder='search' />
 
         </div>
         <Suspense key={search + currentPage}>
           <Table data={data} />
         </Suspense>
-        <div className='absolute bottom-8 right-8'>
-
         <Pagination totalPages={totalPages} />
-        </div>
       </section>
     </div>
   )
