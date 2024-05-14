@@ -1,4 +1,6 @@
+import { getBanners } from './bannerActions';
 import { getCustomers } from './customerAction';
+import { getOrder } from './orderAction';
 import { getVouchers } from './voucherAction';
 
 export async function GetVoucher({
@@ -27,6 +29,33 @@ export async function GetVoucher({
   return { data: paginatedVouchers, totalCount, totalPages };
 }
 
+// export async function GetOrder({
+//   search,
+//   offset = 0,
+//   limit = 1,
+// }: {
+//   search?: string | undefined,
+//   offset?: number,
+//   limit?: number
+// }) {
+//   let orders = await getOrder();
+
+//   if (search) {
+//     orders = orders.filter((order: { order_name: string; }) =>
+//       order.order_name.toLowerCase().includes(search.toLowerCase())
+//     );
+//   }
+
+//   const totalCount = orders.length;
+
+//   const paginatedOrders = orders.slice(offset, offset + limit);
+
+//   const totalPages = Math.ceil(totalCount / limit);
+
+//   return { data: paginatedOrders, totalCount, totalPages };
+// }
+
+
 
 export async function GetCustomer({
   search,
@@ -53,3 +82,4 @@ export async function GetCustomer({
 
   return { data: paginatedVouchers, totalCount, totalPages };
 }
+

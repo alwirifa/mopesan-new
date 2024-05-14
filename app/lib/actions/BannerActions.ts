@@ -41,7 +41,7 @@ export const createBanner = async (
 };
 
 // READ
-export const getBanners = async (): Promise<Banner[]> => {
+export const getBanners = async () => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
     return response.data.data;

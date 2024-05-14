@@ -7,7 +7,7 @@ import { getAdmins } from "@/app/lib/actions/adminActions";
 import { Admin } from "@/app/lib/types/index";
 import { formatDate } from "@/app/lib/formatDate";
 import { checkUserToken } from "@/app/lib/tokenChecker";
-import { useAdminModal } from "@/app/hooks/create/useAdminModal";
+import { useAdminModal } from "@/app/hooks/admin/useAdminModal";
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -29,9 +29,6 @@ const Page: React.FC = () => {
     return () => { };
   }, []);
 
-  const addAdmin = () => {
-    router.push("/dashboard/admin/add");
-  };
 
   const adminModal = useAdminModal()
 

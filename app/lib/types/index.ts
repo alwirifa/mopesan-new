@@ -54,7 +54,6 @@ export type Customer = {
   updated_at: string;
 };
 
-
 export type Voucher = {
     id: number;
     voucher_name: string;
@@ -82,6 +81,71 @@ export type Voucher = {
     last_login: string;
     created_at: string;
     updated_at: string;
+  };
+  
+  export type OrderData = {
+    payment: {
+      paid_date: string;
+      created_at: string;
+      updated_at: string;
+      status: string;
+      payment_method: string;
+      payment_url: string;
+      token: string;
+      order_uid: string;
+      id: number;
+      customer_id: number;
+      payment_amount: number;
+    };
+    pick_up_time: string;
+    order_date: string;
+    updated_at: string;
+    created_at: string;
+    merchant_name: string;
+    order_notes: string;
+    order_lengkap_id: string;
+    order_code: string;
+    order_pesan_id: string;
+    note_status: string;
+    order_status: string;
+    order_type: string;
+    additional_fees: {
+      name: string;
+      id: number;
+      amount: number;
+    }[];
+    order_item_response: {
+      created_at: string;
+      updated_at: string;
+      product_name: string;
+      product_image: string;
+      owner_type: string;
+      selected_customization: {
+        selected_customization_key: string;
+        selected_customization_value: string;
+        id: number;
+        order_item_id: number;
+        price_adjustment: number;
+      }[];
+      id: number;
+      merchant_menu_id: number;
+      menu_id: number;
+      price: number;
+      quantity: number;
+      owner_id: number;
+    }[];
+    staff_scheduled_id: number;
+    final_amount: number;
+    discount: number;
+    sub_total_product: number;
+    payment_id: number;
+    voucher_id: number;
+    total_quantity: number;
+    waiting_time: number;
+    id: number;
+    merchant_id: number;
+    customer_id: number;
+    is_reward_transaction: boolean;
   };
   
   

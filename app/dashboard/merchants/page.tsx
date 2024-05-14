@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getMerchants } from "@/app/lib/actions/merchantsActions"; 
 import { Merchant } from '@/app/lib/types/index'
-import { useMerchantModal } from "@/app/hooks/create/useMerchantModal";
+import { useMerchantModal } from "@/app/hooks/merchant/useMerchantModal";
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -25,10 +25,6 @@ const Page: React.FC = () => {
 
     return () => { };
   }, []);
-
-  const addMerchant = () => {
-    router.push("/dashboard/merchants/add");
-  };
 
   // const changeMerchantStatus = (merchantId: number) => {
   //   setMerchants(prevMerchants =>
