@@ -65,7 +65,9 @@ const Sidebar = () => {
   return (
     <div className="h-full relative">
       <div className="flex flex-col gap-5">
-        <h1 className="text-2xl font-semibold text-textRed">MoPesan App!</h1>
+        <div className="">
+          <img src="/icons/logo.svg" alt="" className="w-full h-full"/>
+        </div>
         <div className="flex flex-col  ">
           {menuItems.map((item) => (
             <button

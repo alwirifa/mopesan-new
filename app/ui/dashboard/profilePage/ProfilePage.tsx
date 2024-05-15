@@ -22,7 +22,7 @@ const Profile = ({ adminId }: { adminId: number }) => {
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
-        const token = localStorage.getItem("admin_token"); // Mengambil token dari local storage
+        const token = localStorage.getItem("admin_token"); 
         if (!token) {
           throw new Error("No token found in local storage");
         }
@@ -31,7 +31,7 @@ const Profile = ({ adminId }: { adminId: number }) => {
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/${adminId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Menggunakan token dari local storage
+              Authorization: `Bearer ${token}`, 
             },
           }
         );
@@ -56,18 +56,6 @@ const Profile = ({ adminId }: { adminId: number }) => {
   };
 
   return (
-    <div>
-      {/* <h1>Admin Profile</h1>
-      <ul>
-        <li>ID: {adminData.id}</li>
-        <li>Name: {adminData.name}</li>
-        <li>Email: {adminData.email}</li>
-        <li>Permission: {adminData.permission}</li>
-        <li>Active: {adminData.is_active ? "Yes" : "No"}</li>
-        <li>Last Login: {new Date(adminData.last_login).toLocaleString()}</li>
-        <li>Created At: {new Date(adminData.created_at).toLocaleString()}</li>
-        <li>Updated At: {new Date(adminData.updated_at).toLocaleString()}</li>
-      </ul> */}
       <div className="w-full flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <img
@@ -82,12 +70,11 @@ const Profile = ({ adminId }: { adminId: number }) => {
         </div>
         <button
           onClick={logoutAction}
-          className="w-full py-3 border-2 border-bgRed rounded-md text-lg font-semibold text-textRed "
+          className="w-full py-3 border-2 border-primary rounded-md text-lg font-semibold text-primary "
         >
           Logout
         </button>
       </div>
-    </div>
   );
 };
 

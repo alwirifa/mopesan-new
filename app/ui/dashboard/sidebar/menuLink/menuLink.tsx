@@ -24,7 +24,7 @@ const MenuLink = ({ item }: MenuLinkProps) => {
     <Link href={item.route} className="w-full flex justify-start text-start">
       <div
         className={`flex items-center p-4  ${
-          pathname === item.route ? "bg-bgRed w-full text-white" : ""
+          pathname === item.route ? "bg-primary w-full text-white" : ""
         }`}
       >
         <img
