@@ -5,33 +5,48 @@ import { OrderData } from '@/app/lib/types';
 import { useEffect, useState } from 'react';
 
 
+
 type Props = {
     query: string;
     limit: number;
     offset: number;
+    selectedMonth: string;
+    selectedYear: string;
 };
 
-const Table: React.FC<Props> = ({ query, limit, offset }) => {
-    const [banners, setBanners] = useState<OrderData[]>([]);
+export const Table: React.FC<Props> = ({ query, limit, offset, selectedMonth, selectedYear }) => {
+    const [orders, setOrders] = useState<OrderData[]>([]);
 
     useEffect(() => {
-        const fetchBanners = async () => {
+        const fetchOrders = async () => {
             try {
                 const response = await getOrder();
-                setBanners(response);
+                setOrders(response);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
-        fetchBanners();
+        fetchOrders();
     }, []);
 
-    const filteredData = banners.filter((order) =>
-        order.order_status.toLowerCase().includes(query)
-    );
+    const filteredData = orders.filter((order) => {
+        const queryMatch = order.order_status.toLowerCase().includes(query.toLowerCase()); // lowercase comparison
+        const orderDate = new Date(order.order_date); // Convert order_date to Date object
+        const orderYear = orderDate.getFullYear().toString();
+        const orderMonth = (orderDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is 2 digits
+        const monthMatch = !selectedMonth || orderMonth === selectedMonth;
+        const yearMatch = !selectedYear || orderYear === selectedYear;
+
+        // console.log(`Order ID: ${order.id}, Year: ${orderYear}`); 
+
+
+
+        return queryMatch && monthMatch && yearMatch;
+    });
 
     const paginatedData = filteredData.slice(offset, offset + limit);
+
 
     return (
 
@@ -57,7 +72,7 @@ const Table: React.FC<Props> = ({ query, limit, offset }) => {
                         <th className="border-r border-black px-6 py-4 text-left">
                             Status
                         </th>
-                        <th className="border-r border-black px-6 py-4 text-left">
+                        <th className=" border-black px-6 py-4 text-left">
                             Detail
                         </th>
                     </tr>
@@ -70,7 +85,7 @@ const Table: React.FC<Props> = ({ query, limit, offset }) => {
                                 {index + 1}.
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                                {order.order_pesan_id}{" "}
+                                {order.payment.order_uid}{" "}
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                                 {order.merchant_name}

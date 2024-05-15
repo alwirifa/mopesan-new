@@ -5,52 +5,87 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const currentPage = Number(searchParams.get("page")) || 1
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
 
   const createPageURL = (pageNumber: number | string) => {
-    const params = new URLSearchParams(searchParams)
-    params.set("page", pageNumber.toString())
-    return `${pathname}?${params.toString()}`
-  }
+    const params = new URLSearchParams(searchParams);
+    params.set("page", pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
 
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
+
+  const renderPageNumbers = () => {
+    const maxVisiblePages = 3; 
+
+    let startPage = currentPage - Math.floor(maxVisiblePages / 2);
+    if (startPage < 1) startPage = 1;
+
+    let endPage = startPage + maxVisiblePages - 1;
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    const pageNumbersToRender = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbersToRender.push(i);
+    }
+
+    const result = [];
+    if (startPage > 1) {
+      result.push(
+        <Link key="first" href={createPageURL(1)} className="text-textRed px-4 py-2">
+          1
+        </Link>,
+        <span key="ellipsisStart" className="text-textRed">...</span>
+      );
+    }
+
+    pageNumbersToRender.forEach(pageNumber => {
+      result.push(
+        <Link
+          key={pageNumber}
+          href={createPageURL(pageNumber)}
+          className={pageNumber === currentPage ? 'text-textRed border-2 border-bgRed px-4 py-2 bg-buttonRed' : 'text-textRed px-4 py-2'}
+        >
+          {pageNumber}
+        </Link>
+      );
+    });
+
+    if (endPage < totalPages) {
+      result.push(
+        <span key="ellipsisEnd" className="text-textRed">...</span>,
+        <Link key="last" href={createPageURL(totalPages)} className="text-textRed px-4 py-2">
+          {totalPages}
+        </Link>
+      );
+    }
+
+    return result;
+  };
 
   return (
-    <div className="w-full flex gap-6 items-center">
-
-
+    <div className="flex gap-6 items-center">
       <Link
         href={createPageURL(currentPage - 1)}
         className={currentPage - 1 === 0 ? `pointer-events-none opacity-50` : "text-textRed"}
       >
-        Previous
+        Prev
       </Link>
-      <div className='flex gap-1 items-center'>
 
-       {pageNumbers.map((pageNumber) => (
-         <Link
-         key={pageNumber}
-         href={createPageURL(pageNumber)}
-         className={
-           pageNumber === currentPage ? 'text-textRed border-2 border-bgRed px-4 py-2 bg-buttonRed' : 'text-textRed px-4 py-2'
-          }
-          >
-          {pageNumber}
-        </Link>
-      ))}
+      <div className='flex gap-1 items-center'>
+        {renderPageNumbers()}
       </div>
 
       <Link
         href={createPageURL(currentPage + 1)}
-        className={
-          currentPage >= totalPages ? `pointer-events-none opacity-50` : "text-textRed"
-        }
+        className={currentPage >= totalPages ? `pointer-events-none opacity-50` : "text-textRed"}
       >
         Next
       </Link>
-
     </div>
-  )
+  );
 }

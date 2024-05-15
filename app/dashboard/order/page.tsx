@@ -1,11 +1,15 @@
 "use client"
 
+// pages/index.js
 import Search from '@/app/components/Search';
 import { getOrder } from '@/app/lib/actions/orderAction';
-import { OrderData } from '@/app/lib/types';
 import { Suspense, useEffect, useState } from 'react';
-import Table from './Table'
+import { Table } from './Table'
 import Pagination from '@/app/components/Pagination';
+import Filter from '@/app/components/Filter';
+
+import { OrderData } from '@/app/lib/types';
+import EmptyData from '@/app/components/EmptyData';
 
 export default function Home({
     searchParams,
@@ -14,55 +18,143 @@ export default function Home({
         query?: string
         page?: string
         limit?: string
+        selectedMonth?: string
+        selectedYear?: string
     }
 }) {
-
-    const query = searchParams?.query || ""
-    const currentPage = Number(searchParams?.page) || 1
-    const limit = Number(searchParams?.limit) || 8
-    const offset = (currentPage - 1) * limit
-
+    const [selectedMonth, setSelectedMonth] = useState(searchParams?.selectedMonth || "");
+    const [selectedYear, setSelectedYear] = useState(searchParams?.selectedYear || "");
+    const query = searchParams?.query || "";
+    const currentPage = Number(searchParams?.page) || 1;
+    const limit = Number(searchParams?.limit) || 10;
+    const offset = (currentPage - 1) * limit;
     const [totalPages, setTotalPages] = useState(1);
+
+    const monthOptions = [
+        { label: "All Months", value: "" },
+        { label: "January", value: "01" },
+        { label: "February", value: "02" },
+        { label: "March", value: "03" },
+        { label: "April", value: "04" },
+        { label: "May", value: "05" },
+        { label: "June", value: "06" },
+        { label: "July", value: "07" },
+        { label: "August", value: "08" },
+        { label: "September", value: "09" },
+        { label: "October", value: "10" },
+        { label: "November", value: "11" },
+        { label: "December", value: "12" },
+    ];
+
+    const [yearOptions, setYearOptions] = useState<{ label: string; value: string }[]>([
+        { label: "All Years", value: "" }, 
+    ]);
+
+    // Effect untuk mengambil tahun dari basis data dan mengatur opsi tahun
+    useEffect(() => {
+        const fetchYears = async () => {
+            try {
+                const allOrders = await getOrder();
+
+                // Ekstrak tahun dari data order dan hilangkan duplikasi
+                const uniqueYears = allOrders.reduce((years: string[], order: OrderData) => {
+                    const orderYear = order.order_date.substring(0, 4);
+                    if (!years.includes(orderYear)) {
+                        years.push(orderYear);
+                    }
+                    return years;
+                }, []);
+
+
+                const yearOptions = uniqueYears.map((year: string) => ({ label: year, value: year }));
+
+                // Tambahkan opsi "All Years" ke opsi tahun
+                yearOptions.unshift({ label: "All Years", value: "" });
+
+                setYearOptions(yearOptions);
+            } catch (error) {
+                console.error('Error fetching years:', error);
+            }
+        };
+
+        fetchYears();
+    }, []);
+
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const totalOrders = await getOrder();
-                const totalPages = Math.ceil(totalOrders.length / limit);
+                const allOrders = await getOrder();
+                let filteredOrders = allOrders;
+
+                if (selectedYear && selectedMonth) {
+                    filteredOrders = allOrders.filter(order => {
+                        const orderYear = order.order_date.substring(0, 4);
+                        const orderMonth = order.order_date.substring(5, 7);
+                        return orderYear === selectedYear && orderMonth === selectedMonth;
+                    });
+                } else if (selectedMonth) {
+                    filteredOrders = allOrders.filter(order => order.order_date.substring(5, 7) === selectedMonth);
+                } else if (selectedYear) {
+                    filteredOrders = allOrders.filter(order => order.order_date.startsWith(selectedYear));
+                }
+
+                const totalPages = Math.ceil(filteredOrders.length / limit);
                 setTotalPages(totalPages);
+                console.log('Selected year:', selectedYear);
+                console.log('Selected month:', selectedMonth);
+                console.log('total data', filteredOrders.length)
+                console.log('Total pages:', totalPages);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [selectedYear, selectedMonth]);
+
+
 
     return (
         <div className="flex flex-col gap-6 h-full">
-        <div className="flex justify-between">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-4xl font-semibold">Orders</h1>
-            <p>List of all Orders</p>
-          </div>
-         
-        </div>
-        <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
-  
-          <div className="flex justify-between">
-        
-            <div></div>
-            <Search placeholder='search' />
-  
-          </div>
-            <Suspense key={query + currentPage}>
-            <Table query={query} limit={limit} offset={offset} />
-        </Suspense>
-            <div className='absolute bottom-8 right-8'>
-                <Pagination totalPages={totalPages} />
+            <div className="flex justify-between">
+                <div className="flex flex-col gap-4">
+                    <h1 className="text-4xl font-semibold">Orders</h1>
+                    <p>List of all Orders</p>
+                </div>
             </div>
+            <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
+                <div className="flex justify-between">
+                    <div>
+                        <Filter
+                            label="selectedMonth"
+                            options={monthOptions}
+                            value={selectedMonth}
+                            onChange={setSelectedMonth}
+                        />
+                        <Filter
+                            label="selectedYear"
+                            options={yearOptions}
+                            value={selectedYear}
+                            onChange={setSelectedYear}
+                        />
+                    </div>
+                    <Search placeholder='search' />
+                </div>
+                {totalPages === 0 ? ( 
+                    <EmptyData />
+                ) : (
+                    <Suspense key={query + currentPage}>
+                        <Table query={query} limit={limit} offset={offset} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+                    </Suspense>
+                )}
+
+                <div className='absolute bottom-8 right-8'>
+                    <Pagination totalPages={totalPages} />
+                </div>
             </section>
         </div>
     );
 }
-

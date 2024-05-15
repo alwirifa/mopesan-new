@@ -1,127 +1,216 @@
-"use client";
+"use client"
 
-import axios from "axios";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import MerchantsOrder from "@/app/ui/dashboard/merchants/merchantsOrder/MerchantOrder";
-import MerchantOrder from "@/app/ui/dashboard/merchants/merchantsOrder/MerchantOrder";
+import Search from '@/app/components/Search';
+import { getOrder } from '@/app/lib/actions/orderAction';
+import { OrderData } from '@/app/lib/types';
+import { Suspense, useEffect, useState } from 'react';
+import Table from './Table'
+import Pagination from '@/app/components/Pagination';
+import { getMerchantById } from '@/app/lib/actions/merchantsActions';
+import Link from 'next/link';
+import Filter from '@/app/components/Filter';
+import EmptyData from '@/app/components/EmptyData';
 
-type Merchant = {
-  id: number;
-  merchant_name: string;
-  location_lat: number;
-  location_long: number;
-  address: string;
-  pic_name: string;
-  email: string;
-  phone_number: string;
-  monthly_earning: number;
-  total_monthly_order: number;
-  staff_scheduled_id: number;
-  total_daily_order: number;
-  daily_order_cancelled: number;
-  daily_order_delivered: number;
-  daily_order_active: number;
-  daily_earning: number;
-  created_at: string;
-  updated_at: string;
-};
+export default function Home({
+  searchParams, params
+}: {
+  params: { id: string }
+  searchParams?: {
+    query?: string
+    page?: string
+    limit?: string
 
-const page = ({ params }: { params: { id: string } }) => {
-  const [merchant, setMerchant] = useState<Merchant | null>(null);
+    selectedMonth?: string
+    selectedYear?: string
+  }
+}) {
+
+  const query = searchParams?.query || ""
+  const currentPage = Number(searchParams?.page) || 1
+  const limit = Number(searchParams?.limit) || 10
+  const offset = (currentPage - 1) * limit
+  const [totalPages, setTotalPages] = useState(1);
+  const [orders, setOrders] = useState<OrderData[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState(searchParams?.selectedMonth || "");
+  const [selectedYear, setSelectedYear] = useState(searchParams?.selectedYear || "");
+  const [merchant, setMerchant] = useState<any>(null);
+
+
+  const monthOptions = [
+    { label: "All Months", value: "" },
+    { label: "January", value: "01" },
+    { label: "February", value: "02" },
+    { label: "March", value: "03" },
+    { label: "April", value: "04" },
+    { label: "May", value: "05" },
+    { label: "June", value: "06" },
+    { label: "July", value: "07" },
+    { label: "August", value: "08" },
+    { label: "September", value: "09" },
+    { label: "October", value: "10" },
+    { label: "November", value: "11" },
+    { label: "December", value: "12" },
+  ];
+
+  const [yearOptions, setYearOptions] = useState<{ label: string; value: string }[]>([
+    { label: "All Years", value: "" },
+  ]);
+
 
   useEffect(() => {
-    const fetchMerchant = async () => {
+    const fetchYears = async () => {
       try {
-        const token = localStorage.getItem("admin_token");
-        if (!token) {
-          throw new Error("Admin token not found");
-        }
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/merchants/${params.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const allOrders = await getOrder();
+
+        // Ekstrak tahun dari data order dan hilangkan duplikasi
+        const uniqueYears = allOrders.reduce((years: string[], order: OrderData) => {
+          const orderYear = order.order_date.substring(0, 4);
+          if (!years.includes(orderYear)) {
+            years.push(orderYear);
           }
-        );
-        const { data } = response.data;
-        setMerchant(data);
+          return years;
+        }, []);
+
+
+        const yearOptions = uniqueYears.map((year: string) => ({ label: year, value: year }));
+
+        // Tambahkan opsi "All Years" ke opsi tahun
+        yearOptions.unshift({ label: "All Years", value: "" });
+
+        setYearOptions(yearOptions);
       } catch (error) {
-        console.error("Error fetching merchant:", error);
+        console.error('Error fetching years:', error);
       }
     };
 
-    fetchMerchant();
+    fetchYears();
   }, []);
 
+  useEffect(() => {
+    if (params && params.id) {
+      getMerchantById(params.id)
+        .then((data) => {
+          setMerchant(data);
+          // console.log(data)
+        })
+        .catch((error) => {
+          console.error("Error fetching admin:", error);
+        });
+    }
+  }, [params]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const totalOrders = await getOrder();
+
+        let filteredOrders = totalOrders.filter(order =>
+          order.merchant_id.toString() === params.id
+        );
+
+        if (selectedYear && selectedMonth) {
+          filteredOrders = filteredOrders.filter(order => {
+            const orderYear = order.order_date.substring(0, 4);
+            const orderMonth = order.order_date.substring(5, 7);
+            return orderYear === selectedYear && orderMonth === selectedMonth;
+          });
+        } else if (selectedMonth) {
+          filteredOrders = filteredOrders.filter(order => order.order_date.substring(5, 7) === selectedMonth);
+        } else if (selectedYear) {
+          filteredOrders = filteredOrders.filter(order => order.order_date.startsWith(selectedYear));
+        }
+
+        const totalPages = Math.ceil(filteredOrders.length / limit);
+        setTotalPages(totalPages);
+        setOrders(filteredOrders);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [params.id, selectedYear, selectedMonth, limit]);
+
+
+
   if (!merchant) {
-    return <p>Loading...</p>;
+    return (
+      <>Loading...</>
+    )
   }
+
+  const formattedDailyEarning = merchant.daily_earning
+    .toLocaleString("id-ID", { style: "currency", currency: "IDR" })
+    .slice(3)
+    .slice(0, -3);
+
   return (
-    <div>
-      <div className="flex flex-col gap-8">
-        <div className="p-6 rounded-md bg-white">
-          <div className="flex flex-col gap-2">
-            <Link
-              href="/dashboard/merchants"
-              className="flex items-center gap-1"
-            >
-              <img src="/icons/backButton.svg" alt="" />
-              <p className="text-sm font-semibold text-textRed">
-                Back to merchant list
-              </p>
-              
-            </Link>
-            <div>
+    <div className="flex flex-col gap-6 h-full">
+
+
+      <div className="p-6 rounded-md bg-white">
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/dashboard/merchants"
+            className="flex items-center gap-1"
+          >
+            <img src="/icons/backButton.svg" alt="" />
+            <p className="text-sm font-semibold text-textRed">
+              Back to merchant list
+            </p>
+
+          </Link>
+          <div>
             <Link href={`/dashboard/merchants/edit/${params.id}`}>EDIT</Link>
+          </div>
+          <h1 className="text-4xl font-semibold">{merchant.merchant_name}</h1>
+          <p className="italic text-textGray">{merchant.address}</p>
+          <div className="flex justify-between">
+            <div className="flex flex-col gap-2">
+              <p className="font-semibold">{merchant.pic_name}</p>
+              <p className="font-semibold">{merchant.phone_number}</p>
+            </div>
+            <div className="flex gap-2">
+              <div className="p-4 border rounded-md flex flex-col gap-2">
+                <p className="text-sm text-textGray">Active Order (Daily)</p>
+                <p className="text-xl font-semibold">
+                  {merchant.daily_order_active}
+                </p>
               </div>
-            <h1 className="text-4xl font-semibold">{merchant.merchant_name}</h1>
-            <p className="italic text-textGray">{merchant.address}</p>
-            <div className="flex justify-between">
-              <div className="flex flex-col gap-2">
-                <p className="font-semibold">{merchant.pic_name}</p>
-                <p className="font-semibold">{merchant.phone_number}</p>
+              <div className="p-4 border rounded-md flex flex-col gap-2">
+                <p className="text-sm text-textGray">
+                  Order Cancelled (Daily)
+                </p>
+                <p className="text-xl text-textRed font-semibold">
+                  {merchant.daily_order_cancelled}
+                </p>
               </div>
-              <div className="flex gap-2">
-                <div className="p-4 border rounded-md flex flex-col gap-2">
-                  <p className="text-sm text-textGray">Active Order (Daily)</p>
-                  <p className="text-xl font-semibold">
-                    {merchant.daily_order_active}
-                  </p>
-                </div>
-                <div className="p-4 border rounded-md flex flex-col gap-2">
-                  <p className="text-sm text-textGray">
-                    Order Cancelled (Daily)
-                  </p>
-                  <p className="text-xl text-textRed font-semibold">
-                    {merchant.daily_order_cancelled}
-                  </p>
-                </div>
-                <div className="p-4 border rounded-md flex flex-col gap-2">
-                  <p className="text-sm text-textGray">
-                    Order Delivered (Daily)
+              <div className="p-4 border rounded-md flex flex-col gap-2">
+                <p className="text-sm text-textGray">
+                  Order Delivered (Daily)
+                </p>
+                <p className="text-xl font-semibold">
+                  {merchant.daily_order_delivered}
+                </p>
+              </div>
+              <div className="p-4 border rounded-md flex flex-col gap-2">
+                <p className="text-sm text-textGray">Daily Earnings</p>
+                <div className="flex gap-1">
+                  <p className="text-xs -translate-y-[2px] text-textGray">
+                    Rp
                   </p>
                   <p className="text-xl font-semibold">
-                    {merchant.daily_order_delivered}
+                    {formattedDailyEarning}
                   </p>
-                </div>
-                <div className="p-4 border rounded-md flex flex-col gap-2">
-                  <p className="text-sm text-textGray">Daily Earnings</p>
-                  <div className="flex gap-1">
-                    <p className="text-xs -translate-y-[2px] text-textGray">
-                      Rp
-                    </p>
-                    <p className="text-xl font-semibold">
-                      {merchant.daily_earning}
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 p-6 rounded-md bg-white">
+      </div>
+
+      <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
+        <div className="flex flex-col gap-4  rounded-md bg-white">
           <div className="flex justify-between">
             <div>
               <h1 className="text-2xl font-semibold">Order History</h1>
@@ -130,7 +219,20 @@ const page = ({ params }: { params: { id: string } }) => {
               </p>
             </div>
             <div>
-              <input type="date" />
+              <div>
+                <Filter
+                  label="selectedMonth"
+                  options={monthOptions}
+                  value={selectedMonth}
+                  onChange={setSelectedMonth}
+                />
+                <Filter
+                  label="selectedYear"
+                  options={yearOptions}
+                  value={selectedYear}
+                  onChange={setSelectedYear}
+                />
+              </div>
             </div>
           </div>
           <div className="flex gap-4">
@@ -146,12 +248,45 @@ const page = ({ params }: { params: { id: string } }) => {
                 {merchant.total_monthly_order} Orders
               </p>
             </div>
+            <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
+              <p className="text-sm text-textGray">Tax Total (Estimation)</p>
+              <p className="text-xl font-semibold">
+                {merchant.total_monthly_order}
+              </p>
+            </div>
+            <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
+              <p className="text-sm text-textGray">Average Income (Estimation)</p>
+              <p className="text-xl font-semibold">
+                {merchant.total_monthly_order} Orders
+              </p>
+            </div>
+
           </div>
-          <MerchantOrder />
         </div>
-      </div>
+
+
+        {/* Table */}
+
+        {/* <div className="flex justify-between">
+            <div></div>
+            <Search placeholder='search' />
+          </div> */}
+
+        {totalPages === 0 ? (
+          <EmptyData />
+        ) : (
+          <Suspense key={query + currentPage}>
+            <Table query={query} limit={limit} offset={offset} orders={orders} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+          </Suspense>
+        )}
+        <div className='w-full flex justify-end'>
+
+          <Pagination totalPages={totalPages} />
+        </div>
+
+
+      </section>
     </div>
   );
-};
+}
 
-export default page;

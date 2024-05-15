@@ -11,6 +11,27 @@ export type Merchant = {
     is_open: boolean;
   };
 
+export type MerchantID = {
+    id: number;
+    merchant_name: string;
+    location_lat: number;
+    location_long: number;
+    address: string;
+    pic_name: string;
+    email: string;
+    phone_number: string;
+    monthly_earning: number;
+    total_monthly_order: number;
+    staff_scheduled_id: number;
+    total_daily_order: number;
+    daily_order_cancelled: number;
+    daily_order_delivered: number;
+    daily_order_active: number;
+    daily_earning: number;
+    created_at: string;
+    updated_at: string;
+  };
+
 export type Banner = {
     created_at: string;
     updated_at: string;
@@ -84,6 +105,8 @@ export type Voucher = {
   };
   
   export type OrderData = {
+    year: string;
+    month: string;
     payment: {
       paid_date: string;
       created_at: string;

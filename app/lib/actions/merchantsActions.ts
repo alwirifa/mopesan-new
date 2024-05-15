@@ -49,6 +49,38 @@ export const createMerchant = async (
   }
 };
 
+// GET DATA BY ID 
+export async function getMerchantById(merchantId: string): Promise<void> {
+  try {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      throw new Error("Admin token not found");
+    }
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/merchants/${merchantId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      console.log("get by id successfully!");
+      const { data } = response.data;
+      return data;
+   
+    } else {
+      console.error("Unexpected response status:", response.status);
+      throw new Error("Failed to fetch admin");
+      
+    }
+  } catch (error) {
+    console.error("Error get data by id:", error);
+  }
+}
+
 // READ
 export const getMerchants = async () => {
   try {
