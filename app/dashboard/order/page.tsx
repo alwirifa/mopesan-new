@@ -50,16 +50,7 @@ export default function Home({
         <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
   
           <div className="flex justify-between">
-            {/* <div className="flex gap-4">
-              <div className="flex gap-3 px-4 py-3 rounded-lg shadow-md">
-                <img src="/icons/filter.svg" alt="" />
-                <p>Filter</p>
-              </div>
-              <div className="flex gap-3 px-4 py-3 rounded-lg shadow-md">
-                <img src="/icons/sort.svg" alt="" />
-                <p>Sort</p>
-              </div>
-            </div> */}
+        
             <div></div>
             <Search placeholder='search' />
   

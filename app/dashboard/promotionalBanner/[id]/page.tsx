@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBanner } from "@/app/lib/actions/bannerActions";
+import { deleteBanner, getBannerByID } from "@/app/lib/actions/bannerActions";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -13,32 +13,20 @@ type Banners = {
 };
 
 const page = ({ params }: { params: { id: string } }) => {
-  const [banners, setbanners] = useState<Banners | null>(null);
+  const [banners, setbanners] = useState<any>(null);
 
   useEffect(() => {
-    const fetchbanners = async () => {
-      try {
-        const token = localStorage.getItem("admin_token");
-        if (!token) {
-          throw new Error("Admin token not found");
-        }
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner/${params.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const { data } = response.data;
-        setbanners(data);
-      } catch (error) {
-        console.error("Error fetching banners:", error);
-      }
-    };
-
-    fetchbanners();
-  }, []);
+    if (params && params.id) {
+      getBannerByID(params.id)
+        .then((data) => {
+          setbanners(data);
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error("Error fetching admin:", error);
+        });
+    }
+  }, [params]);
 
   if (!banners) {
     return <p>Loading...</p>;

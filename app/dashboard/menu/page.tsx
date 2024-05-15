@@ -138,18 +138,18 @@ const Page: React.FC = () => {
                 </div>
                 <p className="text-xs text-textGray">{menu.description}</p>
                 <div className="h-full w-full flex flex-col justify-end items-end translate-x-1">
-                  {/* <Link
+                  <Link
                     href={`/dashboard/menu/${menu.id}`}
                     className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
                   >
                     Details
-                  </Link> */}
-                  <button
+                  </Link>
+                  {/* <button
                     onClick={handleDetailsClick}
                     className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
                   >
                     Details
-                  </button>
+                  </button> */}
                 </div>
               </div>
             );
