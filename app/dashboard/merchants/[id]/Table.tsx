@@ -42,7 +42,7 @@ const Table: React.FC<Props> = ({ query, limit, offset, orders, selectedMonth, s
                             Order ID
                         </th>
                         <th className="border-r border-black px-6 py-4 text-left">
-                            Merchant Name
+                            Order Type
                         </th>
                         <th className="border-r border-black px-6 py-4 text-left">
                             Amount Spent
@@ -69,7 +69,7 @@ const Table: React.FC<Props> = ({ query, limit, offset, orders, selectedMonth, s
                                 {order.payment.order_uid}{" "}
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                                {order.merchant_name}
+                                {order.order_type}
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                                Rp.  {order.final_amount.toLocaleString("id-ID", { style: "currency", currency: "IDR" }).slice(3)}

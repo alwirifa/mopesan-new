@@ -58,20 +58,25 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center items-center gap-8">
+
+      <div className="h-screen w-full flex justify-center items-center gap-8">
+        <div className="flex-1 ">
+
         <img
           src="/images/mainBackground.png"
           alt="food background"
-          className="h-screen w-auto p-8"
-        />
-        <div className="flex flex-col w-[400px] rounded-lg  border-none shadow-md shadow-maroon">
-          <div className="flex flex-col p-6 space-y-1">
-            <h3 className="font-semibold tracking-tight text-xl text-center text-maroon">
+          className="h-screen w-full p-6 bg-cover"
+          />
+          </div>
+          <div className="flex flex-1 justify-center">
+
+        <div className="flex flex-col w-[450px] rounded-lg pb-6 border-none shadow-custom">
+          <div className="flex flex-col p-10 pace-y-1">
+            <h3 className="font-semibold tracking-tight text-3xl text-center text-primary">
               MoPesan App!
             </h3>
           </div>
-          <form className="p-6 pt-0 grid gap-4">
+          <form className="p-6 px-8 pt-0 grid gap-4">
             <div className="grid gap-2">
               <label
                 htmlFor="email"
@@ -85,42 +90,43 @@ const Login = () => {
                 name="email"
                 placeholder="example@example.com"
                 autoComplete="email"
-                className="h-10 w-full border rounded-md px-3 py-2 text-sm outline-none placeholder:text-zinc-500 placeholder-italic focus:border-maroon border-maroon"
+                className="h-10 w-full border border-primary placeholder:text-primary placeholder:italic rounded-md px-3 py-2 text-sm outline-none  placeholder-italic focus:border-maroon border-maroon"
                 value={data.email}
                 onChange={(e) => setData({ ...data, email: e.target.value })}
-              />
+                />
             </div>
             <div className="grid gap-2">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium leading-none text-zinc-950"
-              >
+                >
                 Password
               </label>
               <input
                 type="password"
                 id="password"
                 name="password"
-                placeholder="Enter your password"
+                // placeholder="Enter your password"
                 autoComplete="current-password"
-                className="h-10 w-full border rounded-md px-3 py-2 text-sm outline-none placeholder:text-zinc-500 focus:border-maroon border-maroon"
+                className="h-10 w-full border border-primary rounded-md px-3 py-2 text-sm outline-none placeholder:text-zinc-500 focus:border-maroon border-maroon"
                 value={data.password}
                 onChange={(e) => setData({ ...data, password: e.target.value })}
-              />
+                />
             </div>
           </form>
-          <div className="p-6 pt-0 grid gap-4">
+          <div className="p-6 px-8 pt-0 grid gap-4">
             <button
               onClick={loginUser}
               type="button"
-              className="w-full py-3 text-sm font-semibold text-white bg-bgRed rounded-md"
+              className="w-full py-3 text-sm font-semibold text-white bg-primary rounded-md"
             >
               Login
             </button>
           </div>
+              </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 

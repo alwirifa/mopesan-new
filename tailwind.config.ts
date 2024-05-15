@@ -23,6 +23,9 @@ const config: Config = {
         "buttonRed": "#EBCDD2",
         "primary": "#F57E20"
       },
+      boxShadow: {
+        'custom': 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+      },
     },
   },
   plugins: [],
