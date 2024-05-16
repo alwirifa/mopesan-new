@@ -1,15 +1,11 @@
 "use client";
 
+
 import { deleteBanner, getBannerByID } from "@/app/lib/actions/bannerActions";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-type Banner = {
-  id: number;
-  banner_name: string;
-  description: string;
-  banner_image: string;
-};
+
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [banner, setBanner] = useState<any>(null);

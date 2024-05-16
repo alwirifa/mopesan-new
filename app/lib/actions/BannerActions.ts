@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Banner } from '@/app/lib/types/index'
 
 // CREATE
 export const createBanner = async (
