@@ -1,6 +1,6 @@
-import { getBanners } from './bannerActions';
+
 import { getCustomers } from './customerAction';
-import { getOrder } from './orderAction';
+
 import { getVouchers } from './voucherAction';
 
 export async function GetVoucher({
