@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getMerchants } from "@/app/lib/actions/merchantsActions";
 import { Merchant } from '@/app/lib/types/index'
 import { useMerchantModal } from "@/app/hooks/merchant/useMerchantModal";
+import { formatTime } from "@/app/lib/formatters";
 
 const Page: React.FC = () => {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
@@ -33,12 +34,7 @@ const Page: React.FC = () => {
   //   );
   // };
 
-  const formatTime = (isoString: string): string => {
-    const date = new Date(isoString);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
+ 
 
 
   const merchantModal = useMerchantModal()

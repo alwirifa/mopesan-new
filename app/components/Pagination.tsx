@@ -36,10 +36,10 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
     const result = [];
     if (startPage > 1) {
       result.push(
-        <Link key="first" href={createPageURL(1)} className="text-textRed px-4 py-2">
+        <Link key="first" href={createPageURL(1)} className="text-primary px-4 py-2">
           1
         </Link>,
-        <span key="ellipsisStart" className="text-textRed">...</span>
+        <span key="ellipsisStart" className="text-primary">...</span>
       );
     }
 
@@ -48,7 +48,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
         <Link
           key={pageNumber}
           href={createPageURL(pageNumber)}
-          className={pageNumber === currentPage ? 'text-textRed border-2 border-bgRed px-4 py-2 bg-buttonRed' : 'text-textRed px-4 py-2'}
+          className={pageNumber === currentPage ? 'text-white border-2 border-primary px-4 py-2 bg-primary rounded-md' : 'text-primary px-4 py-2'}
         >
           {pageNumber}
         </Link>
@@ -57,8 +57,8 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
     if (endPage < totalPages) {
       result.push(
-        <span key="ellipsisEnd" className="text-textRed">...</span>,
-        <Link key="last" href={createPageURL(totalPages)} className="text-textRed px-4 py-2">
+        <span key="ellipsisEnd" className="text-primary">...</span>,
+        <Link key="last" href={createPageURL(totalPages)} className="text-primary px-4 py-2">
           {totalPages}
         </Link>
       );
@@ -71,7 +71,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
     <div className="flex gap-6 items-center">
       <Link
         href={createPageURL(currentPage - 1)}
-        className={currentPage - 1 === 0 ? `pointer-events-none opacity-50` : "text-textRed"}
+        className={currentPage - 1 === 0 ? `pointer-events-none opacity-50` : "text-primary"}
       >
         Prev
       </Link>
@@ -82,7 +82,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
       <Link
         href={createPageURL(currentPage + 1)}
-        className={currentPage >= totalPages ? `pointer-events-none opacity-50` : "text-textRed"}
+        className={currentPage >= totalPages ? `pointer-events-none opacity-50` : "text-primary"}
       >
         Next
       </Link>

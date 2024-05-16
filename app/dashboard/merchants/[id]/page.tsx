@@ -2,14 +2,15 @@
 
 import Search from '@/app/components/Search';
 import { getOrder } from '@/app/lib/actions/orderAction';
-import { OrderData } from '@/app/lib/types';
+import { Merchant, OrderData } from '@/app/lib/types';
 import { Suspense, useEffect, useState } from 'react';
 import Table from './Table'
 import Pagination from '@/app/components/Pagination';
-import { getMerchantById } from '@/app/lib/actions/merchantsActions';
+import { getMerchantById, getMerchants } from '@/app/lib/actions/merchantsActions';
 import Link from 'next/link';
 import Filter from '@/app/components/Filter';
 import EmptyData from '@/app/components/EmptyData';
+import { formatCurrency, formatTime } from '@/app/lib/formatters';
 
 export default function Home({
   searchParams, params
@@ -56,6 +57,22 @@ export default function Home({
     { label: "All Years", value: "" },
   ]);
 
+  const [hoursData, setHoursData] = useState<Merchant[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const merchantsData = await getMerchants();
+        setHoursData(merchantsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => { };
+  }, []);
 
   useEffect(() => {
     const fetchYears = async () => {
@@ -99,6 +116,8 @@ export default function Home({
     }
   }, [params]);
 
+
+  const [data, setData] = useState<OrderData[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -123,6 +142,22 @@ export default function Home({
         const totalPages = Math.ceil(filteredOrders.length / limit);
         setTotalPages(totalPages);
         setOrders(filteredOrders);
+
+
+        const filteredData = filteredOrders.filter((order) => {
+          const queryMatch = order.order_status.toLowerCase().includes(query.toLowerCase());
+          const orderDate = new Date(order.order_date);
+          const orderYear = orderDate.getFullYear().toString();
+          const orderMonth = (orderDate.getMonth() + 1).toString().padStart(2, '0');
+          const monthMatch = !selectedMonth || orderMonth === selectedMonth;
+          const yearMatch = !selectedYear || orderYear === selectedYear;
+
+          return queryMatch && monthMatch && yearMatch;
+        });
+
+        const paginatedData = filteredData.slice(offset, offset + limit);
+
+        setData(paginatedData)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -139,36 +174,68 @@ export default function Home({
     )
   }
 
-  const formattedDailyEarning = merchant.daily_earning
-    .toLocaleString("id-ID", { style: "currency", currency: "IDR" })
-    .slice(3)
-    .slice(0, -3);
 
   return (
     <div className="flex flex-col gap-6 h-full">
-
-
       <div className="p-6 rounded-md bg-white">
         <div className="flex flex-col gap-2">
-          <Link
-            href="/dashboard/merchants"
-            className="flex items-center gap-1"
-          >
-            <img src="/icons/backButton.svg" alt="" />
-            <p className="text-sm font-semibold text-textRed">
-              Back to merchant list
-            </p>
+          <div className='w-full flex justify-between'>
+            <Link
+              href="/dashboard/merchants"
+              className="flex items-center gap-1"
+            >
+              <img src="/icons/chevron-left.svg" alt="" />
+              <p className="text-sm font-semibold text-primary">
+                Back to merchant list
+              </p>
+            </Link>
+            <div className='flex flex-col gap-2 items-end'>
+              <div>
+                <button
+                  className={`max-h-max px-4 py-2 rounded-full text-sm ${merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-secondary text-primary"
+                    }`}
+                >
+                  {merchant.is_open ? "Open" : "Closed"}
+                </button>
+              </div>
+              <div>
+                {hoursData
+                  .filter(merchant => merchant.operating_hours.merchant_id === Number(params.id))
+                  .map((merchant, index) => (
+                    <p key={index} className="text-sm text-textGray italic">
+                      Opening Hours: {" "}
+                      {formatTime(
+                        merchant.operating_hours.opening_hours
+                      )}
+                      {" "}
+                      -
+                      {" "}
+                      {formatTime(
+                        merchant.operating_hours.closing_hours
+                      )}
+                    </p>
+                  ))
+                }
+              </div>
+            </div>
 
-          </Link>
-          <div>
-            <Link href={`/dashboard/merchants/edit/${params.id}`}>EDIT</Link>
+
           </div>
+          {/* <div>
+            <Link href={`/dashboard/merchants/edit/${params.id}`}>EDIT</Link>
+          </div> */}
           <h1 className="text-4xl font-semibold">{merchant.merchant_name}</h1>
           <p className="italic text-textGray">{merchant.address}</p>
           <div className="flex justify-between">
-            <div className="flex flex-col gap-2">
-              <p className="font-semibold">{merchant.pic_name}</p>
-              <p className="font-semibold">{merchant.phone_number}</p>
+            <div className="flex flex-col gap-3 mt-4">
+              <div className='flex gap-2'>
+                <img src="/icons/merchant/user-circle.svg" alt="" />
+                <p className="font-semibold">{merchant.pic_name}</p>
+              </div>
+              <div className='flex gap-2'>
+                <img src="/icons/merchant/phone-call.svg" alt="" />
+                <p className="font-semibold">{merchant.phone_number}</p>
+              </div>
             </div>
             <div className="flex gap-2">
               <div className="p-4 border rounded-md flex flex-col gap-2">
@@ -181,7 +248,7 @@ export default function Home({
                 <p className="text-sm text-textGray">
                   Order Cancelled (Daily)
                 </p>
-                <p className="text-xl text-textRed font-semibold">
+                <p className="text-xl text-primary font-semibold">
                   {merchant.daily_order_cancelled}
                 </p>
               </div>
@@ -200,7 +267,8 @@ export default function Home({
                     Rp
                   </p>
                   <p className="text-xl font-semibold">
-                    {formattedDailyEarning}
+
+                    {formatCurrency(merchant.daily_earning)}
                   </p>
                 </div>
               </div>
@@ -214,9 +282,9 @@ export default function Home({
           <div className="flex justify-between">
             <div>
               <h1 className="text-2xl font-semibold">Order History</h1>
-              <p className="italic text-sm text-textGray">
+              {/* <p className="italic text-sm text-textGray">
                 showing data from:{" "}
-              </p>
+              </p> */}
             </div>
             <div>
               <div>
@@ -239,7 +307,7 @@ export default function Home({
             <div className="p-2 rounded-md border w-full flex-1 flex flex-col gap-2">
               <p className="text-sm text-textGray">Monthly Earnings</p>
               <p className="text-xl font-semibold">
-                {merchant.monthly_earning}
+                {formatCurrency(merchant.monthly_earning)}
               </p>
             </div>
             <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
@@ -260,7 +328,6 @@ export default function Home({
                 {merchant.total_monthly_order} Orders
               </p>
             </div>
-
           </div>
         </div>
 
@@ -276,7 +343,7 @@ export default function Home({
           <EmptyData />
         ) : (
           <Suspense key={query + currentPage}>
-            <Table query={query} limit={limit} offset={offset} orders={orders} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+            <Table data={data} />
           </Suspense>
         )}
         <div className='w-full flex justify-end'>

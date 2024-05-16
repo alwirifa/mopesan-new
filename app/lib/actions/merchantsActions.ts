@@ -67,7 +67,6 @@ export async function getMerchantById(merchantId: string): Promise<void> {
     );
 
     if (response.status === 200) {
-      console.log("get by id successfully!");
       const { data } = response.data;
       return data;
    
@@ -88,7 +87,6 @@ export const getMerchants = async () => {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/merchants`
     );
     const { data } = response.data;
-    console.log("Merchants data:", data);
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);

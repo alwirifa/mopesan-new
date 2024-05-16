@@ -9,6 +9,11 @@ export type Merchant = {
     created_at: string;
     updated_at: string;
     is_open: boolean;
+    operating_hours: {
+      opening_hours: string;
+      closing_hours: string;
+      merchant_id: number;
+    }
   };
 
 export type MerchantID = {
