@@ -117,7 +117,7 @@ const Page: React.FC = () => {
               dataKey="total_earnings"
               stroke="#F57E20"
               fill="#FDE1CC"
-              strokeWidth={3}
+              strokeWidth={2}
             />
           </AreaChart>
         </ResponsiveContainer>

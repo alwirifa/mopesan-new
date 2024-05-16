@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type Merchant = {
@@ -55,8 +54,8 @@ const MerchantBar: React.FC = () => {
 
     <div className="grid grid-cols-3 gap-4">
       {merchants.slice(0, 3).map((merchant, index) => (
-        <Link href={`/dashboard/merchants/${merchant.id}`}>
-          <div key={merchant.id} className="bg-white flex items-center justify-between py-4 px-6 rounded-md shadow-custom">
+        <Link key={index} href={`/dashboard/merchants/${merchant.id}`}>
+          <div  className="bg-white flex items-center justify-between py-4 px-6 rounded-md shadow-custom">
             <div className="flex gap-4 items-center">
               <img src="/icons/merchantLogo.svg" alt="" className="h-16 w-16" />
               <div className="flex flex-col gap-1">

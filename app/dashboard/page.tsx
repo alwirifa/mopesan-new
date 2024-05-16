@@ -1,9 +1,10 @@
 import React from "react";
 import DashboardCard from '@/app/ui/dashboard/card/DashboardCard'
 import Link from "next/link";
-import MerchantBar from "../ui/dashboard/merchantsBAR/MerchantBar";
+
 import Chart from "@/app/ui/dashboard/chart/Chart"
 import Last10Order from "../ui/dashboard/home/Last10Order";
+import MerchantBar from "../ui/dashboard/merchantsBAR/MerchantBar";
 
 type Props = {};
 

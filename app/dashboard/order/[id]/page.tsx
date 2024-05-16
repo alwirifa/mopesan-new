@@ -21,6 +21,7 @@ export default function Home({
   };
 }) {
   const [orders, setOrders] = useState<OrderDataById | null>(null);
+  const [data, setData] = useState<OrderDataById[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +30,7 @@ export default function Home({
           const data = await getOrderById(params.id);
           if (data !== null && data !== undefined) {
             setOrders(data);
-            console.log(data);
+            setData(data)
           } else {
             console.error("No data received for order ID:", params.id);
           }
@@ -103,7 +104,7 @@ export default function Home({
         <p className='text-sm italic text-textGray'>Total item: 4 item</p>
 
         <div>
-          <Table />
+          <Table data={data}/>
         </div>
 
         {/* ringkasan pembayaran */}

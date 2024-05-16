@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteMenu, getMenuByID } from "@/app/lib/actions/menuActions";
-import axios from "axios";
+
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -20,40 +20,15 @@ type Category = {
   menus: Menu[];
 };
 
-const page = ({ params }: { params: { id: string } }) => {
+const Page = ({ params }: { params: { id: string } }) => {
   const [menu, setMenu] = useState<any>(null);
-
-  // useEffect(() => {
-  //   const fetchMenu = async () => {
-  //     try {
-  //       const token = localStorage.getItem("admin_token");
-  //       if (!token) {
-  //         throw new Error("Admin token not found");
-  //       }
-  //       const response = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/menu/${params.id}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  //       const { data } = response.data;
-  //       setMenu(data);
-  //     } catch (error) {
-  //       console.error("Error fetching Menu:", error);
-  //     }
-  //   };
-
-  //   fetchMenu();
-  // }, []);
 
   useEffect(() => {
     if (params && params.id) {
       getMenuByID(params.id)
         .then((data) => {
           setMenu(data);
-          console.log(data)
+          console.log(data);
         })
         .catch((error) => {
           console.error("Error fetching admin:", error);
@@ -76,4 +51,4 @@ const page = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default page;
+export default Page;

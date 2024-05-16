@@ -177,7 +177,6 @@ export type OrderData = {
 };
 
 export type OrderDataById = {
-  order_uid: string;
   created_at: string;
   order_date: string;
   pick_up_time: string;
