@@ -1,22 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Category, Menu } from '@/app/lib/types/index'
 import { getCategories, getMenus } from '@/app/lib/actions/menuActions';
 import { useMenuModal } from "@/app/hooks/menu/useMenuModal";
-import { useMenuDetailModal } from "@/app/hooks/menu/useMenuDetailModal";
 
 const Page: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [menus, setMenus] = useState<Menu[]>([]);
   const menuModal = useMenuModal();
-  const menuDetailModal = useMenuDetailModal()
 
-  const [menuId, setMenuId] = useState<string | null>(null);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,28 +21,11 @@ const Page: React.FC = () => {
       const fetchedMenus = await getMenus();
       setMenus(fetchedMenus);
 
-      // Set selected category from URL parameter, or default to "All"
-      const categoryParam = searchParams.get('category');
-      setSelectedCategory(categoryParam || 'All');
     };
 
     fetchData();
-  }, [searchParams]);
+  }, []);
 
-
-  // const filteredMenus =
-  //   selectedCategory === "All"
-  //     ? categories.flatMap((category) => category.menus)
-  //     : categories.find(
-  //         (category) => category.category_name === selectedCategory
-  //       )?.menus || [];
-
-  const handleDetailsClick = (menuId: string) => {
-    console.log("Menu ID clicked:", menuId);
-    menuDetailModal.onOpen(); // Open the modal
-    setMenuId(menuId); // Set the menuId directly using useState
-  };
-  
   const filteredMenus =
     selectedCategory === 'All'
       ? menus
@@ -56,6 +34,7 @@ const Page: React.FC = () => {
           .find((category) => category.category_name === selectedCategory)
           ?.menus.some((m) => m.id === menu.id)
       );
+
 
   return (
     <div className="w-full">
@@ -66,12 +45,6 @@ const Page: React.FC = () => {
             <p>List of all menus</p>
           </div>
           <div>
-            {/* <Link
-              href="/dashboard/menu/add"
-              className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
-            >
-              + Add Menu
-            </Link> */}
             <button
               onClick={menuModal.onOpen}
               className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
@@ -107,7 +80,6 @@ const Page: React.FC = () => {
 
         <div className="mt-4 grid grid-cols-3 gap-4">
           {filteredMenus.map((menu) => {
-            // Menmapilkan category sesuai dengan menu
             const menuCategory = categories.find((category) =>
               category.menus.some((m) => m.id === menu.id)
             );
@@ -144,12 +116,6 @@ const Page: React.FC = () => {
                   >
                     Details
                   </Link>
-                  {/* <button
-                    onClick={handleDetailsClick}
-                    className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
-                  >
-                    Details
-                  </button> */}
                 </div>
               </div>
             );

@@ -1,27 +1,19 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getOrderById } from '@/app/lib/actions/orderAction';
 import { OrderDataById } from '@/app/lib/types';
 import { formatTime, formatDate, formatCurrency } from '@/app/lib/formatters';
 import Link from 'next/link';
 import Table from './Table';
 
+
 export default function Home({
-  searchParams,
   params,
 }: {
   params: { id: string };
-  searchParams?: {
-    query?: string;
-    page?: string;
-    limit?: string;
-    selectedMonth?: string;
-    selectedYear?: string;
-  };
 }) {
   const [orders, setOrders] = useState<OrderDataById | null>(null);
-  const [data, setData] = useState<OrderDataById[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +22,7 @@ export default function Home({
           const data = await getOrderById(params.id);
           if (data !== null && data !== undefined) {
             setOrders(data);
-            setData(data)
+            console.log(orders?.additional_fees)
           } else {
             console.error("No data received for order ID:", params.id);
           }
@@ -41,19 +33,18 @@ export default function Home({
     };
 
     fetchData();
-
   }, [params]);
-
 
   if (!orders) {
     return <>Loading...</>;
   }
 
+
   return (
     <div className="flex flex-col gap-6 h-full">
 
 
-      <div className='flex flex-col gap-8 bg-white p-8 rounded-xl'>
+      <div className='flex flex-col gap-4 bg-white p-8 rounded-xl'>
         <div className='w-full'>
           <Link
             href="/dashboard/order"
@@ -103,8 +94,9 @@ export default function Home({
         <h1 className='text-2xl font-semibold'>Item yang dipesan</h1>
         <p className='text-sm italic text-textGray'>Total item: 4 item</p>
 
-        <div>
-          <Table data={data}/>
+        <div className='my-4'>
+  
+          <Table data={orders}/>
         </div>
 
         {/* ringkasan pembayaran */}

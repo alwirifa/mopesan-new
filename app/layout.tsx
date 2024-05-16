@@ -7,7 +7,6 @@ import VoucherModal from "./components/modals/voucher/VoucherModal";
 import AdminModal from "./components/modals/admin/AdminModal";
 import MerchantModal from "./components/modals/merchant/MerchantModal";
 import MenuModal from "./components/modals/menu/MenuModal";
-import MenuDetailModal from "./components/modals/menu/MenuDetailModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,11 +26,10 @@ export default function RootLayout({
       <AuthProvider>
         <body className={inter.className}>
           <MenuModal />
-          <BannerModal />
+          {/* <BannerModal /> */}
           <VoucherModal />
           <AdminModal />
           <MerchantModal />
-          <MenuDetailModal />
           {children}</body>
       </AuthProvider>
     </html>

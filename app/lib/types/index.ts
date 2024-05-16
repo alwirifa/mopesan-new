@@ -177,6 +177,7 @@ export type OrderData = {
 };
 
 export type OrderDataById = {
+  map(arg0: (order: any, index: any) => import("react").JSX.Element): import("react").ReactNode;
   created_at: string;
   order_date: string;
   pick_up_time: string;
@@ -190,8 +191,8 @@ export type OrderDataById = {
   note_status: string;
   merchant_name: string;
   customer_name: string;
-  order_item_response: OrderItem[]; // Tipe array dari OrderItem
-  additional_fees: AdditionalFee[]; // Tipe array dari AdditionalFee
+  order_item_response: OrderItem[]
+  additional_fees: AdditionalFee[]; 
   configurations_used: null | any[];
   payment: {
     paid_date: string;
@@ -242,6 +243,7 @@ export type SelectedCustomization = {
 }
 
 export type AdditionalFee = {
+  product_name: string;
   name: string;
   id: number;
   amount: number;
