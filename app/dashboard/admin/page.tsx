@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getAdmins } from "@/app/lib/actions/adminActions";
 import { Admin } from "@/app/lib/types/index";
-import { formatDate } from "@/app/lib/formatDate";
 import { checkUserToken } from "@/app/lib/tokenChecker";
 import { useAdminModal } from "@/app/hooks/admin/useAdminModal";
+import { formatDate } from "@/app/lib/formatters";
 
 const Page: React.FC = () => {
   const router = useRouter();

@@ -2,6 +2,7 @@
 
 import { getOrder } from '@/app/lib/actions/orderAction';
 import { OrderData } from '@/app/lib/types';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 
@@ -100,7 +101,9 @@ export const Table: React.FC<Props> = ({ query, limit, offset, selectedMonth, se
                                 {order.order_status}{" "}
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t  border-black text-gray-900 whitespace-nowrap">
-                                <button className="text-indigo-600 hover:text-indigo-900">View Detail</button>
+                                <Link href={`/dashboard/order/${order.payment.id}`} className="text-indigo-600 hover:text-indigo-900">
+                                    View Detail
+                                </Link>
                             </td>
 
                         </tr>
