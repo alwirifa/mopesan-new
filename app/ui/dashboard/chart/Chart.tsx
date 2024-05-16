@@ -1,7 +1,5 @@
 "use client"
 
-"use client"
-
 import axios, { AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,8 +10,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 interface Menu {
   order_day: string;
