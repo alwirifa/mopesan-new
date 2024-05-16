@@ -29,10 +29,6 @@ const MerchantForm: React.FC = () => {
         });
     };
 
-    const handleClose = () => {
-        router.push('/dashboard/merchants');
-    };
-
     return (
         <div className="p rounded-lg bg-white">
 
@@ -40,7 +36,7 @@ const MerchantForm: React.FC = () => {
                 onSubmit={handleSubmit}
                 className='flex flex-col gap-6'
             >
-                <div className='flex gap-6 w-full'>
+                <div className='flex gap-6 w-full border-t border-b border-primary py-6 '>
                     <div className='flex flex-1 flex-col gap-6'>
                         <div className="flex flex-col gap-2">
                             <label
@@ -54,7 +50,7 @@ const MerchantForm: React.FC = () => {
                                 id="merchant_name"
                                 value={merchantName}
                                 onChange={(e) => setMerchantName(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
                             />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -69,7 +65,7 @@ const MerchantForm: React.FC = () => {
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -85,7 +81,7 @@ const MerchantForm: React.FC = () => {
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -101,7 +97,7 @@ const MerchantForm: React.FC = () => {
                                 id="phone_number"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -120,7 +116,7 @@ const MerchantForm: React.FC = () => {
                                 id="address"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -136,7 +132,7 @@ const MerchantForm: React.FC = () => {
                                 id="location_lat"
                                 value={locationLat}
                                 onChange={(e) => setLocationLat(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -152,7 +148,7 @@ const MerchantForm: React.FC = () => {
                                 id="location_long"
                                 value={locationLong}
                                 onChange={(e) => setLocationLong(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -168,7 +164,7 @@ const MerchantForm: React.FC = () => {
                                 id="pic_name"
                                 value={picName}
                                 onChange={(e) => setPicName(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
 
                             />
                         </div>
@@ -176,10 +172,10 @@ const MerchantForm: React.FC = () => {
                     <div className="mt-4 flex justify-end">
                     </div>
                 </div>
-                <div className='w-full flex justify-end'>
 
+                <div className='w-full flex justify-end'>
                     <button
-                        type="submit" className="px-4 py-2 rounded-md bg-bgRed font-semibold text-white">
+                        type="submit" className="px-4 py-2 rounded-md bg-primary font-semibold text-white">
                         Add New Merchant
                     </button>
                 </div>

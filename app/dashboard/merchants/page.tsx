@@ -1,14 +1,13 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getMerchants } from "@/app/lib/actions/merchantsActions"; 
+import { getMerchants } from "@/app/lib/actions/merchantsActions";
 import { Merchant } from '@/app/lib/types/index'
 import { useMerchantModal } from "@/app/hooks/merchant/useMerchantModal";
 
 const Page: React.FC = () => {
-  const router = useRouter();
   const [merchants, setMerchants] = useState<Merchant[]>([]);
 
   useEffect(() => {
@@ -34,6 +33,14 @@ const Page: React.FC = () => {
   //   );
   // };
 
+  const formatTime = (isoString: string): string => {
+    const date = new Date(isoString);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+
   const merchantModal = useMerchantModal()
 
   return (
@@ -41,7 +48,7 @@ const Page: React.FC = () => {
       <div className="flex justify-between">
         <div className="flex flex-col gap-4">
           <h1 className="text-4xl font-semibold">Merchants</h1>
-          <p>List of Merchants</p>
+          <p>List of all Merchants</p>
         </div>
         <div>
           {/* <button
@@ -51,10 +58,10 @@ const Page: React.FC = () => {
             + Add Merchant
           </button> */}
           <button
-             onClick={merchantModal.onOpen}
-             className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+            onClick={merchantModal.onOpen}
+            className="max-h-max px-6 py-4 bg-secondary text-primary rounded-lg"
           >
-          + Add Merchant
+            + Add Merchant
           </button>
         </div>
       </div>
@@ -63,38 +70,47 @@ const Page: React.FC = () => {
         <div className=" w-full grid grid-cols-2 gap-4">
           {merchants.length > 0 ? (
             merchants.map((merchant, index) => (
-              <div
-                key={index}
-                className="p-6 flex flex-col gap-4 rounded-md bg-white"
-              >
-                <div className="flex items-center gap-4 relative">
-                  <img
-                    src="/icons/store.svg"
-                    alt=""
-                    className="h-16 w-16 rounded-full"
-                  />
-                  <div className="flex flex-col gap-1">
-                    <p className="text-3xl font-semibold">
-                      {merchant.merchant_name}
-                    </p>
-                    <p className="text-sm text-textGray">
-                      Opening Hours: 11:00 - 22:30
-                    </p>
-                  </div>
+              <Link href={`/dashboard/merchants/${merchant.id}`}>
+                <div
+                  key={index}
+                  className="p-6 flex flex-col gap-4 rounded-md bg-white"
+                >
+                  <div className="flex items-center gap-4 relative">
+                    <img
+                      src="/icons/merchantLogo.svg"
+                      alt="merchant logo"
+                      className="h-16 w-16 rounded-full"
+                    />
+                    <div className="flex flex-col gap-1">
+                      <p className="text-3xl font-semibold">
+                        {merchant.merchant_name}
+                      </p>
+                      <p className="text-sm text-textGray">
+                        Opening Hours: {" "}
+                        {formatTime(
+                          merchant.operating_hours.opening_hours
+                        )}
+                        {" "}
+                        -
+                        {" "}
+                        {formatTime(
+                          merchant.operating_hours.closing_hours
+                        )}
+                      </p>
+                    </div>
 
-                  <button
-                    // onClick={() => changeMerchantStatus(merchant.id)}
-                    className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-buttonRed text-textRed"
-                      }`}
-                  >
-                    {merchant.is_open ? "Open" : "Closed"}
-                  </button>
+                    <button
+                      // onClick={() => changeMerchantStatus(merchant.id)}
+                      className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-secondary text-primary"
+                        }`}
+                    >
+                      {merchant.is_open ? "Open" : "Closed"}
+                    </button>
+                  </div>
+                  <p className="text-sm text-textGray">{merchant.address}</p>
+
                 </div>
-                <p className="text-sm text-textGray">{merchant.address}</p>
-                <Link href={`/dashboard/merchants/${merchant.id}`}>
-                  <button>View</button>
-                </Link>
-              </div>
+              </Link>
             ))
           ) : (
             <p>No merchants available</p>
