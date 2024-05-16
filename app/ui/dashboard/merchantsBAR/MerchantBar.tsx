@@ -17,7 +17,6 @@ type Merchant = {
 };
 
 const MerchantBar: React.FC = () => {
-  const router = useRouter();
   const [merchants, setMerchants] = useState<Merchant[]>([]);
 
   useEffect(() => {
@@ -56,13 +55,18 @@ const MerchantBar: React.FC = () => {
 
     <div className="grid grid-cols-3 gap-4">
       {merchants.slice(0, 3).map((merchant, index) => (
-        <div key={merchant.id} className="bg-white flex items-center justify-between p-4 rounded-md">
-          <div className="flex gap-4 items-center">
-            <img src="/icons/merchants.svg" alt="" className="h-16 w-16" />
-            <div className="text-lg font-semibold">{merchant.merchant_name}</div>
+        <Link href={`/dashboard/merchants/${merchant.id}`}>
+          <div key={merchant.id} className="bg-white flex items-center justify-between py-4 px-6 rounded-md shadow-custom">
+            <div className="flex gap-4 items-center">
+              <img src="/icons/merchantLogo.svg" alt="" className="h-16 w-16" />
+              <div className="flex flex-col gap-1">
+                <p className="text-lg font-semibold">{merchant.merchant_name}</p>
+                <p className="text-sm text-textGray">{merchant.address}</p>
+              </div>
+            </div>
+            {renderMerchantStatus(merchant.is_active)}
           </div>
-          {renderMerchantStatus(merchant.is_active)}
-        </div>
+        </Link>
       ))}
 
     </div>

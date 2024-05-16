@@ -21,7 +21,8 @@ const config: Config = {
         "textRed": "#9A031E",
         "buttonGreen": "#D4DBD4",
         "buttonRed": "#EBCDD2",
-        "primary": "#F57E20"
+        "primary": "#F57E20",
+        "secondary": "#F3DCCD"
       },
       boxShadow: {
         'custom': 'rgba(0, 0, 0, 0.35) 0px 5px 15px',

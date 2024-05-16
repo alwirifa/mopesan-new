@@ -94,7 +94,7 @@ export const Table: React.FC<Props> = ({ query, limit, offset, selectedMonth, se
                                 {order.final_amount}
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                                {order.payment_id}{" "}
+                                {order.payment.payment_method}{" "}
                             </td>
                             <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                                 {order.order_status}{" "}

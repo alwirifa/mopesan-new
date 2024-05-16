@@ -45,7 +45,49 @@ const OrderDataComponent: React.FC = () => {
   }, []);
 
   if (!orderData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="grid grid-cols-4 gap-8">
+      <div className="p-4 rounded-md bg-white relative shadow-custom">
+          <p className="text-sm text-textGray">Total Active Order</p>
+          <img
+            src="/icons/dashboard/totalActive.svg"
+            alt=""
+            className="absolute top-0 right-0"
+          />
+          <p className="mt-10 text-3xl font-medium">0 Orders</p>
+        </div>
+        <div className="p-4  rounded-md bg-white relative shadow-custom">
+          <p className="text-sm text-textGray">Finished Order (Today)</p>
+          <img
+            src="/icons/dashboard/finishedOrder.svg"
+            alt=""
+            className="absolute top-0 right-0"
+          />
+          <p className="mt-10 text-3xl font-medium">0  Orders</p>
+        </div>
+        <div className="p-4  rounded-md bg-white relative shadow-custom">
+          <p className="text-sm text-textGray">Daily Earnings</p>
+          <img
+            src="/icons/dashboard/dailyEarning.svg"
+            alt=""
+            className="absolute top-0 right-0"
+          />
+          <div className="mt-10 flex gap-2">
+            <p className="text-sm text-textGray -translate-y-1">Rp</p>
+            <p className="text-3xl font-medium">0 </p>
+          </div>
+        </div>
+        <div className="p-4  rounded-md bg-white relative shadow-custom">
+          <p className="text-sm text-textGray">Active merchant</p>
+          <img
+            src="/icons/dashboard/activeMerchant.svg"
+            alt=""
+            className="absolute top-0 right-0"
+          />
+          <p className="mt-10 text-3xl font-medium flex gap-2 items-center">0 <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
+        </div>
+      </div>
+    );
   }
 
   // Format daily earning to Indonesian Rupiah (IDR)
@@ -55,51 +97,48 @@ const OrderDataComponent: React.FC = () => {
     .slice(0, -3);
 
   return (
-    <div>
-      <div className="grid grid-cols-4 gap-8">
-      <div className="p-4 rounded-md bg-white relative">
-          <p className="text-xs text-textGray">Total Active Order</p>
-          <img
-            src="/icons/pizza.svg"
-            alt=""
-            className="absolute top-0 right-0"
-          />
-          <p className="mt-10 text-3xl font-medium">{orderData.daily_order_active} Orders</p>
-        </div>
-        <div className="p-4  rounded-md bg-white relative">
-          <p className="text-xs text-textGray">Finished Order (Today)</p>
-          <img
-            src="/icons/shield-check.svg"
-            alt=""
-            className="absolute top-0 right-0"
-          />
-          <p className="mt-10 text-3xl font-medium">{orderData.daily_order_delivered} Orders</p>
-        </div>
-        <div className="p-4  rounded-md bg-white relative">
-          <p className="text-sm text-textGray">Daily Earnings</p>
-          <img
-            src="/icons/discount-2.svg"
-            alt=""
-            className="absolute top-0 right-0"
-          />
-          <div className="mt-10 flex gap-2">
-            <p className="text-sm text-textGray -translate-y-1">Rp</p>
-            <p className="text-3xl font-medium">{formattedDailyEarning}</p>
-          </div>
-        </div>
-       
-      
-        <div className="p-4  rounded-md bg-white relative">
-          <p className="text-xs text-textGray">Active merchant</p>
-          <img
-            src="/icons/shield-check.svg"
-            alt=""
-            className="absolute top-0 right-0"
-          />
-          <p className="mt-10 text-3xl font-medium">{orderData.daily_merchant_active} <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
+    <div className="grid grid-cols-4 gap-8">
+      <div className="p-4 rounded-md bg-white relative shadow-custom">
+        <p className="text-sm text-textGray">Total Active Order</p>
+        <img
+          src="/icons/dashboard/totalActive.svg"
+          alt=""
+          className="absolute top-0 right-0"
+        />
+        <p className="mt-10 text-3xl font-medium">{orderData.daily_order_active} Orders</p>
+      </div>
+      <div className="p-4  rounded-md bg-white relative shadow-custom">
+        <p className="text-sm text-textGray">Finished Order (Today)</p>
+        <img
+          src="/icons/dashboard/finishedOrder.svg"
+          alt=""
+          className="absolute top-0 right-0"
+        />
+        <p className="mt-10 text-3xl font-medium">{orderData.daily_order_delivered} Orders</p>
+      </div>
+      <div className="p-4  rounded-md bg-white relative shadow-custom">
+        <p className="text-sm text-textGray">Daily Earnings</p>
+        <img
+          src="/icons/dashboard/dailyEarning.svg"
+          alt=""
+          className="absolute top-0 right-0"
+        />
+        <div className="mt-10 flex gap-2">
+          <p className="text-sm text-textGray -translate-y-1">Rp</p>
+          <p className="text-3xl font-medium">{formattedDailyEarning}</p>
         </div>
       </div>
+      <div className="p-4  rounded-md bg-white relative shadow-custom">
+        <p className="text-sm text-textGray">Active merchant</p>
+        <img
+          src="/icons/dashboard/activeMerchant.svg"
+          alt=""
+          className="absolute top-0 right-0"
+        />
+        <p className="mt-10 text-3xl font-medium flex gap-2 items-center">{orderData.daily_merchant_active} <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
+      </div>
     </div>
+
   );
 };
 
