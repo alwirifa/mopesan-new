@@ -42,17 +42,15 @@ export default function Home({
 
   return (
     <div className="flex flex-col gap-6 h-full">
-
-
       <div className='flex flex-col gap-4 bg-white p-8 rounded-xl'>
         <div className='w-full'>
           <Link
-            href="/dashboard/order"
+            href="/dashboard/merchants"
             className="max-w-max rounded-full flex items-center gap-1"
           >
             <img src="/icons/chevron-left.svg" alt="" />
             <p className="text-sm font-semibold text-primary">
-              Back to order list
+              Back to merchants list
             </p>
           </Link>
         </div>
@@ -89,7 +87,6 @@ export default function Home({
 
 
       <div className='bg-white p-8 rounded-xl'>
-
         {/* item yang dipesan */}
         <h1 className='text-2xl font-semibold'>Item yang dipesan</h1>
         <p className='text-sm italic text-textGray'>Total item: 4 item</p>
