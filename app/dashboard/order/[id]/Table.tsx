@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { OrderDataById } from '@/app/lib/types';
-import { formatCurrency, formatDate } from '@/app/lib/formatters';
+import { formatCurrency} from '@/app/lib/formatters';
 
 type Props = {
   data: OrderDataById;
@@ -21,12 +21,10 @@ const Table: React.FC<Props> = ({ data }) => {
               Menu
             </th>
             <th className="border-r border-black px-6 py-4 text-left">
-              Description / Notes
+              Selected Customitation
             </th>
-            <th className="border-r border-black px-6 py-4 text-left">
-              Tanggal Pembelian
-            </th>
-            <th className="border-r border-black px-6 py-4 text-left">
+
+            <th className=" border-black px-6 py-4 text-left">
               Price
             </th>
           </tr>
@@ -44,19 +42,24 @@ const Table: React.FC<Props> = ({ data }) => {
                     <p className='text-xl font-semibold'>
                       {order.product_name}
                     </p>
-                    <p className='text-text-gray'>
-                      ! Category
-                    </p>
+
                   </div>
                 </div>
               </td>
               <td className="py-4 px-6  font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                ! DESCRIPTION/NOTES
+                {order.selected_customization.length > 0 ? (
+                  order.selected_customization.map((custom, index) => (
+                    <div key={index} className='flex gap-1'>
+                      <p>{custom.selected_customization_key}</p>
+                      <p>{custom.selected_customization_value}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>-</p>
+                )}
               </td>
-              <td className="py-4 px-6  font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                {formatDate(order.created_at)}
-              </td>
-              <td className="py-4 px-6 font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
+
+              <td className="py-4 px-6 font-medium border-t  border-black text-gray-900 whitespace-nowrap">
                 {formatCurrency(order.price)}
               </td>
             </tr>
