@@ -303,32 +303,32 @@ export default function Home({
               </div>
             </div>
           </div>
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <div className="p-2 rounded-md border w-full flex-1 flex flex-col gap-2">
               <p className="text-sm text-textGray">Monthly Earnings</p>
               <p className="text-xl font-semibold">
-                {formatCurrency(merchant.monthly_earning)}
+             jumlah final_amount
               </p>
             </div>
             <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
               <p className="text-sm text-textGray">Total Orders</p>
               <p className="text-xl font-semibold">
-                {merchant.total_monthly_order} Orders
+             jumlah order
               </p>
             </div>
             <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
               <p className="text-sm text-textGray">Tax Total (Estimation)</p>
               <p className="text-xl font-semibold">
-                {merchant.total_monthly_order}
+                jumlah aditional fees pajak 
               </p>
             </div>
             <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
               <p className="text-sm text-textGray">Average Income (Estimation)</p>
               <p className="text-xl font-semibold">
-                {merchant.total_monthly_order} Orders
+               income
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
 
 

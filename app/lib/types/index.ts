@@ -47,6 +47,14 @@ export type Banner = {
   is_active: boolean;
 };
 
+
+
+export type Category = {
+  id: number;
+  category_name: string;
+  menus: Menu[]
+};
+
 export type Menu = {
   id: number;
   product_name: string;
@@ -54,12 +62,6 @@ export type Menu = {
   description: string;
   product_code: string;
   product_image: string;
-};
-
-export type Category = {
-  id: number;
-  category_name: string;
-  menus: Menu[];
 };
 
 export type Customer = {
@@ -192,7 +194,7 @@ export type OrderDataById = {
   merchant_name: string;
   customer_name: string;
   order_item_response: OrderItem[]
-  additional_fees: AdditionalFee[]; 
+  additional_fees: AdditionalFee[];
   configurations_used: null | any[];
   payment: {
     paid_date: string;
