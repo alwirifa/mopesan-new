@@ -20,7 +20,9 @@ const AdminModal = () => {
     <div><AdminForm/></div>
   )
   return (
-    <Modal isOpen={adminModal.isOpen} onClose={adminModal.onClose} title={titleContent} body={bodyContent} />
+    <Modal isOpen={adminModal.isOpen} onClose={adminModal.onClose} title={titleContent} body={bodyContent} onSubmit={function (): void {
+      throw new Error('Function not implemented.');
+    } } actionLabel={''} />
   );
 };
 

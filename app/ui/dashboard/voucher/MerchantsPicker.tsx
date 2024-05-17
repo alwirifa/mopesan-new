@@ -8,10 +8,11 @@ import clsx from 'clsx';
 
 
 interface MerchantPickerProps {
-  onMerchantSelect: (merchantId: string | null) => void; // Define prop for handling merchant selection
+  onMerchantSelect: (merchantId: string | null) => void; 
+  label: string// Define prop for handling merchant selection
 }
 
-const MerchantPicker: React.FC<MerchantPickerProps> = ({ onMerchantSelect }) => {
+const MerchantPicker: React.FC<MerchantPickerProps> = ({ onMerchantSelect, label }) => {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
   const [selectedMerchantId, setSelectedMerchantId] = useState<string | null>(null);
 
@@ -77,9 +78,7 @@ const MerchantPicker: React.FC<MerchantPickerProps> = ({ onMerchantSelect }) => 
 
   return (
     <div className="mx-auto w-full">
-      <label className="block font-medium leading-6 text-gray-900">
-        Select Merhchant
-      </label>
+     {label}
       <div className="w-full pt-2">
 
         <Select

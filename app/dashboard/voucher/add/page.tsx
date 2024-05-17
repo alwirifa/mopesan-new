@@ -102,7 +102,7 @@ const Page = () => {
               />
             </div>
 
-              <MerchantPicker onMerchantSelect={handleMerchantSelect} />
+              <MerchantPicker label={''} onMerchantSelect={handleMerchantSelect} />
 
         
 

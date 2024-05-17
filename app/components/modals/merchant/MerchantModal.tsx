@@ -21,7 +21,9 @@ const MerchantModal = () => {
     <div><MerchantForm /></div>
   )
   return (
-    <Modal isOpen={merchantModal.isOpen} onClose={merchantModal.onClose} title={titleContent} body={bodyContent} />
+    <Modal isOpen={merchantModal.isOpen} onClose={merchantModal.onClose} title={titleContent} body={bodyContent} onSubmit={function (): void {
+      throw new Error('Function not implemented.');
+    } } />
   );
 };
 

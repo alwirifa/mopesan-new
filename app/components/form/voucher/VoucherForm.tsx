@@ -97,7 +97,7 @@ const Page = () => {
               />
             </div>
 
-              <MerchantPicker onMerchantSelect={handleMerchantSelect} />
+              <MerchantPicker label="Select Merchant" onMerchantSelect={handleMerchantSelect} />
 
         
 
