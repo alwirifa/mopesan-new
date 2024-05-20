@@ -3,11 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getCategories } from "@/app/lib/actions/menuActions";
-import Filter from "@/app/components/Filter";
 import MenuFilter from "@/app/components/MenuFilter";
 import { formatCurrency } from "@/app/lib/formatters";
 import { Category } from "@/app/lib/types";
-import { Product } from "@/app/lib/models";
 import { useMenuModal } from "@/app/hooks/menu/useMenuModal";
 
 export default function Page({
@@ -42,8 +40,8 @@ export default function Page({
     selectedCategory === "All"
       ? categories.flatMap((category) => category.menus)
       : categories.find(
-          (category) => category.category_name === selectedCategory
-        )?.menus || [];
+        (category) => category.category_name === selectedCategory
+      )?.menus || [];
 
   const options = [
     { label: "All", value: "All" },
@@ -56,64 +54,62 @@ export default function Page({
   const menuModal = useMenuModal();
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-4xl text-primary font-semibold">Menus</h1>
-            <p>List of all menus</p>
-          </div>
-          <div>
-            <button
-              onClick={menuModal.onOpen}
-              className="max-h-max px-6 py-4 bg-secondary text-primary rounded-lg"
-            >
-              + Add Menu
-            </button>
-          </div>
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-4xl text-primary font-semibold">Menus</h1>
+          <p>List of all menus</p>
         </div>
-        <MenuFilter
-          label="selectedCategory"
-          options={options}
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-        />
-        <div className="grid grid-cols-3 gap-8 mt-2">
-          {filteredMenus.map((menu) => {
-            const menuCategory = categories.find((category) =>
-              category.menus.some((m) => m.id === menu.id)
-            );
-            return (
-              <div key={menu.id} className="flex flex-col justify-between shadow-custom rounded-xl bg-primary">
-                <div className="bg-white flex flex-col justify-between rounded-xl h-full">
-                  <div className="h-full flex justify-center py-8">
-                    <Image
-                      src={menu.product_image || "/icons/bowl.svg"}
-                      alt=""
-                      height={400}
-                      width={400}
-                    />
-                  </div>
-                  <div className="pb-8 px-8">
-                    <div className="flex justify-between">
-                      <p className="text-lg font-semibold">{menu.product_name}</p>
-                      <p className="font-semibold text-primary">{formatCurrency(menu.price)}</p>
-                    </div>
-                    <p className="text-xs text-textGray italic">
-                      {menuCategory?.category_name}
-                    </p>
-                    <p className="mt-2 text-textGray">
-                      {menu.description || "Description"}
-                    </p>
-                  </div>
+        <div>
+          <button
+            onClick={menuModal.onOpen}
+            className="max-h-max px-6 py-4 bg-secondary text-primary rounded-lg"
+          >
+            + Add Menu
+          </button>
+        </div>
+      </div>
+      <MenuFilter
+        label="selectedCategory"
+        options={options}
+        value={selectedCategory}
+        onChange={setSelectedCategory}
+      />
+      <div className="grid grid-cols-3 gap-8 mt-2">
+        {filteredMenus.map((menu) => {
+          const menuCategory = categories.find((category) =>
+            category.menus.some((m) => m.id === menu.id)
+          );
+          return (
+            <div key={menu.id} className="flex flex-col justify-between shadow-custom rounded-xl bg-primary">
+              <div className="bg-white flex flex-col justify-between rounded-xl h-full">
+                <div className="h-full flex justify-center py-8">
+                  <Image
+                    src={menu.product_image || "/icons/bowl.svg"}
+                    alt=""
+                    height={400}
+                    width={400}
+                  />
                 </div>
-                <div className="px-8 py-4 text-white font-semibold">
-                  Edit
+                <div className="pb-8 px-8">
+                  <div className="flex justify-between">
+                    <p className="text-lg font-semibold">{menu.product_name}</p>
+                    <p className="font-semibold text-primary">{formatCurrency(menu.price)}</p>
+                  </div>
+                  <p className="text-xs text-textGray italic">
+                    {menuCategory?.category_name}
+                  </p>
+                  <p className="mt-2 text-textGray">
+                    {menu.description || "Description"}
+                  </p>
                 </div>
               </div>
-            );
-          })}
-        </div>
+              <div className="px-8 py-4 text-white font-semibold">
+                Edit
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

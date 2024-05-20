@@ -11,7 +11,7 @@ const ModalButton = (props: Props) => {
         <>
             <button
                 onClick={voucherModal.onOpen}
-                className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+                className="max-h-max px-6 py-4 bg-secondary text-primary  rounded-lg"
             >
                 + Add Voucher
             </button>

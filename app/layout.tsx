@@ -7,6 +7,7 @@ import VoucherModal from "./components/modals/voucher/VoucherModal";
 import AdminModal from "./components/modals/admin/AdminModal";
 import MerchantModal from "./components/modals/merchant/MerchantModal";
 import MenuModal from "./components/modals/menu/MenuModal";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,10 +26,11 @@ export default function RootLayout({
     <html lang="en">
       <AuthProvider>
         <body className={inter.className}>
+          <Toaster />
           <MenuModal />
-          {/* <BannerModal /> */}
           <VoucherModal />
           <AdminModal />
+          <BannerModal />
           <MerchantModal />
           {children}</body>
       </AuthProvider>

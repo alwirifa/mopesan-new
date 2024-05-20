@@ -51,7 +51,7 @@ const Page = () => {
       
 
       <form onSubmit={handleSubmit}>
-        <div className="py-6 pb-8 border-b border-t border-bgRed flex gap-4">
+        <div className="py-6 pb-8 border-b border-t border-primary flex gap-4">
           <div className="flex flex-1 flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label className="block font-medium leading-6 text-gray-900">
@@ -63,7 +63,7 @@ const Page = () => {
                 placeholder="Voucher Name"
                 value={voucherName}
                 onChange={(e) => setVoucherName(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -80,7 +80,7 @@ const Page = () => {
                 placeholder="Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="block w-full rounded-md border-0  px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0  px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -93,7 +93,7 @@ const Page = () => {
                 placeholder="Code"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
 
@@ -138,7 +138,7 @@ const Page = () => {
                 value={discountValue}
                 onChange={(e) => setDiscountValue(e.target.value)}
                 placeholder="Besar Potongan ..."
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -149,7 +149,7 @@ const Page = () => {
                 value={minimumOrder}
                 onChange={(e) => setMinimumOrder(e.target.value)}
                 placeholder="Minimal Pembelian ..."
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -160,7 +160,7 @@ const Page = () => {
                 placeholder="Max Discount"
                 value={maxDiscount}
                 onChange={(e) => setMaxDiscount(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -173,7 +173,7 @@ const Page = () => {
                 placeholder="Valid From"
                 value={validFrom}
                 onChange={(e) => setValidFrom(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -186,7 +186,7 @@ const Page = () => {
                 placeholder="Valid Until"
                 value={validUntil}
                 onChange={(e) => setValidUntil(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -197,7 +197,7 @@ const Page = () => {
                 placeholder="Total Voucher Number"
                 value={totalVoucherNumber}
                 onChange={(e) => setTotalVoucherNumber(e.target.value)}
-                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+                className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
           </div>
@@ -205,7 +205,7 @@ const Page = () => {
         <div className="mt-6 flex justify-end">
           <button
             type="submit"
-            className="px-4 py-2 rounded-md bg-bgRed text-white"
+            className="px-4 py-2 rounded-md bg-primary text-white"
           >
             Add New Voucher
           </button>

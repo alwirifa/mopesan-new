@@ -1,5 +1,7 @@
 "use client"
 
+"use client";
+
 import React, { useCallback, useEffect, useState } from 'react';
 
 interface ModalProps {
@@ -27,15 +29,13 @@ const Modal: React.FC<ModalProps> = ({
   secondaryActionLabel
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     setShowModal(isOpen);
   }, [isOpen]);
 
   const handleClose = useCallback(() => {
-    if (disabled) {
-      return;
-    }
     setShowModal(false);
     setTimeout(() => {
       onClose();
@@ -51,9 +51,10 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleSubmit = useCallback(() => {
     if (disabled) {
+      setShowAlert(true);
       return;
     }
-
+    setShowAlert(false);
     onSubmit();
   }, [onSubmit, disabled]);
 
@@ -63,21 +64,19 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <div
-        className="
-          justify-center 
-          items-center 
-          flex 
-          overflow-x-hidden 
-          overflow-y-auto
-          fixed 
-          inset-0 
-          z-50 
-          outline-none 
-          focus:outline-none
-          bg-neutral-800/70
-        "
-      >
+      <div className="
+        justify-center 
+        items-center 
+        flex 
+        overflow-x-hidden 
+        overflow-hidden
+        fixed 
+        inset-0 
+        z-50 
+        outline-none 
+        focus:outline-none
+        bg-neutral-800/70
+      ">
         <div className="
           relative 
           w-full
@@ -90,7 +89,6 @@ const Modal: React.FC<ModalProps> = ({
           lg:h-auto
           md:h-auto
         ">
-          {/* Content */}
           <div className={`
             translate
             duration-300
@@ -112,14 +110,15 @@ const Modal: React.FC<ModalProps> = ({
                   {title}
                 </div>
               </div>
-              {/* Body */}
               <div className="relative px-6 pb-6 flex-auto">
                 {body}
+                {showAlert && (
+                  <div className="text-red-500 text-sm mt-2">
+                    Please fill in all required fields.
+                  </div>
+                )}
               </div>
-              {/* Actions */}
-
-                {onSubmit !== undefined && (
-
+              {onSubmit !==undefined && (
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                 {secondaryAction && secondaryActionLabel && (
                   <button
@@ -130,18 +129,16 @@ const Modal: React.FC<ModalProps> = ({
                   >
                     {secondaryActionLabel}
                   </button>
-
                 )}
-
-                  <button
-                    disabled={disabled}
-                    onClick={handleSubmit}
-                    className='bg-primary text-white rounded-md px-4 py-2'
-                  >
-                    {actionLabel}
-                  </button>
+                <button
+                  disabled={disabled}
+                  onClick={handleSubmit}
+                  className={`rounded-md px-4 py-2 ${disabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-primary text-white'}`}
+                >
+                  {actionLabel}
+                </button>
               </div>
-                )}
+            )}
             </div>
           </div>
         </div>
