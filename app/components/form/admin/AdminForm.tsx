@@ -32,7 +32,7 @@ const AdminForm: React.FC = () => {
   return (
     <div className="rounded-lg bg-white">
       <form onSubmit={handleSubmit}>
-        <div className=" py-4 pb-10  flex flex-col gap-4 w-full border-b border-t border-bgRed ">
+        <div className=" py-4 pb-10  flex flex-col gap-4 w-full border-b border-t border-primary ">
           <div className="flex flex-col gap-2">
             <label
               htmlFor="name"
@@ -45,7 +45,7 @@ const AdminForm: React.FC = () => {
               id="merchant_name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -60,7 +60,7 @@ const AdminForm: React.FC = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -75,14 +75,14 @@ const AdminForm: React.FC = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
             />
           </div>
         </div>
         <div className="mt-4 flex justify-end">
           <button
             type="submit"
-            className="px-4 py-2 rounded-md bg-bgRed font-semibold text-white"
+            className="px-4 py-2 rounded-md bg-primary font-semibold text-white"
           >
             Add New Admin
           </button>

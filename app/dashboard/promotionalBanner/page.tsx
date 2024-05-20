@@ -2,12 +2,11 @@
 
 import Search from '@/app/components/Search'
 import React, { Suspense } from 'react'
-import BannerModalButton from './BannerModalButton'
 import BannerCard from './BannerCard'
 import { useBannerModal } from '@/app/hooks/banner/useBannerModal'
 
 
-export default async function page({
+export default function page({
   searchParams,
 }: {
   searchParams?: {
