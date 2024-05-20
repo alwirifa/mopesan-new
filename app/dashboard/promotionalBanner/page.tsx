@@ -1,25 +1,22 @@
-"use client"
+"use client";
 
-import Search from '@/app/components/Search'
-import React, { Suspense } from 'react'
-import BannerCard from './BannerCard'
-import { useBannerModal } from '@/app/hooks/banner/useBannerModal'
+import Search from '@/app/components/Search';
+import React, { Suspense } from 'react';
+import BannerCard from './BannerCard';
+import { useBannerModal } from '@/app/hooks/banner/useBannerModal';
 
-
-export default function page({
+export default function Page({
   searchParams,
 }: {
   searchParams?: {
-    query?: string
-  }
+    query?: string;
+  };
 }) {
-  const query = searchParams?.query || ""
+  const query = searchParams?.query || '';
 
-
-  const bannerModal = useBannerModal()
+  const bannerModal = useBannerModal();
 
   return (
-
     <div className='flex flex-col gap-4'>
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-4">
@@ -36,13 +33,10 @@ export default function page({
         </div>
       </div>
       <div className='w-full flex justify-between'>
-
-        <div>
-
-        </div>
+        <div></div>
         <Search placeholder='search' />
       </div>
       <BannerCard query={query} />
     </div>
-  )
+  );
 }
