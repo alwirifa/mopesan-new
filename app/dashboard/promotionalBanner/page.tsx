@@ -1,4 +1,4 @@
-
+"use client"
 
 import Search from '@/app/components/Search'
 import React, { Suspense } from 'react'
