@@ -1,9 +1,11 @@
-"use client";
+"use client"
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+
+import { FiEye, FiEyeOff } from "react-icons/fi"; // Import icons from react-icons library
 
 interface LoginData {
   email: string;
@@ -17,6 +19,12 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const loginUser = async () => {
     try {
@@ -39,7 +47,9 @@ const Login = () => {
       router.push("/dashboard");
     } catch (error) {
       console.error("Error logging in:", error);
-      toast.error("Login failed. Please check your credentials and try again.");
+      toast.error(
+        "Login failed. Please check your credentials and try again."
+      );
     }
   };
 
@@ -75,10 +85,12 @@ const Login = () => {
                 autoComplete="email"
                 className="h-10 w-full border border-primary placeholder:text-primary placeholder:italic rounded-md px-3 py-2 text-sm outline-none placeholder-italic focus:border-maroon border-maroon"
                 value={data.email}
-                onChange={(e) => setData({ ...data, email: e.target.value })}
+                onChange={(e) =>
+                  setData({ ...data, email: e.target.value })
+                }
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-2 relative">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium leading-none text-zinc-950"
@@ -86,14 +98,22 @@ const Login = () => {
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle input type based on showPassword state
                 id="password"
                 name="password"
                 autoComplete="current-password"
-                className="h-10 w-full border border-primary rounded-md px-3 py-2 text-sm outline-none placeholder:text-zinc-500 focus:border-maroon border-maroon"
+                className="h-10 w-full border border-primary rounded-md px-3 py-2 text-sm outline-none placeholder:text-zinc-500 focus:border-maroon border-maroon pr-10" // Added right padding for the icon
                 value={data.password}
-                onChange={(e) => setData({ ...data, password: e.target.value })}
+                onChange={(e) =>
+                  setData({ ...data, password: e.target.value })
+                }
               />
+              <span
+                className="absolute inset-y-0 top-5 right-0 flex items-center pr-3 cursor-pointer"
+                onClick={togglePasswordVisibility} // Toggle password visibility on click
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
             </div>
           </form>
           <div className="p-6 px-8 pt-0 grid gap-4">

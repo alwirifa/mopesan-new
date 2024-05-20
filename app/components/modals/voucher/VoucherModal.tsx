@@ -19,9 +19,7 @@ const VoucherModal = () => {
     <div><VoucherForm /></div>
   )
   return (
-    <Modal isOpen={voucherModal.isOpen} onClose={voucherModal.onClose} title={titleContent} body={bodyContent} onSubmit={function (): void {
-      throw new Error('Function not implemented.');
-    } }  />
+    <Modal isOpen={voucherModal.isOpen} onClose={voucherModal.onClose} title={titleContent} body={bodyContent}  />
   );
 };
 

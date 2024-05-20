@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 interface ModalProps {
   isOpen?: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   title?: React.ReactElement;
   body?: React.ReactElement;
   footer?: React.ReactElement;
@@ -55,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({
       return;
     }
     setShowAlert(false);
-    onSubmit();
+    // onSubmit();
   }, [onSubmit, disabled]);
 
   if (!isOpen) {

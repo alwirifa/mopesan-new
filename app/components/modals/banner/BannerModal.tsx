@@ -19,9 +19,7 @@ const BannerModal = () => {
     <div><BannerForm /></div>
   )
   return (
-    <Modal isOpen={bannerModal.isOpen} onClose={bannerModal.onClose} title={titleContent} body={bodyContent} onSubmit={function (): void {
-      throw new Error('Function not implemented.');
-    } } />
+    <Modal isOpen={bannerModal.isOpen} onClose={bannerModal.onClose} title={titleContent} body={bodyContent}  />
   );
 };
 

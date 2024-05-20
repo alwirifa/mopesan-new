@@ -151,7 +151,7 @@ export default function Home({
                     </Suspense>
                 )}
 
-                <div className='absolute bottom-8 right-8'>
+                <div className='w-full flex justify-end'>
                     <Pagination totalPages={totalPages} />
                 </div>
             </section>
