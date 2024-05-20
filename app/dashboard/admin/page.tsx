@@ -48,7 +48,7 @@ const Page: React.FC = () => {
           </button> */}
           <button
             onClick={adminModal.onOpen}
-            className="max-h-max px-6 py-4 bg-buttonRed text-textRed rounded-lg"
+            className="max-h-max px-6 py-4 bg-secondary text-primary rounded-lg"
           >
             + Add Admin
           </button>
@@ -75,7 +75,7 @@ const Page: React.FC = () => {
                 <div>
                   <Link
                     href={`/dashboard/admin/${admin.id}`}
-                    className="px-8 py-2 rounded-md text-sm text-white bg-bgRed"
+                    className="px-8 py-2 rounded-md text-sm text-white bg-primary"
                   >
                     Details
                   </Link>
