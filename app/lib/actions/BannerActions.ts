@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 // CREATE
+
 export const createBanner = async (
   event: React.FormEvent<HTMLFormElement>,
   file: File | null,
@@ -10,7 +11,9 @@ export const createBanner = async (
   event.preventDefault();
   try {
     const formData = new FormData();
-    formData.append('image', file as Blob);
+    if (file) {
+      formData.append('image', file);
+    }
     formData.append(
       'banner',
       JSON.stringify({
@@ -32,7 +35,7 @@ export const createBanner = async (
     };
 
     await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner`, formData, config);
-    alert('banner added successfully!');
+    alert('Banner added successfully!');
   } catch (error) {
     console.error('Error adding banner:', error);
     alert('Failed to add banner');
