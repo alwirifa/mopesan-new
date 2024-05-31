@@ -208,7 +208,7 @@ const Sidebar = () => {
 
   return (
     <div className="h-full max-h-screen flex flex-col justify-between">
-      <div className="flex flex-col gap-5 h-full overflow-hidden">
+      <div className="flex flex-col gap-5 h-[80%] overflow-hidden">
       <Image src="/icons/logo.svg" alt="Logo" width={300} height={80} />
      
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
