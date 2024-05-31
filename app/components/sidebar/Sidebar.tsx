@@ -81,46 +81,46 @@ const menuItems: MenuItem[] = [
       {
         title: "Sales Report",
         route: "/dashboard/report/order-sales",
-        icon: "/icons/sidebar/dot.svg",
-        iconWhite: "/icons/sidebar/dot-white.svg",
+        icon: "/icons/sidebar/bullet_icon.svg",
+        iconWhite: "/icons/sidebar/bullet_icon_white.svg",
         sales_subtitle: [
           {
             title: "Order Sales",
             route: "/dashboard/report/order-sales",
-            icon: "/icons/sidebar/dot.svg",
-            iconWhite: "/icons/sidebar/dot-white.svg",
+            icon: "/icons/sidebar/bullet_icon.svg",
+            iconWhite: "/icons/sidebar/bullet_icon_white.svg",
           },
           {
             title: "Periodic Sales",
             route: "/dashboard/report/periodic-sales",
-            icon: "/icons/sidebar/dot.svg",
-            iconWhite: "/icons/sidebar/dot-white.svg",
+            icon: "/icons/sidebar/bullet_icon.svg",
+            iconWhite: "/icons/sidebar/bullet_icon_white.svg",
           },
           {
             title: "Merchant Sales",
             route: "/dashboard/report/merchant-sales",
-            icon: "/icons/sidebar/dot.svg",
-            iconWhite: "/icons/sidebar/dot-white.svg",
+            icon: "/icons/sidebar/bullet_icon.svg",
+            iconWhite: "/icons/sidebar/bullet_icon_white.svg",
           },
           {
             title: "Payment Method Sales",
             route: "/dashboard/report/payment-method-sales",
-            icon: "/icons/sidebar/dot.svg",
-            iconWhite: "/icons/sidebar/dot-white.svg",
+            icon: "/icons/sidebar/bullet_icon.svg",
+            iconWhite: "/icons/sidebar/bullet_icon_white.svg",
           },
           {
             title: "Product Sales",
             route: "/dashboard/report/product-sales",
-            icon: "/icons/sidebar/dot.svg",
-            iconWhite: "/icons/sidebar/dot-white.svg",
+            icon: "/icons/sidebar/bullet_icon.svg",
+            iconWhite: "/icons/sidebar/bullet_icon_white.svg",
           },
         ],
       },
       {
         title: "Tax Report",
         route: "/dashboard/report/tax-report",
-        icon: "/icons/sidebar/dot.svg",
-        iconWhite: "/icons/sidebar/dot-white.svg",
+        icon: "/icons/sidebar/bullet_icon.svg",
+        iconWhite: "/icons/sidebar/bullet_icon_white.svg",
       },
     ],
   },
@@ -207,11 +207,10 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col justify-between">
-      <div className="flex flex-col gap-5 h-[70%] overflow-hidden">
-        <div className="">
-          <img src="/icons/logo.svg" alt="Logo" className="w-full h-full" />
-        </div>
+    <div className="h-full max-h-screen flex flex-col justify-between">
+      <div className="flex flex-col gap-5 h-full overflow-hidden">
+      <Image src="/icons/logo.svg" alt="Logo" width={300} height={80} />
+     
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           <Accordion type="multiple" className="animate-none">
             {menuItems.map((item) => {
@@ -326,7 +325,7 @@ const Sidebar = () => {
           </Accordion>
         </div>
       </div>
-      <div className="p-4 border-t">
+      <div className="px-4">
         <UserProfile />
       </div>
     </div>

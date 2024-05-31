@@ -106,7 +106,7 @@ const Page = ({
         <Table data={dataCard} />
         <div className="w-full flex justify-end mt-4">
           <Pagination
-            totalPages={Math.ceil(periodicData.total_transaction / limit)}
+            totalPages={Math.ceil(1 / limit)}
           />
         </div>
       </div>

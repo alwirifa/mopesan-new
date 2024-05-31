@@ -59,33 +59,22 @@ const Table: React.FC<Props> = ({ data }) => {
                       {index + 1}
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {order?.updated_at && formatDate(order?.updated_at)}
+                    
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {order?.total_quantity}
+                
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {order?.final_amount &&
-                        formatCurrency(order?.final_amount)}
+             
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {order?.final_amount &&
-                        formatCurrency(order?.final_amount)}
+                 
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {order?.final_amount &&
-                        formatCurrency(order?.final_amount)}
+                 
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {order?.additional_fees &&
-                        order.additional_fees.map(
-                          (fee: { name: string; amount: number }) => {
-                            if (fee.name === "Pajak") {
-                              return formatCurrency(fee.amount);
-                            }
-                            return null;
-                          }
-                        )}
+                
                     </td>
 
                     <td className="py-4 px-6 text-sm font-medium border-t border-black text-gray-900 whitespace-nowrap">
