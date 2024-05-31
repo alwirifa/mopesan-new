@@ -9,6 +9,8 @@ import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Search from "@/app/components/Search";
+import Heading from "@/app/components/Heading";
+import { useVoucherModal } from "@/app/hooks/voucher/useVoucherModal";
 
 const Page = ({
   searchParams,
@@ -82,9 +84,16 @@ const Page = ({
     }
   };
 
+
+  const voucherModal = useVoucherModal()
   return (
     <div className="">
-      <h1 className="text-[42px] font-semibold">Voucher List</h1>
+       <Heading
+        title="Voucher"
+        subtitle="List of All Voucher"
+        buttonTitle="+ Add Voucherr"
+        onButtonClick={voucherModal.onOpen}
+      />
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
