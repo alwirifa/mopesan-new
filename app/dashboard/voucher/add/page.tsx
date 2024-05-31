@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createVoucher } from "@/app/lib/actions/voucherAction";
-import MerchantPicker from "@/app/ui/dashboard/voucher/MerchantsPicker";
+import { createVoucher } from "@/app/api/voucher";
 
 const Page = () => {
   const router = useRouter();
@@ -101,8 +100,8 @@ const Page = () => {
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
-
-              <MerchantPicker label={''} onMerchantSelect={handleMerchantSelect} />
+{/* 
+              <MerchantPicker label={''} onMerchantSelect={handleMerchantSelect} /> */}
 
         
 

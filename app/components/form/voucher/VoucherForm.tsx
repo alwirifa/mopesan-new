@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createVoucher } from "@/app/lib/actions/voucherAction";
-import MerchantPicker from "@/app/ui/dashboard/voucher/MerchantsPicker";
+import { createVoucher } from "@/app/api/voucher";
+
 
 const Page = () => {
   const router = useRouter();
@@ -97,7 +97,7 @@ const Page = () => {
               />
             </div>
 
-              <MerchantPicker label="Select Merchant" onMerchantSelect={handleMerchantSelect} />
+              {/* <MerchantPicker label="Select Merchant" onMerchantSelect={handleMerchantSelect} /> */}
 
         
 

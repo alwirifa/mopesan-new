@@ -22,7 +22,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   }, 300);
 
   return (
-    <div className="w-full max-w-sm px-4 py-2 rounded-md shadow-md flex items-center gap-2 bg-white">
+    <div className="w-full max-w-md px-4 py-3 rounded-md shadow-md flex items-center gap-2 bg-white">
       <img src="/icons/search.svg" alt="" />
       <input
          className="italic text-textGray outline-none"

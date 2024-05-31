@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "./context/authContex";
-import BannerModal from "./components/modals/banner/BannerModal";
-import VoucherModal from "./components/modals/voucher/VoucherModal";
-import AdminModal from "./components/modals/admin/AdminModal";
-import MerchantModal from "./components/modals/merchant/MerchantModal";
-import MenuModal from "./components/modals/menu/MenuModal";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { UserContextProvider } from "./context/UserContext";
+import AdminModal from "./components/modal/admin/AdminModal";
+import VoucherModal from "./components/modal/voucher/VoucherModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,19 +19,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  // axios.defaults.baseURL = "http://192.168.174.73:8080"
 
+  return (
     <html lang="en">
-      <AuthProvider>
-        <body className={inter.className}>
-          <Toaster />
-          <MenuModal />
-          <VoucherModal />
+      <body className={inter.className}>
+        <UserContextProvider>
           <AdminModal />
-          <BannerModal />
-          <MerchantModal />
-          {children}</body>
-      </AuthProvider>
+          <VoucherModal/>
+          <Toaster />
+          {children}
+        </UserContextProvider>
+      </body>
     </html>
   );
 }

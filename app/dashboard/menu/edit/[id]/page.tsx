@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { updateMenu } from '@/app/lib/actions/menuActions';
+
 import { useRouter } from 'next/navigation';
+import { updateMenu } from '@/app/api/menu';
 
 const UpdateMenuForm = ({ params }: { params: { id: string } }) => {
   const [file, setFile] = useState<File | null>(null);

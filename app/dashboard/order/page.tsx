@@ -2,15 +2,16 @@
 
 // pages/index.js
 import Search from '@/app/components/Search';
-import { getOrder } from '@/app/lib/actions/orderAction';
+
 import { Suspense, useEffect, useState } from 'react';
 import { Table } from './Table'
 import Pagination from '@/app/components/Pagination';
 import Filter from '@/app/components/Filter';
 
-import { OrderData } from '@/app/lib/types';
 import EmptyData from '@/app/components/EmptyData';
-
+import { getOrder } from '@/app/api/order';
+import { OrderData } from '@/app/types/types';
+import Heading from '@/app/components/Heading';
 export default function Home({
     searchParams,
 }: {
@@ -50,13 +51,11 @@ export default function Home({
         { label: "All Years", value: "" }, 
     ]);
 
-    // Effect untuk mengambil tahun dari basis data dan mengatur opsi tahun
     useEffect(() => {
         const fetchYears = async () => {
             try {
                 const allOrders = await getOrder();
 
-                // Ekstrak tahun dari data order dan hilangkan duplikasi
                 const uniqueYears = allOrders.reduce((years: string[], order: OrderData) => {
                     const orderYear = order.order_date.substring(0, 4);
                     if (!years.includes(orderYear)) {
@@ -119,12 +118,7 @@ export default function Home({
 
     return (
         <div className="flex flex-col gap-6 h-full">
-            <div className="flex justify-between">
-                <div className="flex flex-col gap-4">
-                    <h1 className="text-4xl font-semibold">Orders</h1>
-                    <p>List of all Orders</p>
-                </div>
-            </div>
+           <Heading title='Orders' subtitle='List of all orders'/>
             <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
                 <div className="flex justify-between">
                     <div>

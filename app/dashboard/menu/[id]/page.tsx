@@ -1,7 +1,7 @@
 "use client";
 
-import { deleteMenu, getMenuByID } from "@/app/lib/actions/menuActions";
 
+import { deleteMenu, getMenuByID } from "@/app/api/menu";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 

@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
-import { createMenu } from '@/app/lib/actions/menuActions';
 import { useRouter } from 'next/navigation';
+import { createMenu } from '@/app/api/menu';
 
 const MenuForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);

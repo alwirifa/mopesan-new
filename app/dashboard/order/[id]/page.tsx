@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { getOrderById } from '@/app/lib/actions/orderAction';
-import { OrderDataById } from '@/app/lib/types';
-import { formatDate, formatCurrency } from '@/app/lib/formatters';
+import { getOrderById } from '@/app/api/order';
+import { OrderDataById } from '@/app/types/types';
+import { formatDate, formatCurrency } from '@/app/lib/formatter';
 import Link from 'next/link';
 import Table from './Table';
 

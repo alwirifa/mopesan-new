@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
-import Sidebar from "../ui/dashboard/sidebar/Sidebar";
-import Navbar from "../ui/dashboard/navbar/Navbar";
+import Sidebar from "../components/sidebar/Sidebar";
 
 type Props = {
   children: ReactNode;
@@ -12,9 +11,7 @@ const Layout = ({ children }: Props) => {
       <div className="h-screen w-[20%] p-6 sticky top-0">
         <Sidebar />
       </div>
-      <div className="flex-1 p-8 bg-bgGray">   
-        {children}
-      </div>
+      <div className="flex-1 p-8 bg-bgGray">{children}</div>
     </div>
   );
 };
