@@ -29,7 +29,7 @@ const Page = ({
   const [sort, setSort] = useState<string>(sortOptions[0].value);
   const defaultStartDate = new Date(2024, 0, 20);
   const defaultEndDate = new Date(2024, 4, 10);
-  const [dataCard, setDataCard] = useState<any[]>([]);
+  const [dataCard, setDataCard] = useState<any>([]);
   const [totalPages, setTotalPages] = useState<any>({});
   const [selectedDateRange, setSelectedDateRange] = useState<
     DateRange | undefined
@@ -51,7 +51,12 @@ const Page = ({
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/between?sort=${sort}&page=${currentPage}&limit=${limit}`;
+      let url = `${
+        process.env.NEXT_PUBLIC_SERVER_URL
+      }/api/v1/auth/orders/admin/between?sort=${sort}&page=${currentPage}&limit=${limit}&merchant_name=${[
+        dataCard.merchant_name,
+        dataCard.final_amount,
+      ]}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
@@ -66,9 +71,9 @@ const Page = ({
 
       const data = response.data.data;
 
-      const dataCard = response.data.data.orders;
+      const dataTabel = response.data.data.orders;
       setTotalPages(data.total_pages);
-      setDataCard(dataCard);
+      setDataCard(dataTabel);
       console.log(data);
     } catch (error) {
       console.error("Error fetching roles:", error);

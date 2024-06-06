@@ -1,12 +1,12 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -18,16 +18,22 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+        section1: "url('/home/section1.svg')",
+        section2: "url('/home/section2.png')",
+        section3: "url('/home/section3.svg')",
+        section4: "url('/home/section4.svg')",
+      },
       colors: {
-        "bgRed": "#9A031E",
-        "bgGray": "#F2F4F8",
-        "textGray": "#909394",
-        "textGreen": "#3E5D3E",
-        "textRed": "#9A031E",
-        "buttonGreen": "#D4DBD4",
-        "buttonRed": "#EBCDD2",
-        "primary": "#F57E20",
-        "secondary": "#F3DCCD",
+        bgRed: "#9A031E",
+        bgGray: "#F2F4F8",
+        textGray: "#909394",
+        textGreen: "#3E5D3E",
+        textRed: "#9A031E",
+        buttonGreen: "#D4DBD4",
+        buttonRed: "#EBCDD2",
+        primary: "#F57E20",
+        secondary: "#F3DCCD",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -84,6 +90,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

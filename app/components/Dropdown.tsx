@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 
 type Option = {
   value: string;
@@ -14,7 +15,7 @@ type Props = {
   sortTitle?: string;
 };
 
-const Sort = ({ onSortChange, sortOptions, sortTitle }: Props) => {
+const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -27,24 +28,24 @@ const Sort = ({ onSortChange, sortOptions, sortTitle }: Props) => {
   return (
     <div className="relative">
       <button
-        className="flex gap-1 border rounded-md bg-white shadow-sm px-[16px] py-[9px] items-center"
+        className="flex gap-6 border rounded-md bg-white shadow-sm px-[16px] py-[7px] items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Image src={"/icons/sort.svg"} alt="sort" height={16} width={16} />
         <p className="text-black font-base">{sortTitle || "Sort"}</p>
+        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 bg-white border rounded-lg shadow-lg w-32">
+        <div className="absolute top-full left-0 mt-1 bg-white border rounded-md shadow-lg max-w-max p-2 space-y-2">
           {sortOptions.map((option, index) => (
             <button
               key={index}
-              className={`block w-full text-left px-4 py-2 ${
+              className={`block w-full text-left px-4 py-2  hover:bg-gray-200 rounded-sm ${
                 selectedOption === option.value ? "bg-gray-200" : ""
               }`}
-              onClick={() => handleSortChange(option.value)} // Menggunakan option.value sebagai nilai
+              onClick={() => handleSortChange(option.value)}
             >
-              {option.label} {/* Menggunakan option.label sebagai teks */}
+              {option.label}
             </button>
           ))}
         </div>
@@ -53,4 +54,4 @@ const Sort = ({ onSortChange, sortOptions, sortTitle }: Props) => {
   );
 };
 
-export default Sort;
+export default DropDown;
