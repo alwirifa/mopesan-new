@@ -136,11 +136,6 @@ const EditAdminForm: React.FC<{ selectedAdmin: any | null }> = ({ selectedAdmin 
             </div>
           )}
         </div>
-        <div className="mt-4 flex justify-end">
-          <button type="submit" className="px-4 py-2 rounded-md bg-primary font-semibold text-white">
-            Edit Admin
-          </button>
-        </div>
       </form>
     </div>
   );

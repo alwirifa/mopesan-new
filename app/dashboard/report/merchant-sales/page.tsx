@@ -9,6 +9,13 @@ import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import clsx from "clsx";
+import Image from "next/image";
+
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
+
 
 const Page = ({
   searchParams,
@@ -22,6 +29,7 @@ const Page = ({
   const defaultStartDate = new Date(2024, 0, 20);
   const defaultEndDate = new Date(2024, 4, 10);
   const [dataCard, setDataCard] = useState<any[]>([]);
+  const [sort, setSort] = useState<string>(sortOptions[0].value);
   const [merchantData, setMerchantData] = useState<any>({});
   const [selectedDateRange, setSelectedDateRange] = useState<
     DateRange | undefined
@@ -35,7 +43,7 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page]);
+  }, [searchParams?.page, startDate, endDate]);
 
   const handleSave = async () => {
     try {
@@ -58,8 +66,7 @@ const Page = ({
       setMerchantData(data);
       setDataCard(dataTabel);
 
-      console.log(dataTabel)
-
+      console.log(dataTabel);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
@@ -77,20 +84,42 @@ const Page = ({
     }
   };
 
+  
+  const handleSortChange = (selectedSort: string) => {
+    setSort(selectedSort);
+  };
+
+  const handleDownload = () => {
+    window.open(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=merchant-sales`
+    );
+  };
+
   return (
     <div className="">
-      <h1 className="text-[42px] font-semibold">Merchant Sales</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-[42px] font-semibold">Merchant Sales</h1>
+        <div
+          className="px-4 pr-6 py-2 border rounded-lg text-sm font-semibold bg-primary text-white flex gap-2"
+          onClick={handleDownload}
+        >
+          <Image
+            src={"/icons/download.svg"}
+            height={24}
+            width={24}
+            alt="download"
+          />
+          <button className="">Download Report</button>
+        </div>
+      </div>
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
+        <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+           
           <div className="flex gap-4 items-center">
             <DatePickerWithRange onDateChange={handleDateChange} />
-            <button
-              onClick={handleSave}
-              className="px-4 py-3 rounded-lg text-white bg-primary "
-            >
-              Terapkan
-            </button>
+          
           </div>
         </div>
         {/* =====================  DATA CARD  ====================== */}
@@ -98,13 +127,15 @@ const Page = ({
           <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
             <p className="text-sm text-textGray">Total Sales</p>
             <p className="text-xl font-semibold text-green-900">
-              {  merchantData?.total_sales && formatCurrency(merchantData?.total_sales)}
+              {merchantData?.total_sales &&
+                formatCurrency(merchantData?.total_sales)}
             </p>
           </div>
           <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
             <p className="text-sm text-textGray">Total Tax</p>
             <p className="text-xl font-semibold text-green-900">
-              { merchantData?.total_taxes && formatCurrency(merchantData?.total_taxes)}
+              {merchantData?.total_taxes &&
+                formatCurrency(merchantData?.total_taxes)}
             </p>
           </div>
           <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">

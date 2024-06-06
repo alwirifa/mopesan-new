@@ -1,107 +1,265 @@
 "use client"
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createMenu } from '@/app/api/menu';
+import axios from 'axios';
+
+interface VariantOption {
+  variant_option_name: string;
+  price_adjustment: string;
+}
+
+interface Variant {
+  variant_name: string;
+  variant_options: VariantOption[];
+}
+
+interface ProductInfo {
+  product_name: string;
+  price: string;
+  description: string;
+  is_reward_menu: boolean;
+  image: File | null;
+  category_id: string;
+  variants: Variant[];
+}
 
 const MenuForm: React.FC = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [productName, setProductName] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const router = useRouter()
+  const [productInfo, setProductInfo] = useState<ProductInfo>({
+    product_name: '',
+    price: '',
+    description: '',
+    is_reward_menu: false,
+    image: null,
+    category_id: '',
+    variants: [
+      {
+        variant_name: '',
+        variant_options: [{ variant_option_name: '', price_adjustment: '' }],
+      },
+    ],
+  });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setFile(event.target.files[0]);
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = event.target;
+
+    if (event.target instanceof HTMLInputElement && type === 'checkbox') {
+      setProductInfo({ ...productInfo, [name]: event.target.checked });
+    } else {
+      setProductInfo({ ...productInfo, [name]: value });
     }
   };
 
-  const handleClose = () => {
-    router.push('/dashboard/menu');
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setProductInfo({ ...productInfo, image: event.target.files[0] });
+    }
+  };
+
+  const handleVariantChange = (
+    index: number,
+    fieldName: string,
+    value: string
+  ) => {
+    const updatedVariants = [...productInfo.variants];
+    updatedVariants[index] = {
+      ...updatedVariants[index],
+      [fieldName]: value,
+    };
+    setProductInfo({ ...productInfo, variants: updatedVariants });
+  };
+
+  const handleOptionChange = (
+    variantIndex: number,
+    optionIndex: number,
+    fieldName: string,
+    value: string
+  ) => {
+    const updatedVariants = [...productInfo.variants];
+    updatedVariants[variantIndex].variant_options[optionIndex] = {
+      ...updatedVariants[variantIndex].variant_options[optionIndex],
+      [fieldName]: value,
+    };
+    setProductInfo({ ...productInfo, variants: updatedVariants });
+  };
+
+  const handleAddVariant = () => {
+    setProductInfo({
+      ...productInfo,
+      variants: [
+        ...productInfo.variants,
+        {
+          variant_name: '',
+          variant_options: [{ variant_option_name: '', price_adjustment: '' }],
+        },
+      ],
+    });
+  };
+
+  const handleAddOption = (variantIndex: number) => {
+    const updatedVariants = [...productInfo.variants];
+    updatedVariants[variantIndex].variant_options.push({
+      variant_option_name: '',
+      price_adjustment: '',
+    });
+    setProductInfo({ ...productInfo, variants: updatedVariants });
+  };
+
+  const handleDeleteVariant = (variantIndex: number) => {
+    const updatedVariants = [...productInfo.variants];
+    updatedVariants.splice(variantIndex, 1);
+    setProductInfo({ ...productInfo, variants: updatedVariants });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const formData = new FormData();
+      if (productInfo.image) {
+        formData.append('image', productInfo.image);
+      }
+      formData.append(
+        'menu',
+        JSON.stringify({
+          product_name: productInfo.product_name,
+          price: parseFloat(productInfo.price),
+          description: productInfo.description,
+          is_reward_menu: productInfo.is_reward_menu,
+        })
+      );
+      formData.append('category_id', productInfo.category_id);
+      formData.append('variants', JSON.stringify(productInfo.variants));
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Admin token not found');
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu`,
+        formData,
+        config
+      );
+      alert('Menu added successfully!');
+    } catch (error) {
+      console.error('Error adding menu:', error);
+      alert('Failed to add menu');
+    }
   };
 
   return (
-    <div className="p-8 rounded-lg bg-white">
-      <div className="flex justify-between pb-4">
-        <h1 className="text-4xl font-semibold">Add new Menu</h1>
-        <div onClick={handleClose} className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer">
-          <img src="/icons/close.svg" alt="close" className="h-full w-full" />
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Product Name:</label>
+          <input
+            type="text"
+            name="product_name"
+            value={productInfo.product_name}
+            onChange={handleInputChange}
+          />
         </div>
-      </div>
-      <div className="p-4 pb-8 border-b border-t border-bgRed flex gap-4">
-        <form
-          onSubmit={(e) => createMenu(e, file, productName, price, description)}
-          encType="multipart/form-data"
-          className='flex flex-col gap-6 w-full'
-        >
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="product_name"
-              className="block font-medium leading-6 text-gray-900"
-            >
-              Product Name
-            </label>
+        <div>
+          <label>Price:</label>
+          <input
+            type="number"
+            name="price"
+            value={productInfo.price}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div>
+          <label>Description:</label>
+          <textarea
+            name="description"
+            value={productInfo.description}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div>
+          <label>
+            Is Reward Menu:
+            <input
+              type="checkbox"
+              name="is_reward_menu"
+              checked={productInfo.is_reward_menu}
+              onChange={handleInputChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>Image:</label>
+          <input type="file" name="image" onChange={handleImageChange} />
+        </div>
+        <div>
+          <label>Category ID:</label>
+          <input
+            type="text"
+            name="category_id"
+            value={productInfo.category_id}
+            onChange={handleInputChange}
+          />
+        </div>
+        {productInfo.variants.map((variant, variantIndex) => (
+          <div key={variantIndex}>
+            <button type="button" onClick={() => handleDeleteVariant(variantIndex)}>Delete Variant</button>
             <input
               type="text"
-              id="product_name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
+              placeholder="Variant Name"
+              value={variant.variant_name}
+              onChange={(e) =>
+                handleVariantChange(variantIndex, 'variant_name', e.target.value)
+              }
             />
+            {variant.variant_options.map((option, optionIndex) => (
+              <div key={optionIndex}>
+                <input
+                  type="text"
+                  placeholder="Option Name"
+                  value={option.variant_option_name}
+                  onChange={(e) =>
+                    handleOptionChange(
+                      variantIndex,
+                      optionIndex,
+                      'variant_option_name',
+                      e.target.value
+                    )
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Price Adjustment"
+                  value={option.price_adjustment}
+                  onChange={(e) =>
+                    handleOptionChange(
+                      variantIndex,
+                      optionIndex,
+                      'price_adjustment',
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <button type="button" onClick={() => handleAddOption(variantIndex)}>
+              Add Option
+            </button>
           </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="price"
-              className="block font-medium leading-6 text-gray-900"
-            >
-              Price
-            </label>
-            <input
-              type="number"
-              id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="description"
-              className="block font-medium leading-6 text-gray-900"
-            >
-              Description
-            </label>
-            <textarea
-              rows={3}
-              name="description"
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="block w-full rounded-md border-0  px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="description"
-              className="block font-medium leading-6 text-gray-900"
-            >
-              Image
-            </label>
-            <input
-              type="file"
-              id="image"
-              onChange={handleFileChange}
-              className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-sm font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-bgRed file:text-white file:px-3 file:py-[0.32rem] file: file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-nonedark :file:text-neutral-100 " />
-          </div>
-        </form>
-      </div>
-      <div className="mt-4 flex justify-end">
-        <button
-          type="submit" className="px-4 py-2 rounded-md bg-bgRed font-semibold text-white">
-          Add New Menu
+        ))}
+        <button type="button" onClick={handleAddVariant}>
+          Add Variant
         </button>
-      </div>
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 };

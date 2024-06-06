@@ -20,8 +20,6 @@ const Page = ({
     query?: string;
     page?: string;
     limit?: string;
-    selectedMonth?: string;
-    selectedYear?: string;
   };
 }) => {
   const query = searchParams?.query || "";

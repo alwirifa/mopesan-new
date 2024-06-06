@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+"use client";
 
-import TimePicker from "react-time-picker";
+import React, { useState } from "react";
 import { createMerchant } from "@/app/api/merhchant";
+import { useMerchantModal } from "@/app/hooks/merchant/useMerchantModal";
 
 const MerchantForm: React.FC = () => {
   const [merchantName, setMerchantName] = useState("");
@@ -15,24 +15,28 @@ const MerchantForm: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [picName, setPicName] = useState("");
-  const router = useRouter();
+  const merchantModal = useMerchantModal();
 
- const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-  createMerchant(event, {
-    merchant_name: merchantName,
-    location_lat: locationLat,
-    location_long: locationLong,
-    email,
-    password,
-    opening_hours: openingTime, // Menggunakan openingTime yang sudah disimpan di state
-    closing_hours: closingTime, // Menggunakan closingTime yang sudah disimpan di state
-    phone_number: phoneNumber,
-    address,
-    pic_name: picName,
-  });
-};
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
 
+    if (form.reportValidity()) {
+      createMerchant(event, {
+        merchant_name: merchantName,
+        location_lat: locationLat,
+        location_long: locationLong,
+        email,
+        password,
+        opening_hours: openingTime,
+        closing_hours: closingTime,
+        phone_number: phoneNumber,
+        address,
+        pic_name: picName,
+      });
+      merchantModal.onClose();
+    }
+  };
 
   const hours24: string[] = [];
   for (let i = 0; i < 24; i++) {
@@ -57,6 +61,7 @@ const MerchantForm: React.FC = () => {
                 id="merchant_name"
                 placeholder="Contoh: Koruruk Jagakarsa"
                 value={merchantName}
+                required
                 onChange={(e) => setMerchantName(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
@@ -73,6 +78,7 @@ const MerchantForm: React.FC = () => {
                 id="address"
                 placeholder="Contoh: Mercu Barat no 87, Jakarta Selatan ..."
                 value={address}
+                required
                 onChange={(e) => setAddress(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
@@ -89,6 +95,7 @@ const MerchantForm: React.FC = () => {
                 id="address"
                 placeholder="Email"
                 value={email}
+                required
                 onChange={(e) => setEmail(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
@@ -99,12 +106,13 @@ const MerchantForm: React.FC = () => {
                   htmlFor="opening_time"
                   className="block font-medium leading-6 text-gray-900"
                 >
-                  Opening Hours
+                  Opening Hours <span className="text-primary">*</span>
                 </label>
                 <select
                   id="opening_hour" // Properti id untuk opening hours
                   value={openingTime}
                   onChange={(e) => setOpeningTime(e.target.value)}
+                  required
                   className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6"
                 >
                   {hours24.map((hour) => (
@@ -119,12 +127,13 @@ const MerchantForm: React.FC = () => {
                   htmlFor="closing_time"
                   className="block font-medium leading-6 text-gray-900"
                 >
-                  Closing Hours
+                  Closing Hours <span className="text-primary">*</span>
                 </label>
                 <select
                   id="closing_hour" // Properti id untuk closing hours
                   value={closingTime}
                   onChange={(e) => setClosingTime(e.target.value)}
+                  required
                   className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6"
                 >
                   {hours24.map((hour) => (
@@ -147,6 +156,7 @@ const MerchantForm: React.FC = () => {
                 type="text"
                 id="phone_number"
                 value={phoneNumber}
+                required
                 placeholder="Contoh: 0812 0812 0812"
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
@@ -154,15 +164,6 @@ const MerchantForm: React.FC = () => {
             </div>
           </div>
           <div className="mt-4 flex justify-end"></div>
-        </div>
-
-        <div className="w-full flex justify-end">
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-md bg-primary font-semibold text-white"
-          >
-            Add New Merchant
-          </button>
         </div>
       </form>
     </div>

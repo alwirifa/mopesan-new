@@ -23,7 +23,7 @@ const Table: React.FC<Props> = ({ data }) => {
   return (
     <div>
       {filteredData.length > 0 && (
-        <div className="w-full overflow-hidden rounded-lg border border-black shadow-md mt-8">
+        <div className="w-full overflow-hidden rounded-lg border border-black shadow-md mt-4">
           <table className="w-full">
             <thead>
               <tr className="text-base font-semibold text-left text-gray-900 bg-[#D6D6D6] border-b border-black">

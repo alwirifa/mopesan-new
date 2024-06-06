@@ -1,22 +1,29 @@
 "use client";
 
 import { createFee } from "@/app/api/fee";
+import { useFeeModal } from "@/app/hooks/fee/useFeeModal";
 import React, { useState } from "react";
 
 const FeeForm: React.FC = () => {
   const [feeName, setFeeName] = useState("");
   const [description, setDescription] = useState("");
   const [potonganType, setPotonganType] = useState<string>("fixed");
-  const [value, setValue] = useState("")
+  const [value, setValue] = useState("");
+  const feeModal = useFeeModal();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    createFee(event, {
-      configuration_name: feeName,
-      value_type: potonganType,
-      description: description,
-      value: value
-    });
+    const form = event.currentTarget;
+
+    if (form.reportValidity()) {
+      createFee(event, {
+        configuration_name: feeName,
+        value_type: potonganType,
+        description: description,
+        value: value,
+      });
+      feeModal.onClose();
+    }
   };
 
   return (
@@ -36,6 +43,7 @@ const FeeForm: React.FC = () => {
                 id="fee_name"
                 placeholder="Additional Fee Name"
                 value={feeName}
+                required
                 onChange={(e) => setFeeName(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
@@ -53,6 +61,7 @@ const FeeForm: React.FC = () => {
                   id="fixed"
                   name="potonganType"
                   value="fixed"
+                  required
                   checked={potonganType === "fixed"}
                   onChange={(e) => setPotonganType(e.target.value)}
                 />
@@ -63,6 +72,7 @@ const FeeForm: React.FC = () => {
                   type="radio"
                   id="percentage"
                   name="potonganType"
+                  required
                   value="percentage"
                   checked={potonganType === "percentage"}
                   onChange={(e) => setPotonganType(e.target.value)}
@@ -82,6 +92,7 @@ const FeeForm: React.FC = () => {
                 id="value"
                 placeholder="Contoh 10.000 or 11%"
                 value={value}
+                required
                 onChange={(e) => setValue(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6 placeholder:italic"
               />
@@ -91,27 +102,19 @@ const FeeForm: React.FC = () => {
                 htmlFor="description"
                 className="block font-medium leading-6 text-gray-900"
               >
-                Description
+                Description <span className="text-primary">*</span>
               </label>
               <textarea
                 id="description"
                 placeholder="Notification Description ..."
                 value={description}
+                required
                 onChange={(e) => setDescription(e.target.value)}
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
           </div>
           <div className="mt-4 flex justify-end"></div>
-        </div>
-
-        <div className="w-full flex justify-end">
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-md bg-primary font-semibold text-white"
-          >
-            Add Additional Fee
-          </button>
         </div>
       </form>
     </div>

@@ -29,13 +29,12 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
   
         setUser(response.data.data);
       } catch (error) {
-        console.error("Failed to fetch user profile", error);
       } finally {
         setReady(true);
       }
     };
   
-    fetchProfileData(); // Selalu mencoba mengambil data profil
+    fetchProfileData(); 
   }, []);
   
 

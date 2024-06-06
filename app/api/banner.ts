@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "axios";
+import toast from "react-hot-toast";
 
 // CREATE
 
@@ -12,37 +13,41 @@ export const createBanner = async (
   try {
     const formData = new FormData();
     if (file) {
-      formData.append('image', file);
+      formData.append("image", file);
     }
     formData.append(
-      'banner',
+      "banner",
       JSON.stringify({
         banner_name: bannerName,
-        description: description
+        description: description,
       })
     );
 
-    const token = localStorage.getItem('admin_token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      throw new Error('Admin token not found');
+      throw new Error("Admin token not found");
     }
 
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     };
 
-    await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner`, formData, config);
-    alert('Banner added successfully!');
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner`,
+      formData,
+      config
+    );
+    toast.success("Banner added successfully");
   } catch (error) {
-    console.error('Error adding banner:', error);
-    alert('Failed to add banner');
+    console.error("Error adding banner:", error);
+    toast.error("Failed to add banner");
   }
 };
 
-// GET DATA BY ID 
+// GET DATA BY ID
 export async function getBannerByID(adminId: string): Promise<void> {
   try {
     const token = localStorage.getItem("admin_token");
@@ -63,11 +68,9 @@ export async function getBannerByID(adminId: string): Promise<void> {
       console.log("get by id successfully!");
       const { data } = response.data;
       return data;
-   
     } else {
       console.error("Unexpected response status:", response.status);
       throw new Error("Failed to fetch admin");
-      
     }
   } catch (error) {
     console.error("Error get data by id:", error);
@@ -77,10 +80,12 @@ export async function getBannerByID(adminId: string): Promise<void> {
 // READ
 export const getBanners = async () => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`
+    );
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return [];
   }
 };
@@ -97,33 +102,37 @@ export const updatebanner = async (
   try {
     const formData = new FormData();
     if (file) {
-      formData.append('image', file as Blob);
+      formData.append("image", file as Blob);
     }
     formData.append(
-      'banner',
+      "banner",
       JSON.stringify({
         product_name: productName,
-        description: description
+        description: description,
       })
     );
 
-    const token = localStorage.getItem('admin_token');
+    const token = localStorage.getItem("admin_token");
     if (!token) {
-      throw new Error('Admin token not found');
+      throw new Error("Admin token not found");
     }
 
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     };
 
-    await axios.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner/${id}`, formData, config);
-    alert('banner updated successfully!');
+    await axios.put(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/banner/${id}`,
+      formData,
+      config
+    );
+    alert("banner updated successfully!");
   } catch (error) {
-    console.error('Error updating banner:', error);
-    alert('Failed to update banner');
+    console.error("Error updating banner:", error);
+    alert("Failed to update banner");
   }
 };
 
@@ -146,7 +155,7 @@ export const deleteBanner = async (id: string): Promise<void> => {
 
     if (response.status === 200) {
       console.log("banner deleted successfully!");
-      alert("banner deleted successfully!")
+      alert("banner deleted successfully!");
     } else {
       console.error("Unexpected response status:", response.status);
       throw new Error("Failed to delete banner");
@@ -154,4 +163,4 @@ export const deleteBanner = async (id: string): Promise<void> => {
   } catch (error) {
     console.error("Error deleting banner:", error);
   }
-}
+};

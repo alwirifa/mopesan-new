@@ -31,6 +31,12 @@ const menuItems: MenuItem[] = [
     iconWhite: "/icons/homeWhite.svg",
   },
   {
+    title: "Dashboard",
+    route: "/finnace",
+    icon: "/icons/home.svg",
+    iconWhite: "/icons/homeWhite.svg",
+  },
+  {
     title: "Sales",
     route: "/dashboard/sales",
     icon: "/icons/article.svg",
@@ -84,6 +90,12 @@ const menuItems: MenuItem[] = [
         icon: "/icons/sidebar/bullet_icon.svg",
         iconWhite: "/icons/sidebar/bullet_icon_white.svg",
         sales_subtitle: [
+          {
+            title: "Total Sales",
+            route: "/dashboard/report/total-sales",
+            icon: "/icons/sidebar/bullet_icon.svg",
+            iconWhite: "/icons/sidebar/bullet_icon_white.svg",
+          },
           {
             title: "Order Sales",
             route: "/dashboard/report/order-sales",
@@ -200,17 +212,28 @@ const Sidebar = () => {
       ];
       break;
     case "admin_finance":
-      allowedMenuItems = ["Home", "Sales"];
+      allowedMenuItems = [
+        "Home",
+        "Report",
+        "Sales Report",
+        "Tax Report",
+        "Total Sales",
+        "Order Sales",
+        "Periodic Sales",
+        "Merchant Sales",
+        "Payment Method Sales",
+        "Product Sales",
+      ];
       break;
     default:
       allowedMenuItems = [];
   }
 
   return (
-    <div className="h-full max-h-screen flex flex-col justify-between">
+    <div className="flex flex-col gap-5 h-[80%] overflow-hidden">
       <div className="flex flex-col gap-5 h-[80%] overflow-hidden">
-      <Image src="/icons/logo.svg" alt="Logo" width={300} height={80} />
-     
+        <Image src="/icons/logo.svg" alt="Logo" width={300} height={80} />
+
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           <Accordion type="multiple" className="animate-none">
             {menuItems.map((item) => {

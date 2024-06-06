@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['194.233.81.100'], // Corrected typo here
+        domains: ['mopesan.id'], // Corrected typo here
     },
 };
 

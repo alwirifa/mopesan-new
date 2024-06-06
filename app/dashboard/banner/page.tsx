@@ -1,22 +1,62 @@
-"use client";
+"use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "@/app/components/Heading";
 import BannerCard from "./BannerCard";
 import Search from "@/app/components/Search";
 import BannerModal from "@/app/components/modal/banner/BannerModal";
 import { useBannerModal } from "@/app/hooks/banner/useBannerModal";
+import axios from "axios";
+import Sort from "@/app/components/Sort";
+import Filter from "@/app/components/Filter";
 
-const Banner = ({
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
+
+const Page = ({
+  params,
   searchParams,
 }: {
+  params: { id: string };
   searchParams?: {
     query?: string;
   };
 }) => {
   const query = searchParams?.query || "";
+  const [banners, setBanners] = useState<any[]>([]);
 
+  const [sort, setSort] = useState<string>(sortOptions[0].value);
   const bannerModal = useBannerModal();
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`
+        );
+        setBanners(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  // OVERFLOW HIDDEN SAAT MODAL TERBUKA
+  useEffect(() => {
+    if (bannerModal.isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = ""; // Restore default overflow
+    }
+  }, [bannerModal.isOpen]);
+
+  const handleSortChange = (selectedSort: string) => {
+    setSort(selectedSort);
+  };
 
   return (
     <div>
@@ -26,15 +66,30 @@ const Banner = ({
         buttonTitle="+ Add Promotional Banner"
         onButtonClick={bannerModal.onOpen}
       />
-      <BannerModal />
+      <div className="w-full flex justify-between items-center my-4">
+        <div className="flex gap-4">
 
-      <div className="w-full flex justify-between">
-        <div></div>
+        <Filter onFilterChange={handleSortChange} filterOptions={sortOptions} />{" "}
+        <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+        </div>
         <Search placeholder="Search ..." />
       </div>
-      <BannerCard query={query} />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 mt-8">
+        {banners.map((data, index) => (
+          <BannerCard
+            key={index}
+            query={query}
+            id={parseFloat(data.id)}
+            is_active={data.is_active}
+            banner_name={data.banner_name}
+            banner_image={data.banner_image}
+            created_at={data.created_at}
+          />
+        ))}
+      </div>
+      <BannerModal />
     </div>
   );
 };
 
-export default Banner;
+export default Page;

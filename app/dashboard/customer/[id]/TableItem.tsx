@@ -37,7 +37,7 @@ const Table = ({
         }
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/customer/dashboard/${params.id}?offset=${offset}&limit=${limit}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/customer/dashboard/${params.id}?offset=${currentPage}&limit=${limit}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

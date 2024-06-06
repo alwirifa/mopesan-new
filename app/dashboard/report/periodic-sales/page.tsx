@@ -8,6 +8,12 @@ import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
+import Image from "next/image";
+
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
 
 const Page = ({
   searchParams,
@@ -35,10 +41,11 @@ const Page = ({
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
   const offset = (currentPage - 1) * limit;
+  const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page]);
+  }, [searchParams?.page, startDate, endDate]);
 
   const handleSave = async () => {
     try {
@@ -57,12 +64,12 @@ const Page = ({
       });
 
       const data = response.data.data;
-    
 
       const dataCard = response.data.data.orders;
+
       setPeriodicData(data);
       setDataCard(dataCard);
-      console.log(dataCard)
+      setTotalPages(data.total_pages);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
@@ -84,21 +91,35 @@ const Page = ({
     }
   };
 
+  const handleDownload = () => {
+    window.open(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=periodic-sales`
+    );
+  };
+
   return (
     <div className="">
-      <h1 className="text-[42px] font-semibold">Periodic Sales</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-[42px] font-semibold">Periodic Sales</h1>
+        <div
+          className="px-4 pr-6 py-2 border rounded-lg text-sm font-semibold bg-primary text-white flex gap-2"
+          onClick={handleDownload}
+        >
+          <Image
+            src={"/icons/download.svg"}
+            height={24}
+            width={24}
+            alt="download"
+          />
+          <button className="">Download Report</button>
+        </div>
+      </div>
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
-        <div className="w-full flex justify-between">
-          <Sort onSortChange={handleSortChange} />{" "}
+        <div className="w-full flex justify-between items-center">
+          <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
           <div className="flex gap-4 items-center">
             <DatePickerWithRange onDateChange={handleDateChange} />
-            <button
-              onClick={handleSave}
-              className="px-4 py-3 rounded-lg text-white bg-primary "
-            >
-              Terapkan
-            </button>
           </div>
         </div>
         {/* =====================  DATA CARD  ====================== */}
@@ -133,9 +154,7 @@ const Page = ({
         {/* =====================  TABLE  ====================== */}
         <Table data={dataCard} />
         <div className="w-full flex justify-end mt-4">
-          <Pagination
-            totalPages={Math.ceil(periodicData.total_transaction / limit)}
-          />
+          <Pagination totalPages={totalPages} />
         </div>
       </div>
     </div>

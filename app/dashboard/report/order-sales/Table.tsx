@@ -5,15 +5,12 @@ import { OrderData } from "@/app/types/types";
 
 import Link from "next/link";
 import React from "react";
-import { useState } from "react";
 
 type Props = {
   data: OrderData[];
 };
 
 const Table: React.FC<Props> = ({ data }) => {
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-
   // Filter data yang tidak kosong
   const filteredData = data.filter(
     (order) =>
@@ -23,7 +20,7 @@ const Table: React.FC<Props> = ({ data }) => {
   return (
     <div>
       {filteredData.length > 0 && (
-        <div className="w-full overflow-hidden rounded-lg border border-black shadow-md mt-8">
+        <div className="w-full overflow-hidden rounded-lg border border-black shadow-md mt-4">
           <table className="w-full">
             <thead>
               <tr className="text-base font-semibold text-left text-gray-900 bg-[#D6D6D6] border-b border-black">

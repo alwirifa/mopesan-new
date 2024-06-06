@@ -64,6 +64,16 @@ export default function Page({
     editMenuModal.onOpen();
   };
 
+    // // OVERFLOW HIDDEN SAAT MODAL TERBUKA
+    // useEffect(() => {
+    //   if (menuModal.isOpen) {
+    //     document.body.style.overflow = "hidden";
+    //   } else {
+    //     document.body.style.overflow = ""; 
+    //   }
+    // }, [menuModal.isOpen]);
+  
+
   return (
     <div className="flex flex-col gap-4">
       <Heading title='Menus' subtitle='List of all menus' buttonTitle='+ Add Menu' onButtonClick={menuModal.onOpen} />

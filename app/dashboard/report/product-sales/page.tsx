@@ -9,6 +9,12 @@ import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Search from "@/app/components/Search";
+import Image from "next/image";
+
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
 
 const Page = ({
   searchParams,
@@ -31,20 +37,22 @@ const Page = ({
   const [endDate, setEndDate] = useState<string>(
     formatDateRange(defaultEndDate.toISOString())
   );
-  const [sort, setSort] = useState("ASC");
+  const [sort, setSort] = useState<string>(sortOptions[0].value);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
   const offset = (currentPage - 1) * limit;
+  const [totalPages, setTotalPages] = useState<any>({});
+  const [category, setCategory] = useState<any>([]);
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query]);
+  }, [searchParams?.page, query, startDate, endDate, sort]);
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/product-sales?search=${query}&sort=${sort}&offset=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/product-sales?search=${query}&sort=${sort}&page=${currentPage}&limit=${limit}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
@@ -57,9 +65,18 @@ const Page = ({
         },
       });
 
-      const dataTabel = response.data.data;
+      const responeCategory = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category`
+      );
 
-      console.log(response.data);
+      const categoryData = responeCategory.data.category_name;
+
+      console.log("tes", categoryData);
+
+      const dataTabel = response.data.data.data;
+      const totalPages = response.data.data.total_pages;
+      setTotalPages(totalPages);
+      setCategory(categoryData);
       setDataTabel(dataTabel);
     } catch (error) {
       console.error("Error fetching roles:", error);
@@ -82,28 +99,47 @@ const Page = ({
     }
   };
 
+  const handleDownload = () => {
+    window.open(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=product-sales`
+    );
+  };
+
   return (
     <div className="">
-      <h1 className="text-[42px] font-semibold">Product Sales</h1>
+      <div>
+        {/* {category.map((categories,index) => (
+  <p>{categories}</p>
+))} */}
+      </div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-[42px] font-semibold">Product Sales</h1>
+        <div
+          className="px-4 pr-6 py-2 border rounded-lg text-sm font-semibold bg-primary text-white flex gap-2"
+          onClick={handleDownload}
+        >
+          <Image
+            src={"/icons/download.svg"}
+            height={24}
+            width={24}
+            alt="download"
+          />
+          <button className="">Download Report</button>
+        </div>
+      </div>
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
           <div className="flex gap-4 items-center">
+            <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
             <DatePickerWithRange onDateChange={handleDateChange} />
-            <button
-              onClick={handleSave}
-              className="px-4 py-3 rounded-lg text-white bg-primary "
-            >
-              Terapkan
-            </button>
           </div>
           <Search placeholder="Search ..." />
         </div>
-        <Sort onSortChange={handleSortChange} />{" "}
         {/* =====================  TABLE  ====================== */}
         <Table data={dataTabel} />
         <div className="w-full flex justify-end mt-4">
-          <Pagination totalPages={Math.ceil(dataTabel.length / limit)} />
+          <Pagination totalPages={totalPages} />
         </div>
       </div>
     </div>

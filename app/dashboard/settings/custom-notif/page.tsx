@@ -9,6 +9,8 @@ import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Search from "@/app/components/Search";
+import Heading from "@/app/components/Heading";
+import Image from "next/image";
 
 const Page = ({
   searchParams,
@@ -39,7 +41,7 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page]);
+  }, [searchParams?.page, startDate, endDate]);
 
   const handleSave = async () => {
     try {
@@ -84,30 +86,46 @@ const Page = ({
     }
   };
 
+  const handleDownload = () => {
+    // Lakukan pengunduhan
+    window.open(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?type=notification`
+    );
+  };
+
   return (
     <div className="">
-      <h1 className="text-[42px] font-semibold">Custom Notification</h1>
+      <Heading
+        title="Promotional Notifications"
+        subtitle="List of all notifications"
+        buttonTitle="+ Blast Notification"
+        onButtonClick={() => {}}
+      />
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
           <div className="flex gap-4 items-center">
             <DatePickerWithRange onDateChange={handleDateChange} />
-            <button
-              onClick={handleSave}
-              className="px-4 py-3 rounded-lg text-white bg-primary "
+            <div
+              className="px-4 pr-6 py-2 border rounded-lg text-sm font-semibold bg-primary text-white flex gap-2"
+              onClick={handleDownload}
             >
-              Terapkan
-            </button>
+              <Image
+                src={"/icons/download.svg"}
+                height={24}
+                width={24}
+                alt="download"
+              />
+              <button className="">Download Report</button>
+            </div>
           </div>
           <Search placeholder="Search ..." />
         </div>
-        <Sort onSortChange={handleSortChange} />{" "}
+        {/* <Sort onSortChange={handleSortChange} />{" "} */}
         {/* =====================  TABLE  ====================== */}
         <Table data={dataCard} />
         <div className="w-full flex justify-end mt-4">
-          <Pagination
-            totalPages={Math.ceil(1 / limit)}
-          />
+          <Pagination totalPages={Math.ceil(1 / limit)} />
         </div>
       </div>
     </div>

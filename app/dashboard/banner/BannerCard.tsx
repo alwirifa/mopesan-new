@@ -10,76 +10,63 @@ import React, { useEffect, useState } from "react";
 
 type Props = {
   query: string;
+  is_active: boolean;
+  id: number;
+  banner_name: string;
+  banner_image: string;
+  created_at: string;
 };
 
-const BannerCard: React.FC<Props> = ({ query }) => {
-  const [banners, setBanners] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
-  const [isActive, setIsActive] = useState(); // State for is_active
+const BannerCard: React.FC<Props> = ({
+  query,
+  id,
+  is_active,
+  banner_name,
+  banner_image,
+  created_at,
+}) => {
+  const [isActive, setIsActive] = useState(is_active);
 
+  const handleSwitch = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token not found in local storage");
 
-  useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`
-        );
-        setBanners(response.data.data);
-        setLoading(false);
-        console.log(response.data.data)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Error fetching data. Please try again later.");
-        setLoading(false);
-      }
-    };
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
 
-    fetchBanners();
-  }, []);
+      const newIsActive = !isActive;
+      setIsActive(newIsActive);
 
-  const filteredData = banners.filter((movie: { banner_name: string; }) =>
-    movie.banner_name.toLowerCase().includes(query)
-  );
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/banner/${id}`,
+        { is_active: newIsActive },
+        config
+      );
+      console.log("success")
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
+  };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  const handleSwitch = () => {
-
-  }
 
   return (
-    <div className="w-full ">
-      <ul className="grid grid-cols-2 gap-8 mt-4 w-full">
-        {filteredData.map((banner: { id: React.Key | null | undefined; banner_name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; created_at: string; banner_image: string | undefined; }) => (
-          <li className="bg-white rounded-lg p-6 shadow-md" key={banner.id}>
-            <div className="border-b pb-4 border-primary flex justify-between items-center">
-              <div className="flex flex-col gap-1">
-                <h1 className="text-[24px] font-semibold capitalize">
-                  {banner.banner_name}
-                </h1>
-                <p className="text-sm italic text-textGray">
-                  Date Added {formatDate(banner.created_at)}
-                </p>
-              </div>
-              <Switch checked={isActive} onClick={handleSwitch} />
-            </div>
-            <div className="flex justify-center items-center p-4">
-              <img
-                src={banner.banner_image}
-        
-                className="h-full w-auto bg-contain"
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="w-full bg-white p-6 rounded-lg ">
+      <div className="border-b pb-4 border-primary flex justify-between items-center">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-[24px] font-semibold capitalize">
+            {banner_name}
+          </h1>
+          <p className="text-sm italic text-textGray">
+            Date Added {formatDate(created_at)}
+          </p>
+        </div>
+        <Switch checked={isActive} onClick={handleSwitch} />
+      </div>
+      <div className="flex justify-center items-center p-4">
+        <img src={banner_image} className="h-full w-auto bg-contain" />
+      </div>
     </div>
   );
 };

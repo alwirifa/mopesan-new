@@ -14,11 +14,25 @@ type Props = {
 const Table: React.FC<Props> = ({ data }) => {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
+  // Check if data is null or undefined, if so, return null
+  if (data == null || data === undefined) {
+    return null;
+  }
+
   // Filter data yang tidak kosong
   const filteredData = data.filter(
     (order) =>
       order && Object.values(order).some((val) => val !== null && val !== "")
   );
+
+  // Jika tidak ada data yang tersedia, tampilkan pesan
+  if (filteredData.length === 0) {
+    return (
+      <div>
+        <p className="text-gray-500 mt-4">Tidak ada data yang tersedia.</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -42,11 +56,9 @@ const Table: React.FC<Props> = ({ data }) => {
                 <th className="border-r border-black px-6 py-4 text-left">
                   Total Sold
                 </th>
-                <th className="px-6 py-4 text-left">
-                  Total Sales
-                </th>
+                <th className="px-6 py-4 text-left">Total Sales</th>
                 {/* <th className=" border-black px-6 py-4 text-left">...</th>
-               */}
+                 */}
               </tr>
             </thead>
             <tbody>

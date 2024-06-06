@@ -8,7 +8,13 @@ import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
-import Search from "@/app/components/Search";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
 
 const Card = ({
   params,
@@ -33,21 +39,24 @@ const Card = ({
   const [endDate, setEndDate] = useState<string>(
     formatDateRange(defaultEndDate.toISOString())
   );
-  const [sort, setSort] = useState("ASC");
+  const [sort, setSort] = useState<string>(sortOptions[0].value);
   const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
+  const queryParams = useSearchParams();
+  const currentPage = Number(queryParams.get("page")) || 1;
   const limit = Number(searchParams?.limit) || 10;
   const offset = (currentPage - 1) * limit;
   const [data, setData] = useState<any>([]);
+  const [totalPages, setTotalPages] = useState<any>([]);
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query]);
+  }, [searchParams?.page, query, startDate, endDate, sort, currentPage]);
 
+  console.log(currentPage);
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/merchant/${params.id}/between?&search=${query}&sort=${sort}&page=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/merchant/${params.id}/between?sort=${sort}&page=${currentPage}&limit=${limit}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
@@ -63,6 +72,8 @@ const Card = ({
       const dataTabel = response.data.data;
       const data = response.data.data.orders;
 
+      const page = response.data.data.total_pages;
+      setTotalPages(page);
       setData(data);
 
       console.log(response.data);
@@ -70,10 +81,6 @@ const Card = ({
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
-  };
-
-  const handleSortChange = (newSort: string) => {
-    setSort(newSort);
   };
 
   const handleDateChange = (date: DateRange | undefined) => {
@@ -88,30 +95,48 @@ const Card = ({
     }
   };
 
+  const handleSortChange = (selectedSort: string) => {
+    setSort(selectedSort);
+  };
+
+  const handleDownload = () => {
+    window.open(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?type=merchant-orders&sort?=${sort}&start_date=${startDate}&end_date=${endDate}&merchant_id=${params.id}`
+    );
+  };
+
+  console.log("page:", currentPage);
   return (
     <div className="">
       {/* =====================  PENGATURAN  ====================== */}
       <div className="w-full flex justify-between">
         <div>
-          <h1 className="text-[24px]">Order History</h1>
-          <p className="italic text-textGray">showing data from: {startDate} - {endDate}</p>
+          <h1 className="text-[24px] font-semibold">Order History</h1>
+          <p className="italic text-textGray">
+            Showing data from: {startDate} - {endDate}
+          </p>
         </div>
         <div className="flex gap-4 items-center">
-          <Sort onSortChange={handleSortChange} />{" "}
+          <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
           <DatePickerWithRange onDateChange={handleDateChange} />
-          <button
-            onClick={handleSave}
-            className="px-4 py-3 rounded-lg text-white bg-primary "
+          <div
+            className="px-4 pr-6 py-[7px] border rounded-md text-sm font-semibold bg-primary text-white flex gap-2"
+            onClick={handleDownload}
           >
-            Terapkan
-          </button>
+            <Image
+              src={"/icons/download.svg"}
+              height={24}
+              width={24}
+              alt="download"
+            />
+            <button className="">Download Report</button>
+          </div>
         </div>
-        {/* <Search placeholder="Search ..." /> */}
       </div>
 
       {/* =====================  CARD  ====================== */}
       <div className="flex gap-4 mt-4">
-        <div className="p-2 rounded-md border w-full flex-1 flex flex-col gap-2">
+        <div className="p-4 rounded-md border w-full flex-1 flex flex-col gap-2">
           <p className="text-sm text-textGray">Monthly Earnings</p>
           <p className="text-xl font-semibold">
             {dataTabel?.total_sales && formatCurrency(dataTabel?.total_sales)}
@@ -123,7 +148,10 @@ const Card = ({
         </div>
         <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
           <p className="text-sm text-textGray">Tax Total (Estimation)</p>
-          <p className="text-xl font-semibold">{dataTabel?.tax_estimation}</p>
+          <p className="text-xl font-semibold">
+            {dataTabel?.tax_estimation &&
+              formatCurrency(dataTabel?.tax_estimation)}
+          </p>
         </div>
         <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
           <p className="text-sm text-textGray">Average Income (Estimation)</p>
@@ -135,9 +163,11 @@ const Card = ({
       </div>
       {/* =====================  TABLE  ====================== */}
       <Table data={data} />
-      <div className="w-full flex justify-end mt-4">
-        <Pagination totalPages={Math.ceil(dataTabel.total_pages / limit)} />
-      </div>
+      {data.length > 0 && (
+        <div className="w-full flex justify-end mt-4">
+          <Pagination totalPages={totalPages} />
+        </div>
+      )}
     </div>
   );
 };

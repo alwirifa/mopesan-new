@@ -142,15 +142,6 @@ const NotifForm: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <div className="w-full flex justify-end">
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-md bg-primary font-semibold text-white"
-          >
-            Add Promotional Notif
-          </button>
-        </div>
       </form>
     </div>
   );

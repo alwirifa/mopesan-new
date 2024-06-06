@@ -1,19 +1,13 @@
 "use client";
 
-import Search from "@/app/components/Search";
 import { Suspense, useEffect, useState } from "react";
-
 import Link from "next/link";
 import { Merchant, OrderData } from "@/app/types/types";
 import { getMerchantById, getMerchants } from "@/app/api/merhchant";
-import { getOrder } from "@/app/api/order";
+
 import { formatCurrency, formatTime } from "@/app/lib/formatter";
-import EmptyData from "@/app/components/EmptyData";
-import Table from "./Table";
-import Pagination from "@/app/components/Pagination";
-import Filter from "@/app/components/Filter";
-import axios from "axios";
 import Card from "./Card";
+import { Switch } from "@/components/ui/switch";
 
 export default function Home({
   searchParams,
@@ -67,9 +61,9 @@ export default function Home({
 
   return (
     <div className="flex flex-col gap-6 h-full">
-      <div className="p-6 rounded-md bg-white">
+      <div className="p-8 rounded-md bg-white">
         <div className="flex flex-col gap-2">
-          <div className="w-full flex justify-between">
+          <div className="w-full flex justify-between items-center">
             <Link
               href="/dashboard/merchant"
               className="flex items-center gap-1"
@@ -79,8 +73,14 @@ export default function Home({
                 Back to merchant list
               </p>
             </Link>
-            <div className="flex flex-col gap-2 items-end">
-              <div></div>
+            <div className="flex flex-col gap-2 items-end translate-y-2">
+              <div className="flex gap-4 items-center">
+                <p className="text-[#212427]/70  font-semibold">
+                  Closed
+                </p>
+                <Switch />
+                <p className="text-primary font-semibold">Open</p>
+              </div>
               <div>
                 {hoursData
                   .filter(
@@ -117,19 +117,19 @@ export default function Home({
               <div className="p-4 border rounded-md flex flex-col gap-2">
                 <p className="text-sm text-textGray">Active Order (Daily)</p>
                 <p className="text-xl font-semibold">
-                  {merchant?.daily_order_active}
+                  {merchant?.daily_order_active} Orders
                 </p>
               </div>
               <div className="p-4 border rounded-md flex flex-col gap-2">
                 <p className="text-sm text-textGray">Order Cancelled (Daily)</p>
                 <p className="text-xl text-primary font-semibold">
-                  {merchant?.daily_order_cancelled}
+                  {merchant?.daily_order_cancelled} Orders
                 </p>
               </div>
               <div className="p-4 border rounded-md flex flex-col gap-2">
                 <p className="text-sm text-textGray">Order Delivered (Daily)</p>
                 <p className="text-xl font-semibold">
-                  {merchant?.daily_order_delivered}
+                  {merchant?.daily_order_delivered} Orders
                 </p>
               </div>
               <div className="p-4 border rounded-md flex flex-col gap-2">

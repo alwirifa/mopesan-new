@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { ResponsiveLine } from "@nivo/line";
@@ -48,31 +48,30 @@ const LineChart = () => {
     {
       id: "Earnings",
       data: earning.map((item) => ({
-        x: item.order_day, // Gunakan tanggal sebagai sumbu x
+        x: item.order_day, // Use date as x-axis
         y: item.total_earnings,
       })),
     },
   ];
 
   return (
-    <div className="bg-white h-[400px] w-full flex rounded-xl ">
+    <div className="bg-white h-[400px] w-full flex rounded-xl">
       <ResponsiveLine
         data={chartData}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-        xScale={{ type: "time", format: "%Y-%m-%d", useUTC: false }} // Atur skala x sebagai skala waktu
+        xScale={{ type: "time", format: "%Y-%m-%d", useUTC: false }} // Set x-scale as time scale
         yScale={{
           type: "linear",
           min: 0,
           max: Math.max(...earning.map(item => item.total_earnings)),
-          stacked: true,
-          reverse: true, 
+          stacked: false, // Do not stack the lines
+          reverse: false, // Ensure zero is at the bottom
         }}
-        
         axisTop={null}
         axisRight={null}
         axisBottom={{
-          format: "%b %d", // Atur format tampilan untuk sumbu bawah
-          tickValues: "every 1 day", // Tampilkan label untuk setiap hari
+          format: "%b %d", // Set display format for bottom axis
+          tickValues: "every 1 day", // Show label for each day
         }}
         enablePoints={false}
         enableGridX={false}

@@ -37,7 +37,7 @@ const Table: React.FC<Props> = ({ data }) => {
               </td>
               <td className="py-2 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                 <div className='flex gap-2 items-center'>
-                  <img src={order.product_image} alt="product-image" className='h-auto w-16' />
+                  <img src={order.product_image|| "/icons/bowl.svg"} alt="product-image" className='h-auto w-16' />
                   <div className='flex flex-col'>
                     <p className='text-xl font-semibold'>
                       {order.product_name}

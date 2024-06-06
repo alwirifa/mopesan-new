@@ -8,6 +8,7 @@ import Link from "next/link";
 import TableItem from "./TableItem";
 import TableLog from "./TableLog";
 import axios from "axios";
+import Image from "next/image";
 
 export default function Home({
   searchParams,
@@ -69,7 +70,6 @@ export default function Home({
     fetchTabelItem();
   }, [params.id]);
 
-  
   // useEffect(() => {
   //   const fetchTabelItem = async () => {
   //     try {
@@ -92,7 +92,7 @@ export default function Home({
   //   fetchTabelItem();
   // }, [params.id]);
 
-// 
+  //
   return (
     <div className="flex flex-col gap-6 h-full">
       <div className="flex flex-col gap-4 bg-white p-8 rounded-xl">
@@ -114,10 +114,13 @@ export default function Home({
             <p className="italic text-textGray">{customer?.email}</p>
             <p className="italic text-textGray">{customer?.phone_number}</p>
           </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-[32px] font-semibold">
-              {customer?.stamp_count}/5 Stamps
-            </p>
+          <div className="flex items-end flex-col gap-1">
+            <div className="flex gap-2">
+              <Image src={"/icons/stamp.svg"} alt="" width={36} height={36} />
+              <p className="text-[32px] font-semibold">
+                {customer?.stamp_count}/5 Stamps
+              </p>
+            </div>
             <p className="text-textGray">amount spend this month</p>
             <p className="text-[32px] font-semibold">
               {customer?.monthly_spend_amount &&
@@ -126,8 +129,8 @@ export default function Home({
           </div>
         </div>
 
-        <TableItem params={params}/>
-        <TableLog params={params}/>
+        <TableItem params={params} />
+        <TableLog params={params} />
       </div>
     </div>
   );

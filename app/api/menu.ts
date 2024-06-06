@@ -1,14 +1,16 @@
 import axios from 'axios';
 import { Category, Menu } from '../types/types';
+
+
 // CREATE
 export const createMenu = async (
-  event: React.FormEvent<HTMLFormElement>,
   file: File | null,
   productName: string,
   price: string,
-  description: string
+  description: string,
+  customizations: string,
+  categoryId: string
 ) => {
-  event.preventDefault();
   try {
     const formData = new FormData();
     formData.append('image', file as Blob);
@@ -20,6 +22,8 @@ export const createMenu = async (
         description: description
       })
     );
+    formData.append('customizations', customizations);
+    formData.append('category_id', categoryId);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -40,6 +44,7 @@ export const createMenu = async (
     alert('Failed to add menu');
   }
 };
+
 
 // GET DATA BY ID 
 export async function getMenuByID(MenuId: string): Promise<void> {

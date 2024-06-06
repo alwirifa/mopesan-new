@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { formatCurrency, formatDateRange } from "@/app/lib/formatter";
-import { DatePickerWithRange } from "@/app/components/DatePickerWithRange";
 import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
@@ -12,6 +11,11 @@ import Search from "@/app/components/Search";
 import Heading from "@/app/components/Heading";
 import { useNotifModal } from "@/app/hooks/notif/useNotifModal";
 import NotifModal from "@/app/components/modal/notif/NotifModal";
+
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
 
 const Page = ({
   searchParams,
@@ -22,19 +26,9 @@ const Page = ({
     limit?: string;
   };
 }) => {
-  const defaultStartDate = new Date(2024, 0, 20);
-  const defaultEndDate = new Date(2024, 4, 10);
   const [dataTabel, setDataTabel] = useState<any[]>([]);
-  const [selectedDateRange, setSelectedDateRange] = useState<
-    DateRange | undefined
-  >();
-  const [startDate, setStartDate] = useState<string>(
-    formatDateRange(defaultStartDate.toISOString())
-  );
-  const [endDate, setEndDate] = useState<string>(
-    formatDateRange(defaultEndDate.toISOString())
-  );
-  const [sort, setSort] = useState("ASC");
+
+  const [sort, setSort] = useState<string>(sortOptions[0].value);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 8;
@@ -49,12 +43,7 @@ const Page = ({
     try {
       const token = localStorage.getItem("token");
       let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?search=${query}&sort=${sort}&offset=${offset}&limit=${limit}`;
-      if (startDate) {
-        url += `&start_date=${startDate}`;
-      }
-      if (endDate) {
-        url += `&end_date=${endDate}`;
-      }
+
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -73,20 +62,8 @@ const Page = ({
     }
   };
 
-  const handleSortChange = (newSort: string) => {
-    setSort(newSort);
-  };
-
-  const handleDateChange = (date: DateRange | undefined) => {
-    setSelectedDateRange(date);
-    if (date?.from) {
-      const formattedStartDate = formatDateRange(date.from.toISOString());
-      setStartDate(formattedStartDate);
-    }
-    if (date?.to) {
-      const formattedEndDate = formatDateRange(date.to.toISOString());
-      setEndDate(formattedEndDate);
-    }
+  const handleSortChange = (selectedSort: string) => {
+    setSort(selectedSort);
   };
 
   const notifModal = useNotifModal();
@@ -111,15 +88,15 @@ const Page = ({
               Terapkan
             </button>
           </div> */}
-          <Sort onSortChange={handleSortChange} />{" "}
+          <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
           <Search placeholder="Search ..." />
         </div>
         {/* =====================  TABLE  ====================== */}
-        <Table data={dataTabel} />
+        {/* <Table data={dataTabel} /> */}
         {/* <div className="w-full flex justify-end mt-4">
           <Pagination totalPages={totalPages?.total_customer / limit} />
         </div> */}
-        <NotifModal/>
+        <NotifModal />
       </div>
     </div>
   );

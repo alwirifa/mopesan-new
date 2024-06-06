@@ -45,10 +45,9 @@ const Table: React.FC<Props> = ({ data }) => {
                 <th className="border-r border-black px-6 py-4 text-left">
                   Minimal Pembelian
                 </th>
-                <th className="border-r border-black px-6 py-4 text-left">
+                <th className=" border-black px-4 py-4 text-left">
                   Maksimal Potongan
                 </th>
-                <th className=" border-black px-4 py-4 text-left"></th>
               </tr>
             </thead>
             <tbody>
@@ -68,15 +67,19 @@ const Table: React.FC<Props> = ({ data }) => {
                       {voucher.type_voucher}{" "}
                     </td>
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {voucher.value}{" "}
+                      {voucher?.type_voucher === "percentage"
+                        ? `${voucher?.value}%`
+                        : voucher?.value && formatCurrency(voucher?.value)}
                     </td>
+
                     <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {voucher.minimum_order}{" "}
+                      {voucher.minimum_order &&
+                        formatCurrency(voucher?.minimum_order)}{" "}
                     </td>
-                    <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                      {voucher.max_discount}{" "}
+                    <td className="border-t  border-black px-4 py-2">
+                      {voucher.max_discount &&
+                        formatCurrency(voucher?.max_discount)}
                     </td>
-                    <td className="border-t  border-black px-4 py-2"></td>
                   </tr>
                 </React.Fragment>
               ))}

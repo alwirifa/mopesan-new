@@ -45,7 +45,7 @@ const Login = () => {
       localStorage.setItem("token", token);
       toast.success("Login successful!");
 
-      router.push("/dashboard"); // Uncomment this line if you want to navigate to the profile page
+      router.push("/dashboard"); 
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error("Login failed. Please check your credentials and try again.");
@@ -53,18 +53,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row justify-center items-center gap-8 p-4">
-      <div className="flex-1 w-full md:w-1/2">
-        <Image
-          src="/images/mainBackground.png"
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      <div className="h-full">
+        <img
+          src="/images/mainBackground.webp"
           alt="food background"
           className=" hidden md:flex md:h-screen w-full object-cover"
-          height={256}
-          width={256}
         />
       </div>
-      <div className="flex flex-1 justify-center w-full md:w-1/2">
-        <div className="flex flex-col w-full max-w-md rounded-lg pb-6 border-none shadow-custom bg-white">
+      <div className="h-full lg:flex flex-col items-center justify-center px-4">
+        <div className="flex flex-col w-full max-w-md rounded-lg pb-6 border shadow-md bg-white">
           <div className="flex flex-col p-10 space-y-1">
             <h3 className="font-semibold tracking-tight text-3xl text-center text-primary">
               MoPesan App!

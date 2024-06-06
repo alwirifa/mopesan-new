@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createAdmin } from "@/app/api/admin";
 import axios from "axios";
+import { useAdminModal } from "@/app/hooks/admin/useAdminModal";
+import toast from "react-hot-toast";
 
 const AdminForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -15,23 +17,29 @@ const AdminForm: React.FC = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [adminMerchants, setAdminMerchants] = useState<any[]>([]);
   const router = useRouter();
+  const adminModal = useAdminModal();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    try {
-      await createAdmin({
-        name,
-        email,
-        password,
-        roleID,
-        merchantID,
-      });
-      alert("Admin added successfully!");
-      router.push("/dashboard/admin");
-    } catch (error) {
-      console.error("Error creating admin:", error);
-      setError("Failed to add admin. Please try again.");
+
+    const form = event.currentTarget;
+
+    if (form.reportValidity()) {
+      try {
+        await createAdmin({
+          name,
+          email,
+          password,
+          roleID,
+          merchantID,
+        });
+        toast.success("Admin added successfully!");
+        adminModal.onClose();
+      } catch (error) {
+        console.error("Error creating admin:", error);
+        toast.error("Failed to add admin. Please try again.");
+      }
     }
   };
 
@@ -44,12 +52,11 @@ const AdminForm: React.FC = () => {
 
         const data = response.data.data;
         setRoles(data);
-        
       } catch (error) {
         console.error("Error fetching roles:", error);
       }
     };
-    
+
     const fetchAdminMerchants = async () => {
       try {
         const response = await axios.get(
@@ -57,7 +64,6 @@ const AdminForm: React.FC = () => {
         );
         const data = response.data.data;
         setAdminMerchants(data);
-    
       } catch (error) {
         console.error("Error fetching admin merchants:", error);
       }
@@ -66,7 +72,7 @@ const AdminForm: React.FC = () => {
     fetchRoles();
     fetchAdminMerchants();
   }, []);
-  console.log(roleID)
+  console.log(roleID);
 
   return (
     <div className="rounded-lg bg-white">
@@ -84,6 +90,7 @@ const AdminForm: React.FC = () => {
               id="admin-name"
               placeholder="Name"
               value={name}
+              required
               onChange={(e) => setName(e.target.value)}
               className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary focus:outline-none sm:leading-6 placeholder:italic"
             />
@@ -100,6 +107,7 @@ const AdminForm: React.FC = () => {
               id="admin-email"
               placeholder="Email"
               value={email}
+              required
               onChange={(e) => setEmail(e.target.value)}
               className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary focus:outline-none sm:leading-6 placeholder:italic"
             />
@@ -141,7 +149,7 @@ const AdminForm: React.FC = () => {
               ))}
             </select>
           </div>
-          {roleID !== '3' && ( // Ganti "admin_finance" dengan nilai yang sesuai
+          {roleID !== "3" && ( // Ganti "admin_finance" dengan nilai yang sesuai
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="admin-merchantID"
@@ -156,21 +164,16 @@ const AdminForm: React.FC = () => {
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary  focus:outline-none sm:leading-6"
               >
                 {adminMerchants.map((merchant) => (
-                  <option key={merchant.merchant_id} value={merchant.merchant_id}>
+                  <option
+                    key={merchant.merchant_id}
+                    value={merchant.merchant_id}
+                  >
                     {merchant.name}
                   </option>
                 ))}
               </select>
             </div>
           )}
-        </div>
-        <div className="mt-4 flex justify-end">
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-md bg-primary font-semibold text-white"
-          >
-            Add New Admin
-          </button>
         </div>
       </form>
     </div>

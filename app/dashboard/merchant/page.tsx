@@ -9,7 +9,7 @@ import { getMerchants } from "@/app/api/merhchant";
 import { formatTime } from "@/app/lib/formatter";
 import Heading from "@/app/components/Heading";
 import MerchantModal from "@/app/components/modal/merchant/MerchantModal";
-
+import Image from "next/image";
 
 const Page: React.FC = () => {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
@@ -28,32 +28,59 @@ const Page: React.FC = () => {
 
     fetchData();
 
-    return () => { };
+    return () => {};
   }, []);
 
- return (
+  // OVERFLOW HIDDEN SAAT MODAL TERBUKA
+  useEffect(() => {
+    if (merchantModal.isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = ""; // Restore default overflow
+    }
+  }, [merchantModal.isOpen]);
+
+  return (
     <div className="flex flex-col gap-6 ">
-      <Heading title='Merchants' subtitle='List of all merchant' buttonTitle='+ Add Merchant' onButtonClick={merchantModal.onOpen} />
+      <Heading
+        title="Merchants"
+        subtitle="List of all merchant"
+        buttonTitle="+ Add Merchant"
+        onButtonClick={merchantModal.onOpen}
+      />
       <section className="flex gap-6">
         <div className="w-full grid grid-cols-2 gap-4">
           {merchants.length > 0 ? (
             merchants.map((merchant) => (
-              <Link key={merchant.id} href={`/dashboard/merchant/${merchant.id}`}>
+              <Link
+                key={merchant.id}
+                href={`/dashboard/merchant/${merchant.id}`}
+              >
                 <div className="p-6 flex flex-col gap-4 rounded-md bg-white">
                   <div className="flex items-center gap-4 relative">
-                    <img
+                    <Image
                       src="/icons/merchantLogo.svg"
                       alt="merchant logo"
-                      className="h-16 w-16 rounded-full"
+                      className="rounded-full"
+                      height={64}
+                      width={64}
                     />
                     <div className="flex flex-col gap-1">
-                      <p className="text-3xl font-semibold">{merchant.merchant_name}</p>
+                      <p className="text-3xl font-semibold">
+                        {merchant.merchant_name}
+                      </p>
                       <p className="text-sm text-textGray">
-                        Opening Hours: {formatTime(merchant.operating_hours.opening_hours)} - {formatTime(merchant.operating_hours.closing_hours)}
+                        Opening Hours:{" "}
+                        {formatTime(merchant.operating_hours.opening_hours)} -{" "}
+                        {formatTime(merchant.operating_hours.closing_hours)}
                       </p>
                     </div>
                     <button
-                      className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${merchant.is_open ? "bg-buttonGreen text-textGreen" : "bg-secondary text-primary"}`}
+                      className={`absolute right-0 max-h-max px-4 py-2 rounded-full text-sm ${
+                        merchant.is_open
+                          ? "bg-buttonGreen text-textGreen"
+                          : "bg-secondary text-primary"
+                      }`}
                     >
                       {merchant.is_open ? "Open" : "Closed"}
                     </button>
@@ -67,7 +94,7 @@ const Page: React.FC = () => {
           )}
         </div>
       </section>
-      <MerchantModal/>
+      <MerchantModal />
     </div>
   );
 };
