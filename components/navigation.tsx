@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import NavButton from "./nav-button";
 import {
   Accordion,
@@ -10,8 +10,18 @@ import {
   AccordionContent,
 } from "./ui/accordion";
 import Image from "next/image";
+import { UserContext } from "@/app/context/UserContext";
 
-const routes = [
+type Route = {
+  label: string;
+  href: string;
+  icon: string;
+  iconWhite: string;
+  subRoutes?: Route[];
+  subSubRoutes?: Route[];
+};
+
+const routes: Route[] = [
   {
     label: "Home",
     href: "/dashboard",
@@ -151,7 +161,7 @@ const Navigation = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isSubSubRouteActive = (subRoutes: any[] = []): boolean => {
+  const isSubSubRouteActive = (subRoutes: Route[] = []): boolean => {
     return subRoutes.some((subRoute) => {
       if (subRoute.subSubRoutes) {
         return isSubSubRouteActive(subRoute.subSubRoutes);
@@ -160,10 +170,73 @@ const Navigation = () => {
     });
   };
 
+  const { user } = useContext(UserContext);
+
+  let allowedMenuItems: string[];
+  switch (user?.role_keyword) {
+    case "admin_merchant":
+      allowedMenuItems = [
+        "Home",
+        "Order",
+        "Menu",
+        "Customer",
+        "Promotional Notification",
+        "Staff",
+      ];
+      break;
+    case "super_admin":
+      allowedMenuItems = [
+        "Home",
+        "Merchant",
+        "Order",
+        "Menu",
+        "Additional Fee",
+        "Voucher",
+        "Promotional Banner",
+        "Promotional Notification",
+        "Customer",
+        "Report",
+        "Sales Report",
+        "Tax Report",
+        "Order Sales",
+        "Periodic Sales",
+        "Merchant Sales",
+        "Payment Method Sales",
+        "Product Sales",
+        "Settings",
+        "Additional Fee",
+        "Custom Notification",
+        "Admin",
+        "Staff",
+      ];
+      break;
+    case "admin_finance":
+      allowedMenuItems = ["Home", "Sales"];
+      break;
+    default:
+      allowedMenuItems = [];
+  }
+
+  const filterRoutes = (routes: Route[], allowedItems: string[]): Route[] => {
+    return routes
+      .filter((route) => allowedItems.includes(route.label))
+      .map((route) => {
+        if (route.subRoutes) {
+          route.subRoutes = filterRoutes(route.subRoutes, allowedItems);
+        }
+        if (route.subSubRoutes) {
+          route.subSubRoutes = filterRoutes(route.subSubRoutes, allowedItems);
+        }
+        return route;
+      });
+  };
+
+  const filteredRoutes = filterRoutes(routes, allowedMenuItems);
+
   return (
     <div className="h-[65vh] max-h-screen overflow-y-auto pr-2">
       <Accordion type="multiple" className="animate-none flex flex-col gap-4">
-        {routes.map((route) => (
+        {filteredRoutes.map((route) => (
           <div key={route.href}>
             {route.subRoutes ? (
               <AccordionItem value={route.label} key={route.label}>
@@ -174,7 +247,6 @@ const Navigation = () => {
                       : ""
                   } text-gray-900`}
                 >
-                  {/* Report */}
                   <AccordionTrigger className="py-2 px-2 text-sm text-gray-400 hover:text-gray-500">
                     <div className="flex gap-2 items-center">
                       <Image
@@ -190,7 +262,7 @@ const Navigation = () => {
                       <span
                         className={`font-medium ${
                           isSubSubRouteActive(route.subRoutes)
-                            ? "bg-primary rounded-md  text-white w-full text-left"
+                            ? "bg-primary rounded-md text-white w-full text-left"
                             : ""
                         } text-gray-900 font-semibold`}
                       >
@@ -214,7 +286,6 @@ const Navigation = () => {
                                 : ""
                             } text-gray-900`}
                           >
-                            {/* Sales report */}
                             <AccordionTrigger className="py-2 px-2 text-sm hover:text-gray-500">
                               <div className="flex gap-2 items-center">
                                 <Image
@@ -227,7 +298,9 @@ const Navigation = () => {
                                   width={28}
                                   height={28}
                                 />
-                                <span className="font-semibold">{subRoute.label}</span>
+                                <span className="font-semibold">
+                                  {subRoute.label}
+                                </span>
                               </div>
                             </AccordionTrigger>
                           </div>

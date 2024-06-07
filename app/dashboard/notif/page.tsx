@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
-import { formatCurrency, formatDateRange } from "@/app/lib/formatter";
 import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";

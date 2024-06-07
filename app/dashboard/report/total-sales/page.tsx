@@ -9,6 +9,7 @@ import DropDown from "@/app/components/Dropdown";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Image from "next/image";
+import CheckBoxGroup from "@/app/components/Checkbox";
 
 const sortOptions = [
   { value: "ASC", label: "Rendah ke Tinggi" },
@@ -67,6 +68,9 @@ const Page = ({
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
 
+  const [merchantBox, setMerchantBox] = useState<any>([]);
+  const [selectedMerchants, setSelectedMerchants] = useState<any>([]);
+
   useEffect(() => {
     handleSave();
   }, [searchParams?.page, startDate, endDate, sort, periodSort]);
@@ -85,9 +89,6 @@ const Page = ({
       if (endDate) {
         url += `&end_date=${endDate}`;
       }
-
-      console.log("Request URL:", url); // Log URL untuk memastikan URL benar
-      console.log("Token:", token); // Log token untuk memastikan token tidak hilang
 
       const response = await axios.get(url, {
         headers: {
@@ -130,8 +131,30 @@ const Page = ({
     window.open(
       `${
         process.env.NEXT_PUBLIC_SERVER_URL
-      }/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=total-sales&merchant_id=${3}&period=${periodOptions}&sort=${sort}`
+      }/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=total-sales&merchant_id=${selectedMerchants}&period=${periodOptions}&sort=${sort}`
     );
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=order-sales`
+        );
+        const data = response.data.data;
+
+        console.log("Merchants:", data.merchants);
+        setMerchantBox(data.merchants);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleMerchantBoxChange = (selectedValues: string[]) => {
+    setSelectedMerchants(selectedValues.join(","));
   };
 
   return (
@@ -154,16 +177,17 @@ const Page = ({
 
       <div className="mt-8 p-8 bg-white rounded-lg">
         <div className="w-full flex gap-8 items-center">
-          {/* <div className="flex flex-col gap-1 justify-center">
+          <div className="flex flex-col gap-1 justify-center">
             <label htmlFor="selectOption" className="text-[14px] font-semibold">
               Merchant
             </label>
-            <DropDown
-              sortTitle="Pilih Merchant"
-              onSortChange={handleSortChange}
-              sortOptions={sortOptions}
+            <CheckBoxGroup
+              title="Pilih Merchant"
+              options={merchantBox}
+              onSelectionChange={handleMerchantBoxChange}
             />
-          </div> */}
+          </div>
+
           <div className="flex flex-col gap-1 justify-center">
             <label htmlFor="selectOption" className="text-[14px] font-semibold">
               Urutkan

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAdminModal } from "@/app/hooks/admin/useAdminModal";
 import { useEditAdminModal } from "@/app/hooks/admin/useEditAdminModal";
 import { Admin } from "@/app/types/types";
@@ -11,11 +10,16 @@ import EditAdminModal from "@/app/components/modal/admin/EditAdminModal";
 import AdminModal from "@/app/components/modal/admin/AdminModal";
 import Heading from "@/app/components/Heading";
 import { Switch } from "@/components/ui/switch";
-import axios from "axios";
 
-const Page: React.FC = () => {
-  const router = useRouter();
-  const [admins, setAdmins] = useState<any>([]);
+type Props = {
+ id:number;
+ email: string;
+ last_login: string;
+
+}
+
+const Content = ({id, email, last_login} : Props) => {
+  const [admins, setAdmins] = useState<Admin[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,29 +46,6 @@ const Page: React.FC = () => {
     editAdminModal.onOpen();
   };
 
-  const [isActive, setIsActive] = useState(admins?.is_active);
-
-  const adminSwitch = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token not found in local storage");
-
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
-      const newIsActive = !isActive;
-      setIsActive(newIsActive);
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/switch/${admins.id}`,
-        { is_active: newIsActive },
-        config
-      );
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
-  };
-
   return (
     <div className="flex flex-col gap-6 ">
       <Heading
@@ -76,7 +57,7 @@ const Page: React.FC = () => {
 
       <section className="flex gap-6">
         <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-10 w-full">
-          {admins.map((admin : any) => (
+          {admins.map((admin) => (
             <div
               key={admin.id}
               className="flex flex-col gap-2 group relative rounded-lg"
@@ -92,14 +73,8 @@ const Page: React.FC = () => {
                   </p>
                 </div>
                 <div>
-                  <button>
-                    {/* {admin.is_active ? (
-                        <p className="bg-buttonGreen text-textGreen px-4 py-2 rounded-full">Active</p>
-                      ) : (
-                        <p>Deactived</p>
-                      )} */}
-                 <Switch checked={isActive} onClick={adminSwitch} />
-                  </button>
+                 
+                    <Switch />
                 </div>
               </div>
               <div className="absolute bottom-0 transition-all group-hover:translate-y-8 duration-300 w-full rounded-xl bg-primary h-full ">
@@ -122,4 +97,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default Content;

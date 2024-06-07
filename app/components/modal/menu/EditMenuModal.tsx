@@ -180,14 +180,14 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: Menu | null }) => {
         },
       };
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu`,
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu/${selectedMenu}`,
         formData,
         config
       );
       toast.success("Menu added successfully!");
     } catch (error) {
-      toast.error("Failed to add menu");
+      toast.error("Failed to edit menu");
     }
   };
 

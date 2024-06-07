@@ -152,7 +152,7 @@ const Page = ({
       </div>
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between items-center">
           <div className="flex gap-4 items-center">
             <div className="flex flex-col gap-1 justify-center">
               <label

@@ -1,11 +1,9 @@
 "use client";
 
 import { formatDate } from "@/app/lib/formatter";
-import { Banner } from "@/app/types/types";
 import { Switch } from "@/components/ui/switch";
 
 import axios from "axios";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 type Props = {
@@ -18,7 +16,6 @@ type Props = {
 };
 
 const BannerCard: React.FC<Props> = ({
-  query,
   id,
   is_active,
   banner_name,
@@ -40,7 +37,7 @@ const BannerCard: React.FC<Props> = ({
       setIsActive(newIsActive);
 
       await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/banner/${id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/banner/switch/${id}`,
         { is_active: newIsActive },
         config
       );

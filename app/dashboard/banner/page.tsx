@@ -9,6 +9,7 @@ import { useBannerModal } from "@/app/hooks/banner/useBannerModal";
 import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Filter from "@/app/components/Filter";
+import { Loader2 } from "lucide-react";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -57,6 +58,15 @@ const Page = ({
   const handleSortChange = (selectedSort: string) => {
     setSort(selectedSort);
   };
+
+  if (!banners) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin size-12 text-primary" />
+      </div>
+    );
+  }
+
 
   return (
     <div>

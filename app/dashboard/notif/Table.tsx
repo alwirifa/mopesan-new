@@ -8,15 +8,13 @@ type Props = {
 };
 
 const Table: React.FC<Props> = ({ data }) => {
-
-  if (!data || data.length === 0) {
+  if (!data || data.length === 0 || data === null || data === undefined) {
     return (
-        <div className="h-full w-full flex justify-center items-center">
-            <p>No data available</p>
-        </div>
+      <div className="h-full w-full flex justify-center items-center">
+        <p>No data available</p>
+      </div>
     );
-}
-
+  }
 
   return (
     <div>

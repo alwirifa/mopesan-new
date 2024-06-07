@@ -23,8 +23,8 @@ const Page = ({
 }) => {
   const defaultStartDate = new Date(2024, 0, 20);
   const defaultEndDate = new Date(2024, 4, 10);
-  const [dataCard, setDataCard] = useState<any[]>([]);
-  const [periodicData, setPeriodicData] = useState<any>({});
+  const [notifTabel, setNotifTabel] = useState<any[]>([]);
+  const [notifData, setNotifData] = useState<any>({});
   const [selectedDateRange, setSelectedDateRange] = useState<
     DateRange | undefined
   >();
@@ -46,7 +46,7 @@ const Page = ({
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/between?sort=${sort}&offset=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?sort=${sort}&offset=${offset}&limit=${limit}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
@@ -62,8 +62,8 @@ const Page = ({
       const data = response.data.data;
 
       const dataCard = response.data.data.orders;
-      setPeriodicData(data);
-      setDataCard(dataCard);
+      setNotifData(data);
+      setNotifTabel(dataCard);
       console.log(dataCard);
     } catch (error) {
       console.error("Error fetching roles:", error);
@@ -91,6 +91,29 @@ const Page = ({
     window.open(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?type=notification`
     );
+  };
+
+  const [isActive, setIsActive] = useState(notifData?.is_open);
+
+  const notifSwitch = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token not found in local storage");
+
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const newIsActive = !isActive;
+      setIsActive(newIsActive);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/merchants/switch/${notifData.id}`,
+        { is_active: newIsActive },
+        config
+      );
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
 
   return (
@@ -123,7 +146,7 @@ const Page = ({
         </div>
         {/* <Sort onSortChange={handleSortChange} />{" "} */}
         {/* =====================  TABLE  ====================== */}
-        <Table data={dataCard} />
+        <Table data={notifData} />
         <div className="w-full flex justify-end mt-4">
           <Pagination totalPages={Math.ceil(1 / limit)} />
         </div>
