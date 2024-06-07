@@ -4,14 +4,16 @@ import Image from "next/image";
 
 const Section4 = () => {
   return (
-    <div className="py-16 md:py-32 w-full ">
+    <div className="py-16 md:py-32 w-full z-10"> {/* Changed z-40 to z-10 */}
       <Container>
-        <div className="relative flex flex-col  justify-center gap-4 px-4">
-          <img
-            src="/home/heroImage.webp"
-            alt=""
-            className="h-[30vh] md:h-[50vh] w-auto bg-contain md:absolute md:-top-8 md:left-20 "
-          />
+        <div className="relative flex flex-col justify-center gap-4">
+          <div className="px-6 flex justify-center">
+            <img
+              src="/home/heroImage.webp"
+              alt=""
+              className="h-[30vh] md:h-[50vh] w-auto bg-contain md:absolute md:-top-8 md:left-20"
+            />
+          </div>
           <img
             src="/home/section4.svg"
             className="h-[40vh] w-full bg-contain sm:flex hidden"

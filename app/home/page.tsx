@@ -13,6 +13,8 @@ const page = (props: Props) => {
   return (
     <div>
       <Header />
+
+   
       <Banner />
       <Section1 />
       <Section2 />
