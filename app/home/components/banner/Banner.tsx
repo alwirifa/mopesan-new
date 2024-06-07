@@ -9,7 +9,7 @@ const Banner = () => {
       <Container>
         <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start">
           <div className="flex flex-col gap-4 text-center lg:text-left lg:w-1/2">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold md:leading-snug leading-tight">
               Kini, pesan makan lebih mudah & praktis.
             </h1>
             <p className="mt-4">
@@ -29,6 +29,7 @@ const Banner = () => {
             />
           </div>
         </div>
+  
       </Container>
     </div>
   );

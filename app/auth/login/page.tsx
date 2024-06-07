@@ -56,7 +56,7 @@ const Login = () => {
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       <div className="h-full">
         <img
-          src="/images/mainBackground.webp"
+          src="/images/mainBackground.svg"
           alt="food background"
           className=" hidden md:flex md:h-screen w-full object-cover"
         />

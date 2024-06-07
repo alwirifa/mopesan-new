@@ -24,6 +24,9 @@ const config = {
         section3: "url('/home/section3.svg')",
         section4: "url('/home/section4.svg')",
       },
+      fontFamily: {
+        noah:["var(--font-noah)"],
+      },
       colors: {
         bgRed: "#9A031E",
         bgGray: "#F2F4F8",

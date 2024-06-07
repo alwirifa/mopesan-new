@@ -19,7 +19,7 @@ const Section4 = () => {
             className="h-[40vh] w-full bg-contain sm:flex hidden"
           />
           <div className="md:absolute md:top-6 md:right-16 max-w-xl p-4 md:p-16 flex flex-col gap-4">
-            <h1 className="text-2xl font-semibold md:text-white text-primary">
+            <h1 className="text-2xl font-semibold md:text-white text-primary leading-snug">
               Unduh Sekarang dan nikmati promo menarik tiap harinya.
             </h1>
             <p className="text-primary md:text-white">

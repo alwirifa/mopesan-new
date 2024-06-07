@@ -8,7 +8,7 @@ const Section3 = () => {
       <Container>
         <div className="flex flex-col sm:flex-row items-center">
           <div className="flex-1">
-            <h1 className="text-xl sm:text-2xl md:text-3xl xl:text-4xl font-semibold text-white mb-6 sm:mb-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl xl:text-4xl xl:leading-snug font-semibold text-white mb-6 sm:mb-0">
               Stamp Hero! Perbanyak transaksi, dapatkan menu gratis!
             </h1>
             <p className="text-sm sm:text-base text-white font-light max-w-md mt-4">
