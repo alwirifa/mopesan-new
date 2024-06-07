@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { formatCurrency, formatDateRange } from "@/app/lib/formatter";
+import { formatDateRange } from "@/app/lib/formatter";
 import { DatePickerWithRange } from "@/app/components/DatePickerWithRange";
 import axios from "axios";
 import Sort from "@/app/components/Sort";
@@ -11,6 +11,11 @@ import Table from "./Table";
 import Heading from "@/app/components/Heading";
 import Image from "next/image";
 import Filter from "@/app/components/Filter";
+import CheckBoxOrder from "@/app/components/checboxOrder/CheckboxOrder";
+import CheckBoxGroup from "@/app/components/Checkbox";
+import MerchantCheckbox from "@/app/components/checboxOrder/MerchantCheckBox";
+import OrderCheckbox from "@/app/components/checboxOrder/OrderCheckBox";
+import { ChevronDown } from "lucide-react";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -42,27 +47,52 @@ const Page = ({
   );
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
-  // const offset = (currentPage - 1) * limit;
+
+  const [selectedMerchants, setSelectedMerchants] = useState<any>([]);
+  const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<any>([]);
+  const [selectedOrderTypes, setSelectedOrderTypes] = useState<any>([]);
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState<any>([]);
+  const [merchantBox, setMerchantBox] = useState<any>([]);
+  const [orderTypesBox, setOrderTypesBox] = useState<any>([]);
+  const [orderStatusBox, setOrderStatusBox] = useState<any>([]);
+  const [paymentBox, setPaymentBox] = useState<any>([]);
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, startDate, endDate]);
+  }, [
+    searchParams?.page,
+    startDate,
+    endDate,
+    selectedMerchants,
+    selectedPaymentMethods,
+    selectedOrderTypes,
+    selectedOrderStatus,
+  ]);
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${
-        process.env.NEXT_PUBLIC_SERVER_URL
-      }/api/v1/auth/orders/admin/between?sort=${sort}&page=${currentPage}&limit=${limit}&merchant_name=${[
-        dataCard.merchant_name,
-        dataCard.final_amount,
-      ]}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/between?sort=${sort}&page=${currentPage}&limit=${limit}`;
+
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
       if (endDate) {
         url += `&end_date=${endDate}`;
       }
+      if (selectedMerchants.length > 0) {
+        url += `&merchant_ids=${selectedMerchants}`;
+      }
+      if (selectedPaymentMethods.length > 0) {
+        url += `&payment_methods=${selectedPaymentMethods}`;
+      }
+      if (selectedOrderTypes.length > 0) {
+        url += `&order_type=${selectedOrderTypes}`;
+      }
+      if (selectedOrderStatus.length > 0) {
+        url += `&order_status=${selectedOrderStatus}`;
+      }
+
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -71,12 +101,12 @@ const Page = ({
 
       const data = response.data.data;
 
-      const dataTabel = response.data.data.orders;
+      const dataTabel = data.orders;
       setTotalPages(data.total_pages);
+
       setDataCard(dataTabel);
-      console.log(data);
     } catch (error) {
-      console.error("Error fetching roles:", error);
+      console.error("data error:", error);
     }
   };
 
@@ -103,6 +133,47 @@ const Page = ({
     );
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=order-sales`
+        );
+        const data = response.data.data;
+
+        console.log("Merchants:", data.merchants);
+        setMerchantBox(data.merchants);
+
+        console.log("Payment methods:", data.payment_method);
+        setPaymentBox(data.payment_method);
+
+        console.log("Order types:", data.order_types);
+        setOrderTypesBox(data.order_types);
+
+        console.log("Order status:", data.order_status);
+        setOrderStatusBox(data.order_status);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleMerchantBoxChange = (selectedValues: string[]) => {
+    setSelectedMerchants(selectedValues.join(","));
+  };
+  const handlePaymentBoxChange = (selectedValues: string[]) => {
+    setSelectedPaymentMethods(selectedValues.join(","));
+  };
+  const handleOrderTypesBoxChange = (selectedValues: string[]) => {
+    setSelectedOrderTypes(selectedValues.join(","));
+  };
+  const handleOrderStatusBoxChange = (selectedValues: string[]) => {
+    setSelectedOrderStatus(selectedValues.join(","));
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="">
       <div className="w-full flex justify-between items-center relative">
@@ -124,11 +195,46 @@ const Page = ({
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
           <div className="flex gap-4 items-center">
-            <Filter
-              onFilterChange={handleSortChange}
-              filterOptions={sortOptions}
-            />{" "}
-            <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+            <div>
+              <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+            </div>
+
+            <div className="relative inline-block">
+              <button
+                className="flex justify-between gap-4 items-center border rounded-md bg-white shadow-sm px-4 py-2"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <p className="text-black font-base">Filter</p>
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+              </button>
+
+              {isOpen && (
+                <div className="absolute left-0 mt-1 bg-white border rounded-md shadow-lg p-4  z-10 min-w-max max-w-content">
+                  <div className="flex flex-col gap-2">
+                    <OrderCheckbox
+                      title="Merchants"
+                      options={merchantBox}
+                      onSelectionChange={handleMerchantBoxChange}
+                    />
+                    <OrderCheckbox
+                      title="Payment Methods"
+                      options={paymentBox}
+                      onSelectionChange={handlePaymentBoxChange}
+                    />
+                    <OrderCheckbox
+                      title="Order Types"
+                      options={orderTypesBox}
+                      onSelectionChange={handleOrderTypesBoxChange}
+                    />
+                    <OrderCheckbox
+                      title="Order Status"
+                      options={orderStatusBox}
+                      onSelectionChange={handleOrderStatusBoxChange}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-4 items-center">
             <DatePickerWithRange onDateChange={handleDateChange} />

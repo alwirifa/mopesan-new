@@ -10,6 +10,8 @@ import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Search from "@/app/components/Search";
 import Image from "next/image";
+import DropDown from "@/app/components/Dropdown";
+import CheckBoxGroup from "@/app/components/Checkbox";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -41,46 +43,16 @@ const Page = ({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
-  const offset = (currentPage - 1) * limit;
   const [totalPages, setTotalPages] = useState<any>({});
-  const [category, setCategory] = useState<any>([]);
 
-  useEffect(() => {
-    handleSave();
-  }, [searchParams?.page, query, startDate, endDate, sort]);
+  const [categoryFilter, setCategoryFilter] = useState<any[]>([
+    { value: "", label: "All" },
+  ]);
 
-  const handleSave = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/product-sales?search=${query}&sort=${sort}&page=${currentPage}&limit=${limit}`;
-      if (startDate) {
-        url += `&start_date=${startDate}`;
-      }
-      if (endDate) {
-        url += `&end_date=${endDate}`;
-      }
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-      const responeCategory = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category`
-      );
-
-      const categoryData = responeCategory.data.category_name;
-
-      console.log("tes", categoryData);
-
-      const dataTabel = response.data.data.data;
-      const totalPages = response.data.data.total_pages;
-      setTotalPages(totalPages);
-      setCategory(categoryData);
-      setDataTabel(dataTabel);
-    } catch (error) {
-      console.error("Error fetching roles:", error);
-    }
+  const handleCheckboxChange = (selectedValues: string[]) => {
+    setSelectedCategory(selectedValues.join(","));
   };
 
   const handleSortChange = (newSort: string) => {
@@ -99,19 +71,70 @@ const Page = ({
     }
   };
 
+  useEffect(() => {
+    handleSave();
+  }, [searchParams?.page, query, startDate, endDate, sort, selectedCategory]);
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/product-sales?search=${query}&sort=${sort}&page=${currentPage}&limit=${limit}`;
+      if (startDate) {
+        url += `&start_date=${startDate}`;
+      }
+      if (endDate) {
+        url += `&end_date=${endDate}`;
+      }
+      if (selectedCategory) {
+        url += `&category_id=${selectedCategory}`;
+      }
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const responeCategory = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/category`
+      );
+
+      const categoryData = responeCategory.data.category_name;
+
+      console.log("tes", categoryData);
+
+      const dataTabel = response.data.data.data;
+      const totalPages = response.data.data.total_pages;
+      setTotalPages(totalPages);
+      setDataTabel(dataTabel);
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=product-sales`
+        );
+        setCategoryFilter(response.data.data.categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleDownload = () => {
     window.open(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=product-sales`
     );
   };
 
+  console.log(dataTabel)
   return (
     <div className="">
-      <div>
-        {/* {category.map((categories,index) => (
-  <p>{categories}</p>
-))} */}
-      </div>
       <div className="flex justify-between items-center">
         <h1 className="text-[42px] font-semibold">Product Sales</h1>
         <div
@@ -131,8 +154,42 @@ const Page = ({
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
           <div className="flex gap-4 items-center">
-            <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
-            <DatePickerWithRange onDateChange={handleDateChange} />
+            <div className="flex flex-col gap-1 justify-center">
+              <label
+                htmlFor="selectOption"
+                className="text-[14px] font-semibold"
+              >
+                Total Sales
+              </label>
+              <DropDown
+                sortTitle="Harga: Rendah ke Tinggi"
+                onSortChange={handleSortChange}
+                sortOptions={sortOptions}
+              />
+            </div>
+            <div className="flex flex-col gap-1 justify-center">
+              <label
+                htmlFor="selectOption"
+                className="text-[14px] font-semibold"
+              >
+                Category
+              </label>
+              <CheckBoxGroup
+                title="Category"
+                options={categoryFilter}
+                onSelectionChange={handleCheckboxChange}
+              />
+              
+            </div>
+            <div className="flex flex-col gap-1 justify-center">
+              <label
+                htmlFor="selectOption"
+                className="text-[14px] font-semibold"
+              >
+                Pilih Periode
+              </label>
+              <DatePickerWithRange onDateChange={handleDateChange} />
+            </div>
           </div>
           <Search placeholder="Search ..." />
         </div>

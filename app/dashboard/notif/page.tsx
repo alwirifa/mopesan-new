@@ -50,7 +50,7 @@ const Page = ({
         },
       });
 
-      const dataTabel = response.data.data;
+      const dataTabel = response.data;
       const pages = response.data.data;
       setTotalPages(pages);
       console.log(response.data);
@@ -79,23 +79,14 @@ const Page = ({
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
-          {/* <div className="flex gap-4 items-center">
-            <DatePickerWithRange onDateChange={handleDateChange} />
-            <button
-              onClick={handleSave}
-              className="px-4 py-3 rounded-lg text-white bg-primary "
-            >
-              Terapkan
-            </button>
-          </div> */}
           <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
           <Search placeholder="Search ..." />
         </div>
         {/* =====================  TABLE  ====================== */}
-        {/* <Table data={dataTabel} /> */}
-        {/* <div className="w-full flex justify-end mt-4">
+        <Table data={dataTabel} />
+        <div className="w-full flex justify-end mt-4">
           <Pagination totalPages={totalPages?.total_customer / limit} />
-        </div> */}
+        </div>
         <NotifModal />
       </div>
     </div>

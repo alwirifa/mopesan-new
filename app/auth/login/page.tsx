@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { UserContext } from "@/app/context/UserContext";
-import Image from "next/image";
 
 interface LoginData {
   email: string;
@@ -15,7 +14,7 @@ interface LoginData {
 
 const Login = () => {
   const router = useRouter();
-  const { setUser, user } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const [data, setData] = useState<LoginData>({
     email: "",
@@ -41,13 +40,11 @@ const Login = () => {
       console.log("Login Response:", response.data.data);
 
       setUser(userData);
-      console.log("User set in context:", userData);
       localStorage.setItem("token", token);
       toast.success("Login successful!");
 
-      router.push("/dashboard"); 
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Error logging in:", error);
       toast.error("Login failed. Please check your credentials and try again.");
     }
   };

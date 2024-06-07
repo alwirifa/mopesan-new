@@ -73,6 +73,34 @@ const Page = ({
   };
 
   const voucherModal = useVoucherModal();
+
+  const [checkboxFilter, setCheckboxFilter] = useState<any[]>([
+    { value: "", label: "All" },
+  ]);
+
+  const [selectedCheckboxFilter, setSelectedCheckboxFilter] = useState<string>("");
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=voucher`
+        );
+        setCheckboxFilter(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  const handleCheckboxChange = (selectedValues: string[]) => {
+    setSelectedCheckboxFilter(selectedValues.join(","));
+  };
+
   return (
     <div className="">
       <Heading
@@ -85,10 +113,7 @@ const Page = ({
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
           <div className="flex gap-4 items-center">
-            <Filter
-              onFilterChange={handleSortChange}
-              filterOptions={sortOptions}
-            />{" "}
+          
             <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
             <div
               className="px-4 pr-6 py-[7px] border rounded-lg text-sm font-semibold bg-primary text-white flex gap-2"

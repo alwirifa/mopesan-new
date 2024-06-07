@@ -154,7 +154,7 @@ const Page = ({
 
       <div className="mt-8 p-8 bg-white rounded-lg">
         <div className="w-full flex gap-8 items-center">
-          <div className="flex flex-col gap-1 justify-center">
+          {/* <div className="flex flex-col gap-1 justify-center">
             <label htmlFor="selectOption" className="text-[14px] font-semibold">
               Merchant
             </label>
@@ -163,7 +163,7 @@ const Page = ({
               onSortChange={handleSortChange}
               sortOptions={sortOptions}
             />
-          </div>
+          </div> */}
           <div className="flex flex-col gap-1 justify-center">
             <label htmlFor="selectOption" className="text-[14px] font-semibold">
               Urutkan

@@ -1,7 +1,4 @@
-// Sort.tsx
-
 import React, { useState } from "react";
-import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 
 type Option = {
@@ -37,10 +34,20 @@ const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
 
       {isOpen && (
         <div className="absolute top-full left-0 mt-1 bg-white border rounded-md shadow-lg max-w-max p-2 space-y-2">
+          {/* Menambahkan opsi "All" */}
+          <button
+            className={`block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-sm ${
+              selectedOption === "" ? "bg-gray-200" : ""
+            }`}
+            onClick={() => handleSortChange("")}
+          >
+            All
+          </button>
+          {/* Menampilkan opsi-opsi kategori */}
           {sortOptions.map((option, index) => (
             <button
               key={index}
-              className={`block w-full text-left px-4 py-2  hover:bg-gray-200 rounded-sm ${
+              className={`block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-sm ${
                 selectedOption === option.value ? "bg-gray-200" : ""
               }`}
               onClick={() => handleSortChange(option.value)}

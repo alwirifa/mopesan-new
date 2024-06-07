@@ -142,9 +142,9 @@ const Table: React.FC<Props> = ({ data }) => {
           </table>
         </div>
       )}
-      {filteredData.length === 0 && (
+      {/* {filteredData.length === 0 && (
         <p className="text-gray-500 mt-4">Tidak ada data yang tersedia.</p>
-      )}
+      )} */}
     </div>
   );
 };
