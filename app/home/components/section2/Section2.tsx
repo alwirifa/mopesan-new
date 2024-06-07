@@ -5,7 +5,7 @@ import Container from "../Container";
 const MenuList = [
   {
     img: "/home/food1.webp",
-    category: "Snack & SHARING",
+    category: "SNACK & SHARING",
     product_name: "Sunsal Yangnyeom Fried Chicken",
   },
   {
