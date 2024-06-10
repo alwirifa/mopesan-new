@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import axios, { AxiosResponse } from "axios";
+import { UserContext } from "@/app/context/UserContext";
 
 interface Data {
   order_day: string;
@@ -15,6 +16,7 @@ interface ServerResponse {
 
 const LineChart = () => {
   const [earning, setEarning] = useState<Data[]>([]);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,14 +24,17 @@ const LineChart = () => {
         const adminToken = localStorage.getItem("token");
 
         if (adminToken) {
-          const response: AxiosResponse<ServerResponse> = await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/weekly-stats`,
-            {
-              headers: {
-                Authorization: `Bearer ${adminToken}`,
-              },
-            }
-          );
+          let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/weekly-stats`;
+
+          if (user.role_keyword === "admin_merchant") {
+            url += `?merchant_id=${user.merchant_id}`;
+          }
+
+          const response: AxiosResponse<ServerResponse> = await axios.get(url, {
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+            },
+          });
           const { data } = response.data;
           console.log(data);
           setEarning(data);
@@ -63,7 +68,7 @@ const LineChart = () => {
         yScale={{
           type: "linear",
           min: 0,
-          max: Math.max(...earning.map(item => item.total_earnings)),
+          max: Math.max(...earning.map((item) => item.total_earnings)),
           stacked: false, // Do not stack the lines
           reverse: false, // Ensure zero is at the bottom
         }}

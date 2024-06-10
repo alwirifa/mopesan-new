@@ -23,14 +23,17 @@ const OrderCard: React.FC = () => {
           throw new Error("Token not found in local storage");
         }
 
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/orders`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/orders`;
+
+        if (user.role_keyword === "admin_merchant") {
+          url += `?merchant_id=${user.merchant_id}`;
+        }
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setOrderData(response.data.data.admin_daily);
       } catch (error) {
@@ -41,6 +44,8 @@ const OrderCard: React.FC = () => {
 
     fetchData();
   }, []);
+
+  console.log(user);
 
   if (!orderData) {
     return (

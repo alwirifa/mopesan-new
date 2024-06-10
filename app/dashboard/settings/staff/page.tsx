@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { formatCurrency, formatDateRange } from "@/app/lib/formatter";
 import { DatePickerWithRange } from "@/app/components/DatePickerWithRange";
@@ -10,6 +10,7 @@ import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Search from "@/app/components/Search";
 import Image from "next/image";
+import { UserContext } from "@/app/context/UserContext";
 
 const Page = ({
   searchParams,
@@ -43,6 +44,8 @@ const Page = ({
     handleSave();
   }, [searchParams?.page, query, sort]);
 
+  const { user } = useContext(UserContext);
+
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -53,6 +56,12 @@ const Page = ({
       if (endDate) {
         url += `&end_date=${endDate}`;
       }
+      
+      if (user.role_keyword === "admin_merchant") {
+        url += `&merchant_id=${user.merchant_id}`;
+      }
+
+
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,

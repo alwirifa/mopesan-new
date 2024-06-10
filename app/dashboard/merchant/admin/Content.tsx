@@ -63,8 +63,18 @@ export default function Content({
       {}
       <div className="p-8 rounded-md bg-white">
         <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-semibold">{merchant_name}</h1>
-          <p className="italic text-textGray">{address}</p>
+          <div className="flex justify-between">
+            <div>
+              <h1 className="text-4xl font-semibold">{merchant_name}</h1>
+              <p className="italic text-textGray">{address}</p>
+            </div>
+
+            <div className="flex gap-4 items-center">
+              <p className="text-[#212427]/70  font-semibold">Closed</p>
+              <Switch checked={isActive} onClick={merchantSwitch} />
+              <p className="text-primary font-semibold">Open</p>
+            </div>
+          </div>
           <div className="flex justify-between">
             <div className="flex flex-col gap-3 mt-4">
               <div className="flex gap-2">

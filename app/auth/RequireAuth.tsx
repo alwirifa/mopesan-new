@@ -49,7 +49,9 @@ const RequireAuth = ({ children }: Props) => {
       "/dashboard/settings/staff",
       "/dashboard/notif",
       "/dashboard/menu",
-      /^\/dashboard\/settings\/staff\/\d+$/, // Regex to match paths like /dashboard/settings/staff/123
+      /^\/dashboard\/settings\/staff\/\d+$/,
+      /^\/dashboard\/merchant\/\d+$/,
+      /^\/dashboard\/report\/order-sales\/\d+$/ // Regex to match paths like /dashboard/settings/staff/123
     ],
     admin_finance: [
       "/dashboard",
