@@ -40,7 +40,7 @@ const Page = ({
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
   const offset = (currentPage - 1) * limit;
-  const [totalPages, setTotalPages] = useState(1)
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     handleSave();
@@ -67,8 +67,8 @@ const Page = ({
       const dataCard = response.data.data.events;
       // setNotifData(data);
       setNotifTabel(dataCard);
-      setTotalPages(totalPages)
- console.log(dataCard)  
+      setTotalPages(totalPages);
+      // console.log(dataCard);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
@@ -97,28 +97,6 @@ const Page = ({
     );
   };
 
-  const [isActive, setIsActive] = useState(notifData?.is_open);
-
-  const notifSwitch = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token not found in local storage");
-
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
-      const newIsActive = !isActive;
-      setIsActive(newIsActive);
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/merchants/switch/${notifData.id}`,
-        { is_active: newIsActive },
-        config
-      );
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
-  };
   const notifModal = useNotifModal();
 
   return (
