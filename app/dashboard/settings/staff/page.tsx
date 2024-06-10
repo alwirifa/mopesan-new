@@ -42,7 +42,7 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query, sort]);
+  }, [searchParams?.page, query, sort, currentPage]);
 
   const { user } = useContext(UserContext);
 

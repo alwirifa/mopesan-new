@@ -86,7 +86,7 @@ const Page = ({
         url += `&end_date=${endDate}`;
       }
       if (selectedCategory) {
-        url += `&category_id=${selectedCategory}`;
+        url += `&category_ids=${selectedCategory}`;
       }
       const response = await axios.get(url, {
         headers: {
