@@ -118,6 +118,9 @@ const Page = ({
         <div className="w-full flex justify-between">
           {/* <Sort onSortChange={handleSortChange} />{" "} */}
           <div className="flex gap-4 items-center">
+            <div>
+              
+            </div>
             <DatePickerWithRange onDateChange={handleDateChange} />
             {/* <button
               onClick={handleSave}
@@ -126,7 +129,7 @@ const Page = ({
               Terapkan
             </button> */}
           </div>
-          <Search placeholder="Search ..."/>
+          {/* <Search placeholder="Search ..."/> */}
         </div>
         {/* =====================  DATA CARD  ====================== */}
         <div className="flex gap-4">

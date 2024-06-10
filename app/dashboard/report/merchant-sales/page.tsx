@@ -115,8 +115,11 @@ const Page = ({
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
-        <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
-           
+        {/* <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+            */}
+            <div>
+              
+            </div>
           <div className="flex gap-4 items-center">
             <DatePickerWithRange onDateChange={handleDateChange} />
           

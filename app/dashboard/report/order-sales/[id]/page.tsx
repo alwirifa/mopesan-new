@@ -53,7 +53,7 @@ export default function Home({ params }: { params: { id: string } }) {
             </Link>
           ) : (
             <Link
-              href="/dashboard/order"
+              href="/dashboard/report/order-sales"
               className="max-w-max rounded-full flex items-center gap-1"
             >
               <img src="/icons/chevron-left.svg" alt="" />

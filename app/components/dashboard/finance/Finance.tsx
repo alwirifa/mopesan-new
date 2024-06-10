@@ -1,39 +1,91 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import Chart from "./Chart";
-import Table from "./Table";
-import axios from "axios";
-import DropDown from "../../Dropdown";
 import { DateRange } from "react-day-picker";
 import { formatDateRange } from "@/app/lib/formatter";
-import { DatePickerWithRange } from "../../DatePickerWithRange";
+import { DatePickerWithRange } from "@/app/components/DatePickerWithRange";
+import axios from "axios";
+import Table from "./Table";
+
+import DropDown from "../../Dropdown";
+import Chart from "./Chart";
 import ReportDetailOrder from "./ReportDetailOrder";
 
-type Props = {};
+const sortOptions = [
+  { value: "ASC", label: "Ascending" },
+  { value: "DESC", label: "Descending" },
+];
 
-const Finance = (props: Props) => {
+const Finance = ({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+    limit?: string;
+  };
+}) => {
+  const [sort, setSort] = useState<string>(sortOptions[0].value);
   const defaultStartDate = new Date(2024, 0, 20);
   const defaultEndDate = new Date(2024, 4, 10);
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>({
-    from: defaultStartDate,
-    to: defaultEndDate,
-  });
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    DateRange | undefined
+  >();
   const [startDate, setStartDate] = useState<string>(
     formatDateRange(defaultStartDate.toISOString())
   );
   const [endDate, setEndDate] = useState<string>(
     formatDateRange(defaultEndDate.toISOString())
   );
-
   const [dataTabel, setDataTabel] = useState<any>([]);
   const [earning, setEarning] = useState<any>([]);
   const [transactions, setTransactions] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [merchantData, setMerchantData] = useState<any>([]);
-  const [selectedMerchant, setSelectedMerchant] = useState<any>(2);
+  const [selectedMerchants, setSelectedMerchants] = useState<any>(2);
+  const [merchantBox, setMerchantBox] = useState<any>([]);
 
-  const handleSelectedMerchant = (newSort: string) => {
-    setSelectedMerchant(newSort);
+  useEffect(() => {
+    handleSave();
+  }, [searchParams?.page, startDate, endDate, selectedMerchants, sort]);
+
+  const handleSave = async () => {
+    try {
+      setLoading(true); // Start loading indicator
+
+      const token = localStorage.getItem("token");
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/finance-dashboard`;
+      if (selectedMerchants) {
+        url += `?merchant_id=${selectedMerchants}`;
+      }
+      if (startDate) {
+        url += `&start_date=${startDate}`;
+      }
+      if (endDate) {
+        url += `&end_date=${endDate}`;
+      }
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = response.data.data;
+      const earningChart = response.data.data.list_earnings;
+      const transactionsChart = response.data.data.list_transaction;
+
+      setEarning(earningChart);
+      setTransactions(transactionsChart);
+      setData(data);
+      setDataTabel(data.merchant_sales);
+
+      setLoading(false); // Stop loading indicator
+    } catch (error) {
+      console.error("data error:", error);
+      setLoading(false); // Stop loading indicator on error
+    }
   };
 
   const handleDateChange = (date: DateRange | undefined) => {
@@ -50,70 +102,28 @@ const Finance = (props: Props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
-        const adminToken = localStorage.getItem("token");
-
-        // Log dates for debugging
-        console.log("Fetching data with startDate:", startDate, "endDate:", endDate);
-
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=order-sales`
         );
         const data = response.data.data;
 
-        console.log("Merchants:", data);
-        setMerchantData(data.merchants);
-
-        if (adminToken) {
-          let url =   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/finance-dashboard?merchant_id=${selectedMerchant}`
-          if (startDate) {
-            url += `&start_date=${startDate}`;
-          }
-          if (endDate) {
-            url += `&end_date=${endDate}`;
-          }
-          
-      
-          const response = await axios.get(url, 
-
-            {
-              headers: {
-                Authorization: `Bearer ${adminToken}`,
-              },
-            }
-          );
-
-
-
-          const data = response.data.data;
-          const earningChart = response.data.data.list_earnings;
-          const transactionsChart = response.data.data.list_transaction;
-
-          setEarning(earningChart);
-          setTransactions(transactionsChart);
-          setData(data);
-          setDataTabel(data.merchant_sales);
-        } else {
-          console.error("Admin token not found in local storage");
-        }
+        console.log("Merchants:", data.merchants);
+        setMerchantBox(data.merchants);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.log(error);
       }
-      setLoading(false);
     };
 
     fetchData();
-  }, [selectedMerchant, startDate, endDate]);
+  }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  console.log(startDate, endDate)
+  const handleSelectedMerchant = (newSort: string) => {
+    setSelectedMerchants(newSort);
+  };
 
   return (
-    <div>
+    <div className="">
       <div className="flex flex-col gap-8 overflow-x-hidden">
         <div className="w-full flex justify-between">
           <h1 className="text-[42px] font-semibold">Dashboard</h1>
@@ -121,29 +131,35 @@ const Finance = (props: Props) => {
             <DropDown
               sortTitle="Pilih merchant"
               onSortChange={handleSelectedMerchant}
-              sortOptions={merchantData}
-              
+              sortOptions={merchantBox}
             />
             <DatePickerWithRange onDateChange={handleDateChange} />
           </div>
         </div>
 
-        <Chart
-          dataEarnings={earning}
-          dataTransations={transactions}
-          earning={data.total_earnings}
-          transactions={data.total_transactions}
-        />
-        <div className="bg-white p-6 rounded-xl">
-          <div className="w-full flex justify-between items-center">
-            <h1 className="text-[24px] font-semibold">
-              Merchant Sales & Perfomance
-            </h1>
-          </div>
-          <Table data={dataTabel} />
-        </div>
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <>
+            <Chart
+              dataEarnings={earning}
+              dataTransations={transactions}
+              earning={data.total_earnings}
+              transactions={data.total_transactions}
+            />
+            {/* Render your components or data here */}
+            <div className="bg-white p-6 rounded-xl">
+              <div className="w-full flex justify-between items-center">
+                <h1 className="text-[24px] font-semibold">
+                  Merchant Sales & Perfomance
+                </h1>
+              </div>
+              <Table data={dataTabel} />
+            </div>
 
-        <ReportDetailOrder />
+            <ReportDetailOrder />
+          </>
+        )}
       </div>
     </div>
   );

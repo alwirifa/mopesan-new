@@ -62,6 +62,7 @@ const RequireAuth = ({ children }: Props) => {
       "/dashboard/report/periodic-sales",
       "/dashboard/report/product-sales",
       "/dashboard/report/tax-report",
+       /^\/dashboard\/report\/order-sales\/\d+$/
     ],
   };
 
