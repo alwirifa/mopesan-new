@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useContext, useEffect, useState } from "react";
 import { getOrderById } from "@/app/api/order";
@@ -9,6 +9,8 @@ import Table from "./Table";
 import { UserContext } from "@/app/context/UserContext";
 
 export default function Home({ params }: { params: { id: string } }) {
+  const { user } = useContext(UserContext); // useContext used unconditionally
+
   const [orders, setOrders] = useState<OrderDataById | null>(null);
 
   useEffect(() => {
@@ -35,7 +37,6 @@ export default function Home({ params }: { params: { id: string } }) {
     return <>Loading...</>;
   }
 
-  const { user } = useContext(UserContext);
   return (
     <div className="flex flex-col gap-6 h-full">
       <div className="flex flex-col gap-4 bg-white p-8 rounded-xl">

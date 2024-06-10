@@ -66,8 +66,13 @@ const Finance = (props: Props) => {
         setMerchantData(data.merchants);
 
         if (adminToken) {
-          let url =   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/finance-dashboard?start_date=${startDate}&end_date=${endDate}&merchant_id=${selectedMerchant}`
-          
+          let url =   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/finance-dashboard?merchant_id=${selectedMerchant}`
+          if (startDate) {
+            url += `&start_date=${startDate}`;
+          }
+          if (endDate) {
+            url += `&end_date=${endDate}`;
+          }
           
       
           const response = await axios.get(url, 
@@ -99,7 +104,7 @@ const Finance = (props: Props) => {
     };
 
     fetchData();
-  }, [selectedMerchant]);
+  }, [selectedMerchant, startDate, endDate]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -129,7 +134,6 @@ const Finance = (props: Props) => {
           earning={data.total_earnings}
           transactions={data.total_transactions}
         />
-        {/* =================  Sales & Perfomance  =============== */}
         <div className="bg-white p-6 rounded-xl">
           <div className="w-full flex justify-between items-center">
             <h1 className="text-[24px] font-semibold">
