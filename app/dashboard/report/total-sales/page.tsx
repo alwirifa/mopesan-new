@@ -69,11 +69,11 @@ const Page = ({
   const limit = Number(searchParams?.limit) || 10;
 
   const [merchantBox, setMerchantBox] = useState<any>([]);
-  const [selectedMerchants, setSelectedMerchants] = useState<any>([]);
+  const [selectedMerchants, setSelectedMerchants] = useState<string>("");
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, startDate, endDate, sort, periodSort]);
+  }, [searchParams?.page, startDate, endDate, sort, periodSort, selectedMerchants]);
 
   const handleSave = async () => {
     try {
@@ -82,7 +82,7 @@ const Page = ({
         throw new Error("Token is missing");
       }
 
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/total-sales?page=${currentPage}&limit=${limit}&merchant_id=3&sort=${sort}&period=${periodSort}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/total-sales?page=${currentPage}&limit=${limit}&sort=${sort}&period=${periodSort}&merchant_ids=${selectedMerchants}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
@@ -131,7 +131,7 @@ const Page = ({
     window.open(
       `${
         process.env.NEXT_PUBLIC_SERVER_URL
-      }/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=total-sales&merchant_id=${selectedMerchants}&period=${periodOptions}&sort=${sort}`
+      }/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=total-sales&merchant_id=${selectedMerchants}&period=${periodSort}&sort=${sort}`
     );
   };
 

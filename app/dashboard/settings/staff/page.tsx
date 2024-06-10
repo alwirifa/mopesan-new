@@ -74,17 +74,6 @@ const Page = ({
     setSort(newSort);
   };
 
-  const handleDateChange = (date: DateRange | undefined) => {
-    setSelectedDateRange(date);
-    if (date?.from) {
-      const formattedStartDate = formatDateRange(date.from.toISOString());
-      setStartDate(formattedStartDate);
-    }
-    if (date?.to) {
-      const formattedEndDate = formatDateRange(date.to.toISOString());
-      setEndDate(formattedEndDate);
-    }
-  };
 
   const handleDownload = () => {
     // Lakukan pengunduhan

@@ -1,21 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useBannerModal } from "@/app/hooks/banner/useBannerModal";
+import Image from "next/image";
 
 const BannerForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [bannerName, setBannerName] = useState("");
   const [description, setDescription] = useState("");
   const bannerModal = useBannerModal();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setFile(event.target.files[0]);
+      const selectedFile = event.target.files[0];
+      setFile(selectedFile);
+      const fileUrl = URL.createObjectURL(selectedFile);
+      setFilePreview(fileUrl);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (filePreview) {
+        URL.revokeObjectURL(filePreview);
+      }
+    };
+  }, [filePreview]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -98,20 +111,35 @@ const BannerForm: React.FC = () => {
               className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary focus:outline-none sm:leading-6 placeholder:italic"
             />
           </div>
+
           <div className="flex flex-col gap-2">
-            <label
-              htmlFor="image"
-              className="block font-medium leading-6 text-gray-900"
-            >
-              Image <span className="text-primary">*</span>
-            </label>
-            <input
-              className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-sm font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:bg-primary file:text-white file:px-3 file:py-[0.32rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
-              type="file"
-              id="image"
-              required
-              onChange={handleFileChange}
-            />
+            <h1>Gambar banner</h1>
+            <div className="w-24 h-24 border-neutral-300 rounded cursor-pointer">
+              <label htmlFor="image" className="cursor-pointer">
+                <Image
+                  src="/icons/menu/uploadPhoto.svg"
+                  alt="Upload Photo"
+                  className="-translate-x-1"
+                  width={96}
+                  height={96}
+                />
+                <input
+                  type="file"
+                  id="image"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+            </div>
+            {/* {filePreview && (
+              <iframe
+                src={filePreview}
+                className="mt-4 border rounded"
+                width="100%"
+                height="200px"
+                title="Preview"
+              />
+            )} */}
           </div>
         </div>
       </form>

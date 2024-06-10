@@ -54,7 +54,7 @@ const Table: React.FC<Props> = ({ data }) => {
                     {customer?.description}
                   </td>
                   <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                    {customer?.keyword}
+                    {customer?.condition}
                   </td>
                   <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                     {customer?.day_in_month}

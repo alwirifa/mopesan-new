@@ -24,6 +24,9 @@ const Table = ({
   const limit = Number(searchParams?.limit) || 5;
   const offset = (currentPage - 1) * limit;
 
+  const [totalPages, setTotalPages] = useState(1)
+
+
   useEffect(() => {
     const fetchTabelItem = async () => {
       setLoading(true);
@@ -36,7 +39,7 @@ const Table = ({
         }
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/customers/logs/${params.id}?offset=${offset}&limit=${limit}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/customers/logs/${params.id}?page=${currentPage}&limit=${limit}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -44,7 +47,8 @@ const Table = ({
           }
         );
         setData(response.data.data.list_activity);
-        console.log(response.data.data)
+        setTotalPages(response.data.data.total_pages)
+
       } catch (err) {
        console.log(err)
       } finally {
@@ -109,10 +113,10 @@ const Table = ({
       {!loading && !error && filteredData.length === 0 && (
         <p className="text-gray-500 mt-4">Tidak ada data yang tersedia.</p>
       )}
-      {/* <div className="w-full flex justify-end mt-4">
+      <div className="w-full flex justify-end mt-4">
 
-      <Pagination totalPages={Math.ceil(data.length / limit)} />
-      </div> */}
+      <Pagination totalPages={totalPages} />
+      </div>
     </div>
   );
 };

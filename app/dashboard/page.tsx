@@ -4,20 +4,19 @@ import React, { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import Dashboard from "../components/dashboard/Dashboard";
 import Finance from "../components/dashboard/finance/Finance";
+import Merchant from "../components/dashboard/Merchant/Merchant";
 
 type Props = {};
 
 const DashboardPage = (props: Props) => {
   const { user } = useContext(UserContext);
 
-  if (user?.role_keyword === "admin_finnace") {
-    return "finnace";
-  }
-
   return (
-    <div> 
+    <div>
       {user?.role_keyword === "admin_finance" ? (
-        <Finance/>
+        <Finance />
+      ) : user?.role_keyword === "admin_merchant" ? (
+        <Merchant />
       ) : (
         <Dashboard />
       )}

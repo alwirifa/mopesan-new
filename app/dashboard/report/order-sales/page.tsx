@@ -67,6 +67,7 @@ const Page = ({
     selectedPaymentMethods,
     selectedOrderTypes,
     selectedOrderStatus,
+    sort
   ]);
 
   const handleSave = async () => {

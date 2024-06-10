@@ -52,9 +52,8 @@ const Page = ({
         },
       });
 
-      const dataTabel = response.data.data;
+      const dataTabel = response.data.data.vouchers;
 
-      console.log(response.data);
       setDataTabel(dataTabel);
     } catch (error) {
       console.error("Error fetching roles:", error);
@@ -127,13 +126,7 @@ const Page = ({
               />
               <button className="">Download Report</button>
             </div>
-            {/* <DatePickerWithRange onDateChange={handleDateChange} />
-            <button
-              onClick={handleSave}
-              className="px-4 py-3 rounded-lg text-white bg-primary "
-            >
-              Terapkan
-            </button> */}
+     
           </div>
           <Search placeholder="Search ..." />
         </div>

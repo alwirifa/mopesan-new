@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
@@ -9,6 +9,7 @@ import Search from "@/app/components/Search";
 import Heading from "@/app/components/Heading";
 import { useNotifModal } from "@/app/hooks/notif/useNotifModal";
 import NotifModal from "@/app/components/modal/notif/NotifModal";
+import { UserContext } from "@/app/context/UserContext";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -30,7 +31,6 @@ const Page = ({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 8;
-  const offset = (currentPage - 1) * limit;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Page = ({
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?search=${query}&sort=${sort}&offset=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?search=${query}&sort=${sort}&page=${currentPage}&limit=${limit}`;
 
       const response = await axios.get(url, {
         headers: {
@@ -48,8 +48,8 @@ const Page = ({
         },
       });
 
-      const dataTabel = response.data;
-      const pages = response.data.data;
+      const dataTabel = response.data.data.events;
+      const pages = response.data.data.total_pages;
       setTotalPages(pages);
       console.log(response.data);
       console.log("data tabel", dataTabel);
@@ -64,26 +64,36 @@ const Page = ({
     setSort(selectedSort);
   };
 
+  const { user } = useContext(UserContext);
   const notifModal = useNotifModal();
 
   return (
     <div className="">
-      <Heading
-        title="Promotional Notifications"
-        subtitle="List of all notifications"
-        buttonTitle="+ Blast Notification"
-        onButtonClick={notifModal.onOpen}
-      />
+      {user?.role_keyword === "admin_merchant" ? (
+        <Heading
+          title="Promotional Notifications"
+          subtitle="List of all notifications"
+        />
+      ) : (
+        <Heading
+          title="Promotional Notifications"
+          subtitle="List of all notifications"
+          buttonTitle="+ Blast Notification"
+          onButtonClick={notifModal.onOpen}
+        />
+      )}
+
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
-          <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+          {/* <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "} */}
+          <div></div>
           <Search placeholder="Search ..." />
         </div>
         {/* =====================  TABLE  ====================== */}
         <Table data={dataTabel} />
         <div className="w-full flex justify-end mt-4">
-          <Pagination totalPages={totalPages?.total_customer / limit} />
+          {dataTabel === null ? <></> : <Pagination totalPages={totalPages} />}
         </div>
         <NotifModal />
       </div>

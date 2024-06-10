@@ -5,6 +5,7 @@ import { useNotifModal } from "@/app/hooks/notif/useNotifModal";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
 
 const NotifForm: React.FC = () => {
   const [description, setDescription] = useState("");
@@ -26,7 +27,11 @@ const NotifForm: React.FC = () => {
         name: notifName,
         description: description,
         day_in_month: daysInMonth,
-        time: timeBlast === "Now" ? new Date().toISOString() : selectedDate?.toISOString() || "",
+        time: timeBlast === "Now"
+          ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
+          : selectedDate
+          ? format(selectedDate, "yyyy-MM-dd HH:mm:ss")
+          : "",
         is_active: isActive,
       });
       notifModal.onClose();
@@ -204,7 +209,6 @@ const NotifForm: React.FC = () => {
             </div>
           </div>
         </div>
-        
       </form>
     </div>
   );

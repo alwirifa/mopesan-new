@@ -11,6 +11,8 @@ import Table from "./Table";
 import Search from "@/app/components/Search";
 import Heading from "@/app/components/Heading";
 import Image from "next/image";
+import NotifModal from "@/app/components/modal/notif/NotifModal";
+import { useNotifModal } from "@/app/hooks/notif/useNotifModal";
 
 const Page = ({
   searchParams,
@@ -38,6 +40,7 @@ const Page = ({
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 10;
   const offset = (currentPage - 1) * limit;
+  const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
     handleSave();
@@ -46,7 +49,7 @@ const Page = ({
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?sort=${sort}&offset=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?sort=${sort}&page=${currentPage}&limit=${limit}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }
@@ -59,12 +62,13 @@ const Page = ({
         },
       });
 
-      const data = response.data.data;
+      const totalPages = response.data.data.total_pages;
 
-      const dataCard = response.data.data.orders;
-      setNotifData(data);
+      const dataCard = response.data.data.events;
+      // setNotifData(data);
       setNotifTabel(dataCard);
-      console.log(dataCard);
+      setTotalPages(totalPages)
+ console.log(dataCard)  
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
@@ -115,6 +119,7 @@ const Page = ({
       console.error("Error logging in:", error);
     }
   };
+  const notifModal = useNotifModal();
 
   return (
     <div className="">
@@ -122,7 +127,7 @@ const Page = ({
         title="Promotional Notifications"
         subtitle="List of all notifications"
         buttonTitle="+ Blast Notification"
-        onButtonClick={() => {}}
+        onButtonClick={notifModal.onOpen}
       />
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
@@ -146,11 +151,12 @@ const Page = ({
         </div>
         {/* <Sort onSortChange={handleSortChange} />{" "} */}
         {/* =====================  TABLE  ====================== */}
-        <Table data={notifData} />
+        <Table data={notifTabel} />
         <div className="w-full flex justify-end mt-4">
-          <Pagination totalPages={Math.ceil(1 / limit)} />
+          <Pagination totalPages={totalPages} />
         </div>
       </div>
+      <NotifModal />
     </div>
   );
 };

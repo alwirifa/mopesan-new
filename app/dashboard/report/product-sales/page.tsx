@@ -14,8 +14,8 @@ import DropDown from "@/app/components/Dropdown";
 import CheckBoxGroup from "@/app/components/Checkbox";
 
 const sortOptions = [
-  { value: "ASC", label: "Ascending" },
-  { value: "DESC", label: "Descending" },
+  { value: "ASC", label: "Tinggi ke rendah" },
+  { value: "DESC", label: "Rendah ke tinggi" },
 ];
 
 const Page = ({

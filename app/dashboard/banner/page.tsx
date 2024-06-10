@@ -37,7 +37,8 @@ const Page = ({
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`
         );
-        setBanners(response.data.data);
+        setBanners(response.data.data.banners);
+        console.log(response.data.data)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -79,7 +80,7 @@ const Page = ({
       <div className="w-full flex justify-between items-center my-4">
         <div className="flex gap-4">
 
-        <Filter onFilterChange={handleSortChange} filterOptions={sortOptions} />{" "}
+        {/* <Filter onFilterChange={handleSortChange} filterOptions={sortOptions} />{" "} */}
         <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
         </div>
         <Search placeholder="Search ..." />

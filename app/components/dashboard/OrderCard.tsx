@@ -1,7 +1,8 @@
 "use client";
 
+import { UserContext } from "@/app/context/UserContext";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 type NumberData = {
   daily_earning: number;
@@ -12,6 +13,7 @@ type NumberData = {
 
 const OrderCard: React.FC = () => {
   const [orderData, setOrderData] = useState<NumberData | null>(null);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +45,7 @@ const OrderCard: React.FC = () => {
   if (!orderData) {
     return (
       <div className="grid grid-cols-4 gap-8">
-      <div className="p-4 rounded-md bg-white relative shadow-custom">
+        <div className="p-4 rounded-md bg-white relative shadow-custom">
           <p className="text-sm text-textGray">Total Active Order</p>
           <img
             src="/icons/dashboard/totalActive.svg"
@@ -52,16 +54,16 @@ const OrderCard: React.FC = () => {
           />
           <p className="mt-10 text-3xl font-medium">0 Orders</p>
         </div>
-        <div className="p-4  rounded-md bg-white relative shadow-custom">
+        <div className="p-4 rounded-md bg-white relative shadow-custom">
           <p className="text-sm text-textGray">Finished Order (Today)</p>
           <img
             src="/icons/dashboard/finishedOrder.svg"
             alt=""
             className="absolute top-0 right-0"
           />
-          <p className="mt-10 text-3xl font-medium">0  Orders</p>
+          <p className="mt-10 text-3xl font-medium">0 Orders</p>
         </div>
-        <div className="p-4  rounded-md bg-white relative shadow-custom">
+        <div className="p-4 rounded-md bg-white relative shadow-custom">
           <p className="text-sm text-textGray">Daily Earnings</p>
           <img
             src="/icons/dashboard/dailyEarning.svg"
@@ -70,17 +72,22 @@ const OrderCard: React.FC = () => {
           />
           <div className="mt-10 flex gap-2">
             <p className="text-sm text-textGray -translate-y-1">Rp</p>
-            <p className="text-3xl font-medium">0 </p>
+            <p className="text-3xl font-medium">0</p>
           </div>
         </div>
-        <div className="p-4  rounded-md bg-white relative shadow-custom">
+        <div className="p-4 rounded-md bg-white relative shadow-custom">
           <p className="text-sm text-textGray">Active merchant</p>
           <img
             src="/icons/dashboard/activeMerchant.svg"
             alt=""
             className="absolute top-0 right-0"
           />
-          <p className="mt-10 text-3xl font-medium flex gap-2 items-center">0 <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
+          <p className="mt-10 text-3xl font-medium flex gap-2 items-center">
+            0{" "}
+            <span className="text-base text-textGray font-normal italic">
+              (Merchants)
+            </span>
+          </p>
         </div>
       </div>
     );
@@ -92,6 +99,8 @@ const OrderCard: React.FC = () => {
     .slice(3)
     .slice(0, -3);
 
+  const isAdminMerchant = user?.role_keyword === "admin_merchant";
+
   return (
     <div className="grid grid-cols-4 gap-8">
       <div className="p-4 rounded-md bg-white relative shadow-custom">
@@ -101,18 +110,22 @@ const OrderCard: React.FC = () => {
           alt=""
           className="absolute top-0 right-0"
         />
-        <p className="mt-10 text-3xl font-medium">{orderData.daily_order_active} Orders</p>
+        <p className="mt-10 text-3xl font-medium">
+          {orderData.daily_order_active} Orders
+        </p>
       </div>
-      <div className="p-4  rounded-md bg-white relative shadow-custom">
+      <div className="p-4 rounded-md bg-white relative shadow-custom">
         <p className="text-sm text-textGray">Finished Order (Today)</p>
         <img
           src="/icons/dashboard/finishedOrder.svg"
           alt=""
           className="absolute top-0 right-0"
         />
-        <p className="mt-10 text-3xl font-medium">{orderData.daily_order_delivered} Orders</p>
+        <p className="mt-10 text-3xl font-medium">
+          {orderData.daily_order_delivered} Orders
+        </p>
       </div>
-      <div className="p-4  rounded-md bg-white relative shadow-custom">
+      <div className="p-4 rounded-md bg-white relative shadow-custom">
         <p className="text-sm text-textGray">Daily Earnings</p>
         <img
           src="/icons/dashboard/dailyEarning.svg"
@@ -124,17 +137,23 @@ const OrderCard: React.FC = () => {
           <p className="text-3xl font-medium">{formattedDailyEarning}</p>
         </div>
       </div>
-      <div className="p-4  rounded-md bg-white relative shadow-custom">
-        <p className="text-sm text-textGray">Active merchant</p>
-        <img
-          src="/icons/dashboard/activeMerchant.svg"
-          alt=""
-          className="absolute top-0 right-0"
-        />
-        <p className="mt-10 text-3xl font-medium flex gap-2 items-center">{orderData.daily_merchant_active} <span className="text-base text-textGray font-normal italic">(Merchants)</span></p>
-      </div>
+      {!isAdminMerchant && (
+        <div className="p-4 rounded-md bg-white relative shadow-custom">
+          <p className="text-sm text-textGray">Active merchant</p>
+          <img
+            src="/icons/dashboard/activeMerchant.svg"
+            alt=""
+            className="absolute top-0 right-0"
+          />
+          <p className="mt-10 text-3xl font-medium flex gap-2 items-center">
+            {orderData.daily_merchant_active}{" "}
+            <span className="text-base text-textGray font-normal italic">
+              (Merchants)
+            </span>
+          </p>
+        </div>
+      )}
     </div>
-
   );
 };
 

@@ -23,7 +23,7 @@ const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button
         className="flex gap-6 border rounded-md bg-white shadow-sm px-[16px] py-[7px] items-center"
         onClick={() => setIsOpen(!isOpen)}

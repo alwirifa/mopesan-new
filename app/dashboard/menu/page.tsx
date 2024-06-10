@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { useEditMenuModal } from "@/app/hooks/menu/useEditMenuModal";
 import { useMenuModal } from "@/app/hooks/menu/useMenuModal";
@@ -11,6 +11,7 @@ import EditMenuModal from "@/app/components/modal/menu/EditMenuModal";
 import MenuFilter from "@/app/components/MenuFilter";
 import Heading from "@/app/components/Heading";
 import MenuModal from "@/app/components/modal/menu/MenuModal";
+import { UserContext } from "@/app/context/UserContext";
 
 export default function Page({
   searchParams,
@@ -45,8 +46,8 @@ export default function Page({
     selectedCategory === "All"
       ? categories.flatMap((category) => category.menus)
       : categories.find(
-        (category) => category.category_name === selectedCategory
-      )?.menus || [];
+          (category) => category.category_name === selectedCategory
+        )?.menus || [];
 
   const options = [
     { label: "All", value: "All" },
@@ -64,19 +65,20 @@ export default function Page({
     editMenuModal.onOpen();
   };
 
-    // // OVERFLOW HIDDEN SAAT MODAL TERBUKA
-    // useEffect(() => {
-    //   if (menuModal.isOpen) {
-    //     document.body.style.overflow = "hidden";
-    //   } else {
-    //     document.body.style.overflow = ""; 
-    //   }
-    // }, [menuModal.isOpen]);
-  
-
+  const { user } = useContext(UserContext);
   return (
     <div className="flex flex-col gap-4">
-      <Heading title='Menus' subtitle='List of all menus' buttonTitle='+ Add Menu' onButtonClick={menuModal.onOpen} />
+      {user?.role_keyword === "admin_merchant" ? (
+        <Heading title="Menus" subtitle="List of all menus" />
+      ) : (
+        <Heading
+          title="Menus"
+          subtitle="List of all menus"
+          buttonTitle="+ Add Menu"
+          onButtonClick={menuModal.onOpen}
+        />
+      )}
+
       <MenuFilter
         label="selectedCategory"
         options={options}
@@ -104,9 +106,7 @@ export default function Page({
                 </div>
                 <div className="pb-8 px-8">
                   <div className="flex justify-between">
-                    <p className="text-lg font-semibold">
-                      {menu.product_name}
-                    </p>
+                    <p className="text-lg font-semibold">{menu.product_name}</p>
                     <p className="font-semibold text-primary">
                       {formatCurrency(menu.price)}
                     </p>
@@ -119,9 +119,16 @@ export default function Page({
                   </p>
                 </div>
               </div>
-              <div className="px-8 py-4 text-white font-semibold">
-                <button onClick={() => handleEditMenuClick(menu)}>Edit</button>
-              </div>
+
+              {user?.role_keyword === "admin_merchant" ? (
+                <div></div>
+              ) : (
+                <div className="px-8 py-4 text-white font-semibold">
+                  <button onClick={() => handleEditMenuClick(menu)}>
+                    Edit
+                  </button>
+                </div>
+              )}
             </div>
           );
         })}

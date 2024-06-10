@@ -81,10 +81,10 @@ export default function Home({
             </p>
           </div>
           <div className="flex flex-col items-end gap-1 w-full ">
-            <div className="border-b border-textGray max-w-xs w-full text-end pb-1">
+            {/* <div className="border-b border-textGray max-w-xs w-full text-end pb-1">
               <p className="text-[32px] font-semibold">merhant</p>
               <p className="text-end text-textGray text-sm">Opening hours</p>
-            </div>
+            </div> */}
             <div>
               <p className="text-end text-textGray text-sm">Role</p>
               <p className="text-end text-[32px] font-semibold">

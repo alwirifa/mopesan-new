@@ -51,9 +51,9 @@ const Table: React.FC<Props> = ({ data }) => {
               <th className="border-r border-black px-6 py-4 text-left">
                 Last Login
               </th>
-              <th className="border-r border-black px-6 py-4 text-left">
+              {/* <th className="border-r border-black px-6 py-4 text-left">
                 Total Working Hours
-              </th>
+              </th> */}
               <th className=" border-black px-4 py-4 text-left">...</th>
             </tr>
           </thead>
@@ -87,9 +87,9 @@ const Table: React.FC<Props> = ({ data }) => {
                       ? "-"
                       : formatDate(customer?.last_login)}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
+                  {/* <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
                     {customer?.total_working_hours}
-                  </td>
+                  </td> */}
                   <td className="border-t  border-black px-4 py-2">
                     <Link
                       href={`/dashboard/settings/staff/${customer.id}`}

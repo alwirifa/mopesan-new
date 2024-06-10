@@ -44,9 +44,9 @@ const Table = ({
             },
           }
         );
-        setData(response.data.data.list_order);
-        setTotalPages(response.data.data);
-        console.log(response.data.data);
+        setData(response.data.data.orders);
+        setTotalPages(response.data.data.total_pages);
+      
       } catch (err) {
         console.log(err);
       } finally {
@@ -57,8 +57,6 @@ const Table = ({
     fetchTabelItem();
   }, [params.id, offset, limit]);
 
-  console.log(totalPages);
-  console.log(limit);
   // Filter data yang tidak kosong
   const filteredData = data.filter(
     (order) =>
@@ -123,9 +121,9 @@ const Table = ({
       {!loading && !error && filteredData.length === 0 && (
         <p className="text-gray-500 mt-4">Tidak ada data yang tersedia.</p>
       )}
-      {/* <div className="w-full flex justify-end mt-4">
-        <Pagination totalPages={Math.ceil(totalPages / limit)} />
-      </div> */}
+      <div className="w-full flex justify-end mt-4">
+        <Pagination totalPages={totalPages} />
+      </div>
     </div>
   );
 };

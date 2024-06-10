@@ -70,29 +70,7 @@ export default function Home({
     fetchTabelItem();
   }, [params.id]);
 
-  // useEffect(() => {
-  //   const fetchTabelItem = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token"); // Retrieve token from local storage
-  //       const response = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/customers/logs/${params.id}?offset=${offset}&limit=${limit}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  //       setTableLog(response.data.data);
-  //       console.log("tabel log", response.data.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
 
-  //   fetchTabelItem();
-  // }, [params.id]);
-
-  //
   return (
     <div className="flex flex-col gap-6 h-full">
       <div className="flex flex-col gap-4 bg-white p-8 rounded-xl">

@@ -19,8 +19,8 @@ const UserProfile: React.FC<Props> = (props: Props) => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
     router.push("/auth/login"); // Redirect to the login page or homepage
+    localStorage.removeItem("token");
     setUser(null);
   };
 

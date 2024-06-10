@@ -179,8 +179,9 @@ const Navigation = () => {
         "Home",
         "Order",
         "Menu",
-        "Customer",
+        "Merchant",
         "Promotional Notification",
+        "Settings",
         "Staff",
       ];
       break;
@@ -196,6 +197,7 @@ const Navigation = () => {
         "Promotional Notification",
         "Customer",
         "Report",
+        "Total Sales",
         "Sales Report",
         "Tax Report",
         "Order Sales",
@@ -211,7 +213,18 @@ const Navigation = () => {
       ];
       break;
     case "admin_finance":
-      allowedMenuItems = ["Home", "Sales"];
+      allowedMenuItems = [
+        "Home",
+        "Report",
+        "Total Sales",
+        "Sales Report",
+        "Tax Report",
+        "Order Sales",
+        "Periodic Sales",
+        "Merchant Sales",
+        "Payment Method Sales",
+        "Product Sales",
+      ];
       break;
     default:
       allowedMenuItems = [];

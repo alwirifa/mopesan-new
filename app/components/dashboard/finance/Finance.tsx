@@ -1,31 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "./Chart";
-import ReportDetailOrder from "./ReportDetailOrder";
-import Sort from "./Option";
+import Table from "./Table";
+import axios from "axios";
+import DropDown from "../../Dropdown";
 import { DateRange } from "react-day-picker";
 import { formatDateRange } from "@/app/lib/formatter";
 import { DatePickerWithRange } from "../../DatePickerWithRange";
-import Table from "./Table";
+import ReportDetailOrder from "./ReportDetailOrder";
 
 type Props = {};
 
 const Finance = (props: Props) => {
-  const [sort, setSort] = useState("ASC");
   const defaultStartDate = new Date(2024, 0, 20);
   const defaultEndDate = new Date(2024, 4, 10);
-  const [dataCard, setDataCard] = useState<any[]>([]);
-  const [periodicData, setPeriodicData] = useState<any>({});
-  const [selectedDateRange, setSelectedDateRange] = useState<
-    DateRange | undefined
-  >();
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>({
+    from: defaultStartDate,
+    to: defaultEndDate,
+  });
   const [startDate, setStartDate] = useState<string>(
     formatDateRange(defaultStartDate.toISOString())
   );
   const [endDate, setEndDate] = useState<string>(
     formatDateRange(defaultEndDate.toISOString())
   );
-  const handleSortChange = (newSort: string) => {
-    setSort(newSort);
+
+  const [dataTabel, setDataTabel] = useState<any>([]);
+  const [earning, setEarning] = useState<any>([]);
+  const [transactions, setTransactions] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [merchantData, setMerchantData] = useState<any>([]);
+  const [selectedMerchant, setSelectedMerchant] = useState<any>(2);
+
+  const handleSelectedMerchant = (newSort: string) => {
+    setSelectedMerchant(newSort);
   };
 
   const handleDateChange = (date: DateRange | undefined) => {
@@ -40,37 +48,99 @@ const Finance = (props: Props) => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const adminToken = localStorage.getItem("token");
+
+        // Log dates for debugging
+        console.log("Fetching data with startDate:", startDate, "endDate:", endDate);
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=order-sales`
+        );
+        const data = response.data.data;
+
+        console.log("Merchants:", data);
+        setMerchantData(data.merchants);
+
+        if (adminToken) {
+          let url =   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/finance-dashboard?start_date=${startDate}&end_date=${endDate}&merchant_id=${selectedMerchant}`
+          
+          
+      
+          const response = await axios.get(url, 
+
+            {
+              headers: {
+                Authorization: `Bearer ${adminToken}`,
+              },
+            }
+          );
+
+
+
+          const data = response.data.data;
+          const earningChart = response.data.data.list_earnings;
+          const transactionsChart = response.data.data.list_transaction;
+
+          setEarning(earningChart);
+          setTransactions(transactionsChart);
+          setData(data);
+          setDataTabel(data.merchant_sales);
+        } else {
+          console.error("Admin token not found in local storage");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [selectedMerchant]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(startDate, endDate)
+
   return (
-    <div className="flex flex-col gap-8 overflow-x-hidden">
-      <div className="w-full flex justify-between">
-        <h1 className="text-[42px] font-semibold">Dashboard</h1>
-
-        <div className="flex gap-3 items-center">
-          <Sort onSortChange={handleSortChange} sortTitle="Select Merchant" />{" "}
-          <DatePickerWithRange onDateChange={handleDateChange} />
-          <button
-            onClick={() => {}}
-            className="px-4 py-[10px] text-sm rounded-md text-white bg-primary "
-          >
-            Terapkan
-          </button>
+    <div>
+      <div className="flex flex-col gap-8 overflow-x-hidden">
+        <div className="w-full flex justify-between">
+          <h1 className="text-[42px] font-semibold">Dashboard</h1>
+          <div className="flex gap-3 items-center">
+            <DropDown
+              sortTitle="Pilih merchant"
+              onSortChange={handleSelectedMerchant}
+              sortOptions={merchantData}
+              
+            />
+            <DatePickerWithRange onDateChange={handleDateChange} />
+          </div>
         </div>
-      </div>
 
-      <Chart />
-
-      {/* =================  Sales & Perfomance  =============== */}
-      <div className="bg-white p-6 rounded-xl">
-        <div className="w-full flex justify-between items-center">
-          <h1 className="text-[24px] font-semibold">
-            Merchant Sales & Perfomance
-          </h1>
-          <Sort onSortChange={handleSortChange} sortTitle="Highest to Lowest" />{" "}
+        <Chart
+          dataEarnings={earning}
+          dataTransations={transactions}
+          earning={data.total_earnings}
+          transactions={data.total_transactions}
+        />
+        {/* =================  Sales & Perfomance  =============== */}
+        <div className="bg-white p-6 rounded-xl">
+          <div className="w-full flex justify-between items-center">
+            <h1 className="text-[24px] font-semibold">
+              Merchant Sales & Perfomance
+            </h1>
+          </div>
+          <Table data={dataTabel} />
         </div>
-        <Table />
-      </div>
 
-      <ReportDetailOrder />
+        <ReportDetailOrder />
+      </div>
     </div>
   );
 };

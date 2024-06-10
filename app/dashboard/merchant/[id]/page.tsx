@@ -28,6 +28,8 @@ export default function Home({ params }: { params: { id: string } }) {
     );
   }
 
+
+
   return (
     <>
       <Content

@@ -1,53 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ResponsiveLine } from "@nivo/line";
-import axios, { AxiosResponse } from "axios";
-
-interface Data {
-  order_day: string;
-  total_earnings: number;
-}
 
 interface Props {
   data: any[];
 }
-const LineChart = ({ data }: Props) => {
-  const [earning, setEarning] = useState<any[]>([]);
+const EarningChart = ({ data }: Props) => {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const adminToken = localStorage.getItem("token");
-
-        if (adminToken) {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/weekly-stats`,
-            {
-              headers: {
-                Authorization: `Bearer ${adminToken}`,
-              },
-            }
-          );
-          const { data } = response.data;
-          console.log(data);
-          setEarning(data);
-        } else {
-          console.error("Admin token not found in local storage");
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  if (!data) {
+    return (
+      <div>
+        Tidak ada data 
+      </div>
+    )
+  }
+  
   const chartData = [
     {
       id: "Earnings",
-      data: earning.map((item) => ({
-        x: item.order_day, // Gunakan tanggal sebagai sumbu x
+      data: data.map((item) => ({
+        x: item.date_name, 
         y: item.total_earnings,
       })),
     },
@@ -62,9 +35,9 @@ const LineChart = ({ data }: Props) => {
         yScale={{
           type: "linear",
           min: 0,
-          max: Math.max(...earning.map((item) => item.total_earnings)),
-          stacked: true,
-          reverse: true,
+          max: Math.max(...data.map((item) => item.total_earnings)),
+          stacked: false, // Ensure this is false to avoid unnecessary stacking
+          reverse: false, // Ensure this is false to avoid inverted y-axis
         }}
         axisTop={null}
         axisRight={null}
@@ -72,9 +45,12 @@ const LineChart = ({ data }: Props) => {
           format: "%b %d", // Atur format tampilan untuk sumbu bawah
           tickValues: "every 1 day", // Tampilkan label untuk setiap hari
         }}
+        axisLeft={{
+          tickValues: 5, // Adjust the tick values for better readability
+        }}
         enablePoints={false}
         enableGridX={false}
-        enableGridY={false}
+        enableGridY={true}
         lineWidth={3}
         enableArea={true}
         colors={{ scheme: "nivo" }}
@@ -110,4 +86,4 @@ const LineChart = ({ data }: Props) => {
   );
 };
 
-export default LineChart;
+export default EarningChart;
