@@ -56,12 +56,45 @@ export type Merchant = {
   };
   
   export type Menu = {
-    id: number;
-    product_name: string;
-    price: number;
-    description: string;
-    product_code: string;
     product_image: string;
+    id: string;
+    product_name: string;
+    price: string;
+    description: string;
+    is_reward_menu: boolean;
+    category_id: string;
+    customization_keys: CustomizationKey[];
+  };
+
+  type CustomizationValue = {
+    id: string;
+    name: string;
+    price_adjustment: string;
+  };
+  
+  type CustomizationKey = {
+    id: string;
+    name: string;
+    customization_values: CustomizationValue[] | null;
+  };
+  
+
+  
+  
+  type VariantOption = {
+    variant_option_id?: string;
+    variant_option_name: string;
+    price_adjustment: string;
+  };
+  
+  type Variant = {
+    variant_id?: string;
+    variant_name: string;
+    variant_options: VariantOption[];
+  };
+  
+  type Customization = {
+    variants: Variant[];
   };
   
   export type Customer = {

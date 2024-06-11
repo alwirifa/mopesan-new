@@ -71,13 +71,16 @@ const MenuModal = () => {
     >
   ) => {
     const { name, value, type } = event.target;
-
-    if (event.target instanceof HTMLInputElement && type === "checkbox") {
+  
+    if (name === "category_id") {
+      setProductInfo({ ...productInfo, [name]: value });
+    } else if (event.target instanceof HTMLInputElement && type === "checkbox") {
       setProductInfo({ ...productInfo, [name]: event.target.checked });
     } else {
       setProductInfo({ ...productInfo, [name]: value });
     }
   };
+  
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -229,6 +232,7 @@ const MenuModal = () => {
     fetchCategories();
   }, []);
 
+  console.log("tes", productInfo.category_id);
   let bodyContent = (
     <div className="flex flex-col gap-4">
       <div>
@@ -308,7 +312,7 @@ const MenuModal = () => {
           </label>
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-2">
         <label
           htmlFor="description"
@@ -327,25 +331,12 @@ const MenuModal = () => {
           }
           required
         >
-          {categories.map((category, index) => (
-            <option key={index} value={index}>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
               {category.category_name}
             </option>
           ))}
         </select>
-
-        {/* <input
-          type="text"
-          name="category_id"
-          value={productInfo.category_id}
-          onChange={handleInputChange}
-          className={
-            invalidFields.includes("category_id")
-              ? "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400"
-              : "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-          }
-          required
-        /> */}
       </div>
     </div>
   );
@@ -578,7 +569,7 @@ const MenuModal = () => {
     if (menuModal.isOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""; 
+      document.body.style.overflow = "";
     }
 
     return () => {

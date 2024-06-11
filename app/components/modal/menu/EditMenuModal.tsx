@@ -1,15 +1,10 @@
-"use client";
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Modal from "../Modal";
-import { useEditMenuModal } from "@/app/hooks/menu/useEditMenuModal";
-
-import Image from "next/image";
-import { Category, Menu } from "@/app/types/types";
-import { formatCurrency } from "@/app/lib/formatter";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { getCategories } from "@/app/api/menu";
+import Image from "next/image";
+import { editMenus } from "@/app/api/menu";
+import { useEditMenuModal } from "@/app/hooks/menu/useEditMenuModal";
 
 enum STEPS {
   NAME = 0,
@@ -17,233 +12,177 @@ enum STEPS {
   VARIANT = 2,
 }
 
-interface VariantOption {
+type CustomizationValue = {
+  id: string;
+  name: string;
+  price_adjustment: string;
+};
+
+type CustomizationKey = {
+  id: string;
+  name: string;
+  customization_values: CustomizationValue[] | null;
+};
+
+type Props = {
+  selectedMenu: {
+    id: string;
+    product_name: string;
+    price: string;
+    description: string;
+    is_reward_menu: boolean;
+    category_id: string;
+    customization_keys: CustomizationKey[];
+  };
+};
+
+
+
+type VariantOption = {
+  variant_option_id?: string;
   variant_option_name: string;
   price_adjustment: string;
-}
+};
 
-interface Variant {
+type Variant = {
+  variant_id?: string;
   variant_name: string;
   variant_options: VariantOption[];
-}
+};
 
-interface ProductInfo {
-  product_name: string;
-  price: string;
-  description: string;
-  is_reward_menu: boolean;
-  image: File | null;
-  category_id: string;
+type Customization = {
   variants: Variant[];
-}
+};
 
-const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
-  const editMenuModal = useEditMenuModal();
-  const [isLoading, setIsLoading] = useState(false);
-  const [invalidFields, setInvalidFields] = useState<string[]>([]);
-  const [step, setStep] = useState(STEPS.NAME);
-  const [productInfo, setProductInfo] = useState<ProductInfo>({
-    product_name: "",
-    price: "",
-    description: "",
-    is_reward_menu: false,
-    image: null,
-    category_id: "",
-    variants: [
-      {
-        variant_name: "",
-        variant_options: [{ variant_option_name: "", price_adjustment: "" }],
-      },
-    ],
+const EditMenuModal = ({ selectedMenu }: Props) => {
+  const editMenuModal = useEditMenuModal(); // Ensure correct hook usage
+  const [step, setStep] = useState<STEPS>(STEPS.NAME); // Initialize step state
+
+  const {
+    product_name,
+    price,
+    description,
+    is_reward_menu,
+    category_id,
+    customization_keys,
+  } = selectedMenu;
+
+  const [productName, setProductName] = useState<string>(product_name);
+  const [menuPrice, setMenuPrice] = useState<string>(price);
+  const [menuDescription, setMenuDescription] = useState<string>(description);
+  const [rewardMenu, setRewardMenu] = useState<boolean>(is_reward_menu);
+  const [image, setImage] = useState<File | null>(null);
+  const [categoryId, setCategoryId] = useState<string>(category_id);
+
+  const customizationKeys = useMemo(
+    () => customization_keys.filter((key) => key.customization_values !== null),
+    [customization_keys]
+  );
+
+  const [editCustomization, setEditCustomization] = useState<Customization>({
+    variants: customizationKeys.map((variant) => ({
+      variant_id: variant.id,
+      variant_name: variant.name,
+      variant_options: variant.customization_values!.map((option) => ({
+        variant_option_id: option.id,
+        variant_option_name: option.name,
+        price_adjustment: option.price_adjustment,
+      })),
+    })),
   });
 
-  // ======================   STEP   ======================
-  const onNext = useCallback(() => {
-    setStep((prevStep) => Math.min(prevStep + 1, STEPS.VARIANT));
-  }, []);
+  const [addCustomization, setAddCustomization] = useState<Customization>({
+    variants: [],
+  });
 
-  const onBack = useCallback(() => {
-    setStep((prevStep) => Math.max(prevStep - 1, STEPS.NAME));
-  }, []);
+  const [deleteCustomization, setDeleteCustomization] = useState<{
+    delete_variant: string[];
+    delete_variant_opt: string[];
+  }>({ delete_variant: [], delete_variant_opt: [] });
 
-  // ======================  CATEGORY  ======================
-  const handleInputChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+  const [editModeVariantIndex, setEditModeVariantIndex] = useState<
+    number | null
+  >(null);
+
+  const handleEditCustomizationChange = (
+    variantIndex: number,
+    optionIndex: number,
+    key: keyof VariantOption | "variant_name",
+    value: string
   ) => {
-    const { name, value, type } = event.target;
-
-    if (event.target instanceof HTMLInputElement && type === "checkbox") {
-      setProductInfo({ ...productInfo, [name]: event.target.checked });
-    } else {
-      setProductInfo({ ...productInfo, [name]: value });
-    }
+    setEditCustomization((prevState) => {
+      const newVariants = [...prevState.variants];
+      if (key === "variant_name") {
+        newVariants[variantIndex].variant_name = value;
+      } else {
+        newVariants[variantIndex].variant_options[optionIndex][key] = value;
+      }
+      return { ...prevState, variants: newVariants };
+    });
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setProductInfo({ ...productInfo, image: event.target.files[0] });
-    }
-  };
-
-  // ======================   VARIANT ======================
-  const [hasCustomization, setHasCustomization] = useState(false);
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setHasCustomization(event.target.checked);
-  };
-
-  const handleAddVariant = () => {
-    setProductInfo({
-      ...productInfo,
+  const handleAddCustomization = () => {
+    setAddCustomization((prevState) => ({
+      ...prevState,
       variants: [
-        ...productInfo.variants,
+        ...prevState.variants,
         {
           variant_name: "",
           variant_options: [{ variant_option_name: "", price_adjustment: "" }],
         },
       ],
-    });
-    return productInfo.variants && productInfo.variants.length > 0;
+    }));
   };
 
   const handleAddOption = (variantIndex: number) => {
-    const updatedVariants = [...productInfo.variants];
-    updatedVariants[variantIndex].variant_options.push({
-      variant_option_name: "",
-      price_adjustment: "",
+    setAddCustomization((prevState) => {
+      const newVariants = [...prevState.variants];
+      newVariants[variantIndex].variant_options.push({
+        variant_option_name: "",
+        price_adjustment: "",
+      });
+      return { ...prevState, variants: newVariants };
     });
-    setProductInfo({ ...productInfo, variants: updatedVariants });
   };
 
-  const handleDeleteVariant = (variantIndex: number) => {
-    const updatedVariants = [...productInfo.variants];
-    updatedVariants.splice(variantIndex, 1);
-    setProductInfo({ ...productInfo, variants: updatedVariants });
+  const handleDeleteCustomization = (variantId: string) => {
+    setDeleteCustomization((prevState) => ({
+      ...prevState,
+      delete_variant: [...prevState.delete_variant, variantId],
+    }));
+
+    setEditCustomization((prevState) => ({
+      variants: prevState.variants.filter(
+        (variant) => variant.variant_id !== variantId
+      ),
+    }));
   };
 
-  const handleVariantChange = (
-    index: number,
-    fieldName: string,
-    value: string
-  ) => {
-    const updatedVariants = [...productInfo.variants];
-    updatedVariants[index] = {
-      ...updatedVariants[index],
-      [fieldName]: value,
-    };
-    setProductInfo({ ...productInfo, variants: updatedVariants });
-  };
-
-  const handleOptionChange = (
-    variantIndex: number, // gunakan customKey.id sebagai variantIndex
-    optionIndex: number,
-    fieldName: string,
-    value: string
-  ) => {
-    const updatedVariants = [...productInfo.variants];
-    // Update the specific variant option
-    updatedVariants[variantIndex].variant_options[optionIndex] = {
-      ...updatedVariants[variantIndex].variant_options[optionIndex],
-      [fieldName]: value,
-    };
-    // Update productInfo state with the modified variants
-    setProductInfo({ ...productInfo, variants: updatedVariants });
-  };
-
-  // ======================   SUBMIT  ======================
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const menuData = {
+      product_name: productName,
+      price: menuPrice,
+      description: menuDescription,
+      is_reward_menu: rewardMenu,
+      image: image,
+      category_id: categoryId,
+      edit_customization:
+        editCustomization.variants.length > 0 ? editCustomization : undefined,
+      add_customization:
+        addCustomization.variants.length > 0 ? addCustomization : undefined,
+      delete_customization:
+        deleteCustomization.delete_variant.length > 0
+          ? deleteCustomization
+          : undefined,
+    };
+
     try {
-      const formData = new FormData();
-      if (productInfo.image) {
-        formData.append("image", productInfo.image);
-      }
-
-      // Constructing the payload for menu edit
-      const menuPayload = {
-        product_name: productInfo.product_name,
-        price: parseFloat(productInfo.price),
-        description: productInfo.description,
-        is_reward_menu: productInfo.is_reward_menu,
-      };
-
-      formData.append("menu", JSON.stringify(menuPayload));
-      formData.append("category_id", productInfo.category_id);
-
-      // Handle add customizations
-      if (handleAddVariant()) {
-        const addCustomizations = {
-          variants: productInfo.variants.map((variant) => ({
-            variant_name: variant.variant_name,
-            variant_options: variant.variant_options.map((option) => ({
-              variant_option_name: option.variant_option_name,
-              price_adjustment: parseFloat(option.price_adjustment),
-            })),
-          })),
-        };
-        formData.append(
-          "add_customizations",
-          JSON.stringify(addCustomizations)
-        );
-      } else {
-        const addCustomizations = null; // Set addCustomizations to null if handleAddVariant() is false
-        formData.append(
-          "add_customizations",
-          JSON.stringify(addCustomizations)
-        );
-      }
-
-      // Handle edit customizations
-      if (productInfo.variants && productInfo.variants.length > 0) {
-        const editCustomizations = {
-          variants: productInfo.variants.map((variant, variantIndex) => {
-            const selectedVariant = selectedMenu?.variants?.[variantIndex];
-            return {
-              variant_id: selectedVariant?.variant_id,
-              variant_name: variant.variant_name,
-              variant_options: variant.variant_options.map(
-                (option, optionIndex) => {
-                  const selectedVariantOption =
-                    selectedVariant?.variant_options?.[optionIndex];
-                  return {
-                    variant_option_id: selectedVariantOption?.variant_option_id,
-                    variant_option_name: option.variant_option_name,
-                    price_adjustment: parseFloat(option.price_adjustment),
-                  };
-                }
-              ),
-            };
-          }),
-        };
-
-        formData.append(
-          "edit_customizations",
-          JSON.stringify(editCustomizations)
-        );
-      }
-
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Admin token not found");
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      };
-
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/menu/${selectedMenu?.id}`,
-        formData,
-        config
-      );
-      toast.success("Menu edited successfully!");
+      await editMenus(menuData, selectedMenu.id); // Ensure `menuId` is defined somewhere
+      editMenuModal.onClose();
     } catch (error) {
+      console.error("Failed to edit menu:", error);
       toast.error("Failed to edit menu");
     }
   };
@@ -258,28 +197,27 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
         new Event("submit", { cancelable: true, bubbles: true })
       );
     }
-
-    setStep(STEPS.VARIANT);
-    editMenuModal.onClose();
   };
 
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categoriesData = await getCategories();
-        console.log(categoriesData);
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories();
+  const onBack = useCallback(() => {
+    setStep((prevStep) => prevStep - 1);
   }, []);
 
-  console.log(selectedMenu);
+  const onNext = useCallback(() => {
+    setStep((prevStep) => prevStep + 1);
+  }, []);
+
+  const titleContent = useMemo(
+    () => (
+      <div>
+        <h1 className="text-3xl font-semibold">
+          Edit {selectedMenu.product_name}
+        </h1>
+      </div>
+    ),
+    [selectedMenu.product_name]
+  );
+
   let bodyContent = (
     <div className="flex flex-col gap-4">
       <div>
@@ -303,14 +241,9 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
         <input
           type="text"
           name="product_name"
-          placeholder="Contoh: Dosirak Dakgalbi"
-          value={productInfo.product_name}
-          onChange={handleInputChange}
-          className={
-            invalidFields.includes("product_name")
-              ? "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400"
-              : "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-          }
+          placeholder={productName}
+          onChange={(e) => setProductName(e.target.value)}
+          className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
           required
         />
       </div>
@@ -323,14 +256,11 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
         </label>
         <textarea
           name="description"
-          placeholder="Contoh: Dosirak Dakgalbi terbuat dari sayuran dan daging berkualitas"
-          value={productInfo.description}
-          onChange={handleInputChange}
+          onChange={(e) => setMenuDescription(e.target.value)}
+          placeholder={menuDescription}
           className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-          required
         />
       </div>
-
       <div className="flex flex-col gap-2">
         <h1>Foto Produk</h1>
         <div className="w-24 h-24 border-neutral-300 rounded cursor-pointer">
@@ -345,34 +275,12 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
             <input
               type="file"
               id="image"
-              className="hidden"
-              onChange={handleImageChange}
+              onChange={(e) =>
+                setImage(e.target.files ? e.target.files[0] : null)
+              }
             />
           </label>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="category_id"
-          className="block font-medium leading-6 text-gray-900"
-        >
-          Category <span className="text-primary">*</span>
-        </label>
-        <select
-          name="category_id"
-          value={productInfo.category_id}
-          onChange={handleInputChange}
-          className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-          required
-        >
-          <option value="">Pilih Kategori</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.category_name}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );
@@ -391,7 +299,6 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
             </div>
           </div>
         </div>
-
         <div>
           <label
             htmlFor="price"
@@ -400,28 +307,22 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
             Harga Produk<span className="text-primary">*</span>
           </label>
           <input
-            type="number"
+            type="text"
             name="price"
-            placeholder="Contoh: Rp:19.000.00"
-            value={productInfo.price}
-            onChange={handleInputChange}
-            className={
-              invalidFields.includes("price")
-                ? "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400"
-                : "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-            }
+            placeholder={menuPrice}
+            onChange={(e) => setMenuPrice(e.target.value)}
+            className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
             required
           />
         </div>
-
         <div>
           <label>
             Is Reward Menu:
             <input
               type="checkbox"
               name="is_reward_menu"
-              checked={productInfo.is_reward_menu}
-              onChange={handleInputChange}
+              checked={rewardMenu}
+              onChange={(e) => setRewardMenu(e.target.checked)}
             />
           </label>
         </div>
@@ -429,178 +330,196 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
     );
   }
 
-  const [productEditInfo, setProductEditInfo] = useState<any>({
-    product_name: "",
-    price: "",
-    description: "",
-    is_reward_menu: false,
-    image: null,
-    category_id: "",
-    variants: [
-      {
-        variant_id: "",
-        variant_name: "",
-        variant_options: [{ variant_option_name: "", price_adjustment: "" }],
-      },
-    ],
-  });
-
   if (step === STEPS.VARIANT) {
     bodyContent = (
       <div className="flex flex-col gap-8">
-        <div>
-          <p className="text-textGray text-xs">STEP 3 OF 3</p>
-          <div className="flex flex-col gap-2">
-            <p className="text-primary">Variant</p>
-            <div className="flex gap-4">
-              <div className="h-2 w-full bg-primary rounded-full" />
-              <div className="h-2 w-full bg-primary rounded-full" />
-              <div className="h-2 w-full bg-primary rounded-full" />
-            </div>
-          </div>
-        </div>
-        <div>
-
-
-          
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                checked={hasCustomization}
-                onChange={handleCheckboxChange}
-                id="customizationCheckbox"
-              />
-              <label
-                htmlFor="customizationCheckbox"
-                className="ml-2 font-semibold"
-              >
-                Add customization
-              </label>
-            </div>
-            {hasCustomization && (
-              <button
-                type="button"
-                onClick={handleAddVariant}
-                className="px-4 py-2 border rounded-md border-primary text-primary italic text-sm"
-              >
-                Add Another Variant
-              </button>
-            )}
-          </div>
-          {hasCustomization && (
-            <div>
-              <div className="absolute top-0"></div>
-              {productInfo.variants.map((variant, variantIndex) => (
-                <div key={variantIndex} className="flex flex-col gap-4">
-                  <div className="flex flex-col gap-2">
-                    <div className="w-full flex justify-between items-center">
-                      <label
-                        htmlFor="product_name"
-                        className="block font-medium leading-6 text-gray-900"
-                      >
-                        Variant {variantIndex + 1}
-                      </label>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteVariant(variantIndex)}
-                          className="border px-4 py-2 text-red-500 border-red-500 rounded-md text-sm italic "
-                        >
-                          Delete Variant
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleAddOption(variantIndex)}
-                          className="px-4 py-2 border rounded-md border-primary text-primary italic text-sm"
-                        >
-                          Add Option
-                        </button>
-                      </div>
+        {editCustomization.variants.length > 0 &&
+          editCustomization.variants.map((variant, variantIndex) => (
+            <div key={variantIndex}>
+              {editModeVariantIndex === variantIndex ? (
+                <>
+                  <h3>Edit Customization</h3>
+                  <label>Variant Name</label>
+                  <input
+                    type="text"
+                    className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                    placeholder={variant.variant_name}
+                    onChange={(e) =>
+                      handleEditCustomizationChange(
+                        variantIndex,
+                        0,
+                        "variant_name",
+                        e.target.value
+                      )
+                    }
+                  />
+                  {variant.variant_options.map((option, optionIndex) => (
+                    <div key={optionIndex}>
+                      <label>Variant Option Name</label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                        placeholder={option.variant_option_name}
+                        onChange={(e) =>
+                          handleEditCustomizationChange(
+                            variantIndex,
+                            optionIndex,
+                            "variant_option_name",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <label>Price Adjustment</label>
+                      <input
+                        type="text"
+                        className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                        placeholder={option.price_adjustment}
+                        onChange={(e) =>
+                          handleEditCustomizationChange(
+                            variantIndex,
+                            optionIndex,
+                            "price_adjustment",
+                            e.target.value
+                          )
+                        }
+                      />
                     </div>
-                    <input
-                      type="text"
-                      placeholder="Variant Name"
-                      value={variant.variant_name}
-                      onChange={(e) =>
-                        handleVariantChange(
-                          variantIndex,
-                          "variant_name",
-                          e.target.value
-                        )
-                      }
-                      className={
-                        invalidFields.includes(`variant_name_${variantIndex}`)
-                          ? "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400 placeholder:italic"
-                          : "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:italic"
-                      }
-                      required
-                    />
+                  ))}
+                  <div className="flex gap-2 mt-4 items-center">
+                    <button
+                      type="button"
+                      onClick={() => setEditModeVariantIndex(null)}
+                      className="px-4 py-2 rounded-md border border-primary text-primary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditModeVariantIndex(null)}
+                      className="px-4 py-2 rounded-md bg-primary text-white"
+                    >
+                      Save
+                    </button>
                   </div>
-                  <div className="mb-4 ml-4">
-                    {variant.variant_options.map((option, optionIndex) => (
-                      <div key={optionIndex}>
-                        <div className="flex flex-col gap-2">
-                          <label
-                            htmlFor="product_name"
-                            className="block font-medium leading-6 text-gray-900"
-                          >
-                            Variant Option {optionIndex + 1}
-                          </label>
-
-                          <div className="flex gap-2 items-center">
-                            <input
-                              type="text"
-                              placeholder="Ex. Big, Egg, Red"
-                              value={option.variant_option_name}
-                              onChange={(e) =>
-                                handleOptionChange(
-                                  variantIndex,
-                                  optionIndex,
-                                  "variant_option_name",
-                                  e.target.value
-                                )
-                              }
-                              className={
-                                invalidFields.includes(
-                                  `option_name_${variantIndex}_${optionIndex}`
-                                )
-                                  ? "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400  placeholder:italic"
-                                  : "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:italic"
-                              }
-                              required
-                            />
-                            <input
-                              type="text"
-                              placeholder="Ex. In Rupiah (19.000)"
-                              value={option.price_adjustment}
-                              onChange={(e) =>
-                                handleOptionChange(
-                                  variantIndex,
-                                  optionIndex,
-                                  "price_adjustment",
-                                  e.target.value
-                                )
-                              }
-                              className={
-                                invalidFields.includes(
-                                  `price_adjustment_${variantIndex}_${optionIndex}`
-                                )
-                                  ? "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400  placeholder:italic"
-                                  : "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 placeholder:italic"
-                              }
-                              required
-                            />
-                          </div>
+                </>
+              ) : (
+                <>
+                  <h3>List customization</h3>
+                  <div className="flex justify-between my-8 items-center">
+                    <div className="flex flex-col">
+                      <label>Nama Variant: {variant.variant_name}</label>
+                      {variant.variant_options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="flex flex-col">
+                          <label>Option: {option.variant_option_name}</label>
+                          <label>Price: {option.price_adjustment}</label>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDeleteCustomization(variant.variant_id!)
+                        }
+                        className="px-4 py-2 rounded-md border border-primary text-primary"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditModeVariantIndex(variantIndex)}
+                        className="px-4 py-2 rounded-md bg-primary text-white"
+                      >
+                        Edit
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                </>
+              )}
             </div>
-          )}
-        </div>
+          ))}
+        {addCustomization.variants.map((variant, variantIndex) => (
+          <div key={variantIndex}>
+            <h3>Add Customization</h3>
+            <label>Variant Name</label>
+            <input
+              type="text"
+              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+              onChange={(e) =>
+                setAddCustomization((prevState) => ({
+                  ...prevState,
+                  variants: prevState.variants.map((item, idx) =>
+                    idx === variantIndex
+                      ? { ...item, variant_name: e.target.value }
+                      : item
+                  ),
+                }))
+              }
+            />
+            {variant.variant_options.map((option, optionIndex) => (
+              <div key={optionIndex}>
+                <label>Variant Option Name</label>
+                <input
+                  type="text"
+                  className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                  onChange={(e) =>
+                    setAddCustomization((prevState) => ({
+                      ...prevState,
+                      variants: prevState.variants.map((item, idx) =>
+                        idx === variantIndex
+                          ? {
+                              ...item,
+                              variant_options: item.variant_options.map(
+                                (opt, oIdx) =>
+                                  oIdx === optionIndex
+                                    ? {
+                                        ...opt,
+                                        variant_option_name: e.target.value,
+                                      }
+                                    : opt
+                              ),
+                            }
+                          : item
+                      ),
+                    }))
+                  }
+                />
+                <label>Price Adjustment</label>
+                <input
+                  type="text"
+                     className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                  onChange={(e) =>
+                    setAddCustomization((prevState) => ({
+                      ...prevState,
+                      variants: prevState.variants.map((item, idx) =>
+                        idx === variantIndex
+                          ? {
+                              ...item,
+                              variant_options: item.variant_options.map(
+                                (opt, oIdx) =>
+                                  oIdx === optionIndex
+                                    ? {
+                                        ...opt,
+                                        price_adjustment: e.target.value,
+                                      }
+                                    : opt
+                              ),
+                            }
+                          : item
+                      ),
+                    }))
+                  }
+                />
+              </div>
+            ))}
+            <button type="button" onClick={() => handleAddOption(variantIndex)} className="bg-primary text-white rounded-md px-4 py-2 mt-2">
+              Add Option
+            </button>
+          </div>
+        ))}
+        <button type="button" className="my-4" onClick={handleAddCustomization}>
+          Add Customization
+        </button>
       </div>
     );
   }
@@ -609,7 +528,6 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
     if (step === STEPS.VARIANT) {
       return "Submit";
     }
-
     return "Next";
   }, [step]);
 
@@ -617,17 +535,16 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
     if (step === STEPS.NAME) {
       return undefined;
     }
-
     return "Back";
   }, [step]);
 
   useEffect(() => {
+    // Adjust based on actual modal library or implementation
     if (editMenuModal.isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -637,19 +554,11 @@ const EditMenuModal = ({ selectedMenu }: { selectedMenu: any | null }) => {
     return null;
   }
 
-  const titleContent = (
-    <div>
-      <h1 className="text-4xl font-semibold">
-        Edit {selectedMenu?.product_name}
-      </h1>
-    </div>
-  );
-
   return (
     <Modal
-      title={titleContent}
       isOpen={editMenuModal.isOpen}
       onClose={editMenuModal.onClose}
+      title={titleContent}
       body={<form onSubmit={handleSubmit}>{bodyContent}</form>}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}

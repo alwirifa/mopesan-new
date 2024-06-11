@@ -14,6 +14,7 @@ import MenuModal from "@/app/components/modal/menu/MenuModal";
 import { UserContext } from "@/app/context/UserContext";
 
 
+
 export default function Page({
   searchParams,
   params,
@@ -67,6 +68,8 @@ export default function Page({
   };
 
   const { user } = useContext(UserContext);
+
+  
   return (
     <div className="flex flex-col gap-4">
       {user?.role_keyword === "admin_merchant" ? (
@@ -109,7 +112,7 @@ export default function Page({
                   <div className="flex justify-between">
                     <p className="text-lg font-semibold">{menu.product_name}</p>
                     <p className="font-semibold text-primary">
-                      {formatCurrency(menu.price)}
+                     {menu.price}
                     </p>
                   </div>
                   <p className="text-xs text-textGray italic">
@@ -135,7 +138,9 @@ export default function Page({
         })}
       </div>
       <MenuModal />
-      <EditMenuModal selectedMenu={selectedMenu} />
+      {selectedMenu && (
+        <EditMenuModal selectedMenu={selectedMenu} />
+      )}
     </div>
   );
 }
