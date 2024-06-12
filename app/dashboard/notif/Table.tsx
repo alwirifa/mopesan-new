@@ -32,7 +32,7 @@ const Table: React.FC<Props> = ({ data }) => {
                 Deskripsi
               </th>
               <th className="border-r border-black px-6 py-4 text-left">
-                Promotion Type
+             Kondisi
               </th>
               <th className="border-r border-black px-6 py-4 text-left">
                 Time Blast

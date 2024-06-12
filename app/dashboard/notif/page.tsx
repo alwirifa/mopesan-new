@@ -10,6 +10,7 @@ import Heading from "@/app/components/Heading";
 import { useNotifModal } from "@/app/hooks/notif/useNotifModal";
 import NotifModal from "@/app/components/modal/notif/NotifModal";
 import { UserContext } from "@/app/context/UserContext";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -28,14 +29,15 @@ const Page = ({
   const [dataTabel, setDataTabel] = useState<any[]>([]);
 
   const [sort, setSort] = useState<string>(sortOptions[0].value);
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 8;
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query]);
+  }, [currentPage, query, sort]);
 
   const handleSave = async () => {
     try {

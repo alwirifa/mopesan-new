@@ -74,7 +74,7 @@ const Table: React.FC<Props> = ({ data }) => {
               <th className="border-r border-black px-2 py-4 text-center">No.</th>
               <th className="border-r border-black px-6 py-4 text-left">Notification Title</th>
               <th className="border-r border-black px-6 py-4 text-left">Deskripsi</th>
-              <th className="border-r border-black px-6 py-4 text-left">Promotion Type</th>
+              <th className="border-r border-black px-6 py-4 text-left">Kondisi</th>
               <th className="border-r border-black px-6 py-4 text-left">Time Blast</th>
               <th className="border-black px-6 py-4 text-left">Status</th>
             </tr>
