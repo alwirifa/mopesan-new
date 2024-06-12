@@ -10,6 +10,7 @@ import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Image from "next/image";
 import Search from "@/app/components/Search";
+import { useSearchParams } from "next/navigation";
 
 const Page = ({
   searchParams,
@@ -34,14 +35,14 @@ const Page = ({
     formatDateRange(defaultEndDate.toISOString())
   );
   const [sort, setSort] = useState("ASC");
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
-  // const offset = (currentPage - 1) * limit;
+  const queryParams = useSearchParams();
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, sort, startDate, endDate]);
+  }, [currentPage, sort, startDate, endDate]);
 
   const handleSave = async () => {
     try {
@@ -67,8 +68,8 @@ const Page = ({
 
       console.log(dataTabel);
       setTabelData(dataTabel);
-      console.log("total page", page);
       setTaxData(data);
+      console.log(dataTabel)
     } catch (error) {
       console.error("Error fetching roles:", error);
     }

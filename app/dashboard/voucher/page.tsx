@@ -39,12 +39,12 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query]);
+  }, [searchParams?.page, query, sort]);
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/vouchers?search=${query}&sort=${sort}&offset=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/vouchers?search=${query}&sort=${sort}&page=${currentPage}&limit=${limit}`;
 
       const response = await axios.get(url, {
         headers: {

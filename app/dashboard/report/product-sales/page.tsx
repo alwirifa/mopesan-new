@@ -12,6 +12,7 @@ import Search from "@/app/components/Search";
 import Image from "next/image";
 import DropDown from "@/app/components/Dropdown";
 import CheckBoxGroup from "@/app/components/Checkbox";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Tinggi ke rendah" },
@@ -40,9 +41,10 @@ const Page = ({
     formatDateRange(defaultEndDate.toISOString())
   );
   const [sort, setSort] = useState<string>(sortOptions[0].value);
+  const queryParams = useSearchParams();
   const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   const [totalPages, setTotalPages] = useState<any>({});
 
   const [categoryFilter, setCategoryFilter] = useState<any[]>([
@@ -73,7 +75,7 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query, startDate, endDate, sort, selectedCategory]);
+  }, [currentPage, query, startDate, endDate, sort, selectedCategory]);
 
   const handleSave = async () => {
     try {

@@ -37,7 +37,7 @@ const Table = ({
         }
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/customer/dashboard/${params.id}?offset=${currentPage}&limit=${limit}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/customer/dashboard/${params.id}?page=${currentPage}&limit=${limit}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ const Table = ({
     };
 
     fetchTabelItem();
-  }, [params.id, offset, limit]);
+  },[searchParams?.page, currentPage]);
 
   // Filter data yang tidak kosong
   const filteredData = data.filter(

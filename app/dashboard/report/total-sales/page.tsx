@@ -10,6 +10,7 @@ import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Image from "next/image";
 import CheckBoxGroup from "@/app/components/Checkbox";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Rendah ke Tinggi" },
@@ -65,15 +66,15 @@ const Page = ({
   );
   const [sort, setSort] = useState<string>(sortOptions[0].value);
   const [periodSort, setPeriodSort] = useState<string>(periodOptions[3].value);
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
-
+  const queryParams = useSearchParams();
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   const [merchantBox, setMerchantBox] = useState<any>([]);
   const [selectedMerchants, setSelectedMerchants] = useState<string>("");
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, startDate, endDate, sort, periodSort, selectedMerchants]);
+  }, [currentPage, startDate, endDate, sort, periodSort, selectedMerchants]);
 
   const handleSave = async () => {
     try {
@@ -102,6 +103,7 @@ const Page = ({
       setDataTabel(secondData);
       setFirstData(firstData);
       setTotalPages(firstData.total_page);
+      console.log(firstData.total_page)
     } catch (error) {
       console.error("Error fetching data", error);
     }

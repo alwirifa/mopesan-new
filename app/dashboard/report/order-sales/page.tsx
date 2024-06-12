@@ -16,6 +16,7 @@ import CheckBoxGroup from "@/app/components/Checkbox";
 import MerchantCheckbox from "@/app/components/checboxOrder/MerchantCheckBox";
 import OrderCheckbox from "@/app/components/checboxOrder/OrderCheckBox";
 import { ChevronDown } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -45,8 +46,10 @@ const Page = ({
   const [endDate, setEndDate] = useState<string>(
     formatDateRange(defaultEndDate.toISOString())
   );
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
+
+  const queryParams = useSearchParams();
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
 
   const [selectedMerchants, setSelectedMerchants] = useState<any>([]);
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<any>([]);
@@ -60,7 +63,7 @@ const Page = ({
   useEffect(() => {
     handleSave();
   }, [
-    searchParams?.page,
+    currentPage,
     startDate,
     endDate,
     selectedMerchants,

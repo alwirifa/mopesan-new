@@ -9,6 +9,7 @@ import Sort from "@/app/components/Sort";
 import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -38,19 +39,19 @@ const Page = ({
     formatDateRange(defaultEndDate.toISOString())
   );
   const [sort, setSort] = useState("ASC");
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
-  const offset = (currentPage - 1) * limit;
+  const queryParams = useSearchParams();
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, startDate, endDate]);
+  }, [currentPage, startDate, endDate]);
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/between?sort=${sort}&offset=${offset}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/orders/admin/between?sort=${sort}&page=${currentPage}&limit=${limit}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }

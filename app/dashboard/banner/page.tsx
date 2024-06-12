@@ -35,7 +35,7 @@ const Page = ({
     const fetchBanners = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner?sort=${sort}&search=${query}`
         );
         setBanners(response.data.data.banners);
         console.log(response.data.data)
@@ -45,7 +45,7 @@ const Page = ({
     };
 
     fetchBanners();
-  }, []);
+  }, [query, sort]);
 
   // OVERFLOW HIDDEN SAAT MODAL TERBUKA
   useEffect(() => {
@@ -82,6 +82,7 @@ const Page = ({
 
         {/* <Filter onFilterChange={handleSortChange} filterOptions={sortOptions} />{" "} */}
         <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+     
         </div>
         <Search placeholder="Search ..." />
       </div>

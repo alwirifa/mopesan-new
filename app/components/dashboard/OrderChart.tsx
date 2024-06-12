@@ -14,7 +14,7 @@ interface ServerResponse {
   data: Data[];
 }
 
-const LineChart = () => {
+const OrderChart = () => {
   const [earning, setEarning] = useState<Data[]>([]);
   const { user } = useContext(UserContext);
 
@@ -47,40 +47,51 @@ const LineChart = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user]);
+
+  if (earning.length === 0) {
+    return (
+      <div>
+        Tidak ada data
+      </div>
+    );
+  }
 
   const chartData = [
     {
       id: "Earnings",
       data: earning.map((item) => ({
-        x: item.order_day, // Use date as x-axis
+        x: item.order_day,
         y: item.total_earnings,
       })),
     },
   ];
 
   return (
-    <div className="bg-white h-[400px] w-full flex rounded-xl">
+    <div className="bg-white h-[300px] w-full flex rounded-xl">
       <ResponsiveLine
         data={chartData}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-        xScale={{ type: "time", format: "%Y-%m-%d", useUTC: false }} // Set x-scale as time scale
+        xScale={{ type: "time", format: "%Y-%m-%d", useUTC: false }}
         yScale={{
           type: "linear",
           min: 0,
           max: Math.max(...earning.map((item) => item.total_earnings)),
-          stacked: false, // Do not stack the lines
-          reverse: false, // Ensure zero is at the bottom
+          stacked: false,
+          reverse: false,
         }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
-          format: "%b %d", // Set display format for bottom axis
-          tickValues: "every 1 day", // Show label for each day
+          format: "%b %d",
+          tickValues: "every 1 day",
+        }}
+        axisLeft={{
+          tickValues: 5,
         }}
         enablePoints={false}
         enableGridX={false}
-        enableGridY={false}
+        enableGridY={true}
         lineWidth={3}
         enableArea={true}
         colors={{ scheme: "nivo" }}
@@ -116,4 +127,4 @@ const LineChart = () => {
   );
 };
 
-export default LineChart;
+export default OrderChart;

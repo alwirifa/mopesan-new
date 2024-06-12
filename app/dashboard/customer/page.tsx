@@ -30,14 +30,15 @@ const Page = ({
   const [sort, setSort] = useState<string>(sortOptions[0].value);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 8;
+  const limit = Number(searchParams?.limit) || 10 ;
   // const offset = (currentPage - 1) * limit;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query, currentPage]);
+  }, [searchParams?.page, query, sort, currentPage]);
 
+  console.log(currentPage)
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
