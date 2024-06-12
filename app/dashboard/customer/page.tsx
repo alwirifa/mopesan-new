@@ -36,7 +36,7 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query]);
+  }, [searchParams?.page, query, currentPage]);
 
   const handleSave = async () => {
     try {
