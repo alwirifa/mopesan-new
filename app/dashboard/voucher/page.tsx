@@ -14,6 +14,7 @@ import { useVoucherModal } from "@/app/hooks/voucher/useVoucherModal";
 import VoucherModal from "@/app/components/modal/voucher/VoucherModal";
 import Filter from "@/app/components/Filter";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -32,9 +33,12 @@ const Page = ({
 
   const [dataTabel, setDataTabel] = useState<any[]>([]);
   const [sort, setSort] = useState<string>(sortOptions[0].value);
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
+
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+ 
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   const offset = (currentPage - 1) * limit;
 
   useEffect(() => {

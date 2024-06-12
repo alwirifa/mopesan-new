@@ -15,7 +15,7 @@ const Table: React.FC<Props> = ({ data }) => {
   if (data.length === 0) {
     return (
       <div className="h-full flex justify-center items-center">
-        <h1 className="">Order tidak ditemukan</h1>
+        <h1 className="">Customer Data tidak ditemukan</h1>
       </div>
     );
   }

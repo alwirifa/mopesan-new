@@ -10,6 +10,7 @@ import axios from "axios";
 import Sort from "@/app/components/Sort";
 import Filter from "@/app/components/Filter";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -25,9 +26,10 @@ const Page = ({
     query?: string;
   };
 }) => {
-  const query = searchParams?.query || "";
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+ 
   const [banners, setBanners] = useState<any[]>([]);
-
   const [sort, setSort] = useState<string>(sortOptions[0].value);
   const bannerModal = useBannerModal();
 

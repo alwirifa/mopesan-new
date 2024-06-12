@@ -42,7 +42,7 @@ const Page = ({
   );
   const [sort, setSort] = useState<string>(sortOptions[0].value);
   const queryParams = useSearchParams();
-  const query = searchParams?.query || "";
+  const query = queryParams.get("query") || "";
   const currentPage = Number(queryParams.get("page")) || 1;
   const limit = Number(queryParams.get("limit")) || 10;
   const [totalPages, setTotalPages] = useState<any>({});

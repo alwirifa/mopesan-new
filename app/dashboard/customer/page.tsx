@@ -10,6 +10,7 @@ import Pagination from "@/app/components/Pagination";
 import Table from "./Table";
 import Search from "@/app/components/Search";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "ASC", label: "Ascending" },
@@ -28,21 +29,22 @@ const Page = ({
   const [dataTabel, setDataTabel] = useState<any[]>([]);
 
   const [sort, setSort] = useState<string>(sortOptions[0].value);
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10 ;
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
   // const offset = (currentPage - 1) * limit;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query, sort, currentPage]);
+  }, [currentPage, query, sort, currentPage]);
 
-  console.log(currentPage)
+  console.log(currentPage);
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/customers?sort=${sort}&page=${currentPage}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/customers?sort=${sort}&page=${currentPage}&limit=${limit}&search=${query}`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
