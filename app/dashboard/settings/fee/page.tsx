@@ -9,6 +9,7 @@ import FeeModal from "@/app/components/modal/fee/FeeModal";
 import { useAdminModal } from "@/app/hooks/admin/useAdminModal";
 import { useFeeModal } from "@/app/hooks/fee/useFeeModal";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 type Props = {};
@@ -22,7 +23,11 @@ const Page = ({
     limit?: string;
   };
 }) => {
-  const query = searchParams?.query || "";
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
+
   const feeModal = useFeeModal();
   const [fee, setFee] = useState<any[]>([]);
 

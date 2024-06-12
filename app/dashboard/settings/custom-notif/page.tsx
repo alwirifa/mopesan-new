@@ -13,6 +13,7 @@ import Heading from "@/app/components/Heading";
 import Image from "next/image";
 import NotifModal from "@/app/components/modal/notif/NotifModal";
 import { useNotifModal } from "@/app/hooks/notif/useNotifModal";
+import { useSearchParams } from "next/navigation";
 
 const Page = ({
   searchParams,
@@ -37,19 +38,21 @@ const Page = ({
     formatDateRange(defaultEndDate.toISOString())
   );
   const [sort, setSort] = useState("ASC");
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
-  const offset = (currentPage - 1) * limit;
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
+
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, startDate, endDate]);
+  }, [currentPage, startDate, endDate, query]);
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?sort=${sort}&page=${currentPage}&limit=${limit}`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/events?sort=${sort}&page=${currentPage}&limit=${limit}&search=${query}`;
       if (startDate) {
         url += `&start_date=${startDate}`;
       }

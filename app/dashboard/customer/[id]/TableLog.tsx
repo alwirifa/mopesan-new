@@ -67,7 +67,7 @@ const Table = ({
   return (
     <div className="mt-4">
       <div className="flex flex-col gap-2">
-        <h1 className="font-semibold text-[24px]">Log History</h1>
+        <h1 className="font-semibold text-[24px]">Last 5 Log Histories</h1>
         <p className="italic text-textGray">History Log User</p>
       </div>
       {loading && <p className="text-gray-500 mt-4">Loading...</p>}
@@ -113,10 +113,10 @@ const Table = ({
       {!loading && !error && filteredData.length === 0 && (
         <p className="text-gray-500 mt-4">Tidak ada data yang tersedia.</p>
       )}
-      <div className="w-full flex justify-end mt-4">
+      {/* <div className="w-full flex justify-end mt-4">
 
       <Pagination totalPages={totalPages} />
-      </div>
+      </div> */}
     </div>
   );
 };

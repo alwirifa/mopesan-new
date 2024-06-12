@@ -11,6 +11,7 @@ import Table from "./Table";
 import Search from "@/app/components/Search";
 import Image from "next/image";
 import { UserContext } from "@/app/context/UserContext";
+import { useSearchParams } from "next/navigation";
 
 const Page = ({
   searchParams,
@@ -34,15 +35,17 @@ const Page = ({
     formatDateRange(defaultEndDate.toISOString())
   );
   const [sort, setSort] = useState("ASC");
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 8;
+  const queryParams = useSearchParams();
+  const query = queryParams.get("query") || "";
+  const currentPage = Number(queryParams.get("page")) || 1;
+  const limit = Number(queryParams.get("limit")) || 10;
+
   // const offset = (currentPage - 1) * limit;
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
     handleSave();
-  }, [searchParams?.page, query, sort, currentPage]);
+  }, [currentPage, query, sort, currentPage]);
 
   const { user } = useContext(UserContext);
 

@@ -33,7 +33,7 @@ const Page = ({
   const query = queryParams.get("query") || "";
   const currentPage = Number(queryParams.get("page")) || 1;
   const limit = Number(queryParams.get("limit")) || 10;
-  // const offset = (currentPage - 1) * limit;
+
   const [totalPages, setTotalPages] = useState<any>({});
 
   useEffect(() => {
