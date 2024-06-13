@@ -37,7 +37,7 @@ export default function Content({
   const [isActive, setIsActive] = useState(is_open);
   const confirmModal = useConfirmModal();
 
-  const merchantSwitch = async () => {
+  const handleConfirm = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token not found in local storage");
@@ -58,6 +58,12 @@ export default function Content({
     }
   };
 
+
+  const handleAdminStatusChange = (admin: any) => {
+    
+    confirmModal.onOpen();
+  };
+
   return (
     <div className="flex flex-col gap-6 h-full">
       {}
@@ -71,7 +77,7 @@ export default function Content({
 
             <div className="flex gap-4 items-center">
               <p className="text-[#212427]/70  font-semibold">Closed</p>
-              <Switch checked={isActive} onClick={merchantSwitch} />
+              <Switch checked={isActive} onClick={handleAdminStatusChange} />
               <p className="text-primary font-semibold">Open</p>
             </div>
           </div>
@@ -122,7 +128,10 @@ export default function Content({
       <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
         <Card id={id} />
       </section>
-      <ConfirmModal />
+      <ConfirmModal
+        onConfirm={handleConfirm}
+        status={isActive}
+      />
     </div>
   );
 }

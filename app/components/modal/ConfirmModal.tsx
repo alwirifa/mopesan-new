@@ -4,25 +4,37 @@ import React from "react";
 import Modal from "./Modal";
 import { useConfirmModal } from "@/app/hooks/confirm/useConfirmModal";
 
-const ConfirmModal = () => {
+interface Props {
+  onConfirm: () => void;
+  status: boolean;
+}
+
+const ConfirmModal = ({ onConfirm, status } : Props ) => {
   const confirmModal = useConfirmModal();
 
   const handleSubmit = () => {
-    const formElement = document.querySelector("form");
-    if (formElement) {
-      formElement.dispatchEvent(
-        new Event("submit", { cancelable: true, bubbles: true })
-      );
-    }
+    onConfirm();
+    confirmModal.onClose();
+  };
+
+  const handleCancel = () => {
+    confirmModal.onClose();
   };
 
   const titleContent = (
     <div>
-      <h1 className="text-4xl font-semibold">Konfimari Penonaktifan</h1>
+      <h1 className="text-4xl font-semibold">Konfirmasi</h1>
     </div>
   );
 
-  const bodyContent = <div>Apakah anda ingin mematikan?</div>;
+  const bodyContent = <div>
+
+    {!status ? (
+        <p>Apakah anda ingin mengaktifkan?</p>
+    ) : (
+      <p>Apakah anda ingin mematikan?</p>
+    )}
+  </div>;
   return (
     <Modal
       isOpen={confirmModal.isOpen}
@@ -30,7 +42,9 @@ const ConfirmModal = () => {
       title={titleContent}
       body={bodyContent}
       onSubmit={handleSubmit}
-      actionLabel="Submit"
+      onCancel={handleCancel}
+      actionLabel="Konfirmasi"
+      cancelLabel="Batal"
     />
   );
 };

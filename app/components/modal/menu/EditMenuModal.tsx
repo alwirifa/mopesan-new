@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { editMenus } from "@/app/api/menu";
 import { useEditMenuModal } from "@/app/hooks/menu/useEditMenuModal";
+import { formatCurrency } from "@/app/lib/formatter";
 
 enum STEPS {
   NAME = 0,
@@ -35,8 +36,6 @@ type Props = {
     customization_keys: CustomizationKey[];
   };
 };
-
-
 
 type VariantOption = {
   variant_option_id?: string;
@@ -86,7 +85,7 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
       variant_options: variant.customization_values!.map((option) => ({
         variant_option_id: option.id,
         variant_option_name: option.name,
-        price_adjustment: option.price_adjustment,
+        price_adjustment: String(option.price_adjustment),
       })),
     })),
   });
@@ -103,6 +102,23 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
   const [editModeVariantIndex, setEditModeVariantIndex] = useState<
     number | null
   >(null);
+
+  // const handleEditCustomizationChange = (
+  //   variantIndex: number,
+  //   optionIndex: number,
+  //   key: keyof VariantOption | "variant_name",
+  //   value: string
+  // ) => {
+  //   setEditCustomization((prevState) => {
+  //     const newVariants = [...prevState.variants];
+  //     if (key === "variant_name") {
+  //       newVariants[variantIndex].variant_name = value;
+  //     } else {
+  //       newVariants[variantIndex].variant_options[optionIndex][key] = value;
+  //     }
+  //     return { ...prevState, variants: newVariants };
+  //   });
+  // };
 
   const handleEditCustomizationChange = (
     variantIndex: number,
@@ -121,28 +137,22 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
     });
   };
 
-  const handleAddCustomization = () => {
-    setAddCustomization((prevState) => ({
-      ...prevState,
-      variants: [
-        ...prevState.variants,
-        {
-          variant_name: "",
-          variant_options: [{ variant_option_name: "", price_adjustment: "" }],
-        },
-      ],
-    }));
+  const handleAddOption = (variantIndex: number) => {
+    const updatedVariants = [...addCustomization.variants];
+    updatedVariants[variantIndex].variant_options.push({
+      variant_option_name: "",
+      price_adjustment: "",
+    });
+    setAddCustomization({ ...addCustomization, variants: updatedVariants });
   };
 
-  const handleAddOption = (variantIndex: number) => {
-    setAddCustomization((prevState) => {
-      const newVariants = [...prevState.variants];
-      newVariants[variantIndex].variant_options.push({
-        variant_option_name: "",
-        price_adjustment: "",
-      });
-      return { ...prevState, variants: newVariants };
+  const handleAddEditOption = (variantIndex: number) => {
+    const updatedVariants = [...editCustomization.variants];
+    updatedVariants[variantIndex].variant_options.push({
+      variant_option_name: "",
+      price_adjustment: "",
     });
+    setEditCustomization({ ...editCustomization, variants: updatedVariants });
   };
 
   const handleDeleteCustomization = (variantId: string) => {
@@ -179,11 +189,20 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
     };
 
     try {
-      await editMenus(menuData, selectedMenu.id); // Ensure `menuId` is defined somewhere
+      await editMenus(menuData, selectedMenu.id);
+      toast.promise(editMenus(menuData, selectedMenu.id), {
+        loading: "Editing menu...",
+        success: "Menu edited successfully",
+        error: "Failed to edit menu",
+      });
+
       editMenuModal.onClose();
     } catch (error) {
-      console.error("Failed to edit menu:", error);
-      toast.error("Failed to edit menu");
+      toast.promise(editMenus(menuData, selectedMenu.id), {
+        loading: "Editing menu...",
+        success: "Menu edited successfully",
+        error: "Failed to edit menu",
+      });
     }
   };
 
@@ -330,15 +349,99 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
     );
   }
 
+  const handleDeleteVariant = (variantIndex: number) => {
+    const updatedVariants = [...addCustomization.variants];
+    updatedVariants.splice(variantIndex, 1);
+    setAddCustomization({ ...addCustomization, variants: updatedVariants });
+  };
+
+  const handleVariantChange = (
+    index: number,
+    fieldName: string,
+    value: string
+  ) => {
+    const updatedVariants = [...addCustomization.variants];
+    updatedVariants[index] = {
+      ...updatedVariants[index],
+      [fieldName]: value,
+    };
+    setAddCustomization({ ...addCustomization, variants: updatedVariants });
+  };
+
+  const handleOptionChange = (
+    variantIndex: number,
+    optionIndex: number,
+    fieldName: string,
+    value: string
+  ) => {
+    const updatedVariants = [...addCustomization.variants];
+    updatedVariants[variantIndex].variant_options[optionIndex] = {
+      ...updatedVariants[variantIndex].variant_options[optionIndex],
+      [fieldName]: value,
+    };
+    setAddCustomization({ ...addCustomization, variants: updatedVariants });
+  };
+
+  const handleAddCustomization = () => {
+    setAddCustomization((prevState) => ({
+      ...prevState,
+      variants: [
+        ...prevState.variants,
+        {
+          variant_name: "",
+          variant_options: [{ variant_option_name: "", price_adjustment: "" }],
+        },
+      ],
+    }));
+  };
+
+  // const handleAddVariant = () => {
+  //   setAddCustomization({
+  //     ...addCustomization,
+  //     variants: [
+  //       ...addCustomization.variants,
+  //       {
+  //         variant_name: "",
+  //         variant_options: [{ variant_option_name: "", price_adjustment: "" }],
+  //       },
+  //     ],
+  //   });
+  // };
+
+  // const handleAddVariant = () => {
+  //   setProductInfo({
+  //     ...productInfo,
+  //     variants: [
+  //       ...productInfo.variants,
+  //       {
+  //         variant_name: "",
+  //         variant_options: [{ variant_option_name: "", price_adjustment: "" }],
+  //       },
+  //     ],
+  //   });
+  // };
+
   if (step === STEPS.VARIANT) {
     bodyContent = (
       <div className="flex flex-col gap-8">
+        <div>
+          <p className="text-textGray text-xs">STEP 3 OF 3</p>
+          <div className="flex flex-col gap-2">
+            <p className="text-primary">Variant</p>
+            <div className="flex gap-4">
+              <div className="h-2 w-full bg-primary rounded-full" />
+              <div className="h-2 w-full bg-primary rounded-full" />
+              <div className="h-2 w-full bg-primary rounded-full" />
+            </div>
+          </div>
+        </div>
         {editCustomization.variants.length > 0 &&
           editCustomization.variants.map((variant, variantIndex) => (
             <div key={variantIndex}>
               {editModeVariantIndex === variantIndex ? (
                 <>
                   <h3>Edit Customization</h3>
+
                   <label>Variant Name</label>
                   <input
                     type="text"
@@ -354,49 +457,61 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
                     }
                   />
                   {variant.variant_options.map((option, optionIndex) => (
-                    <div key={optionIndex}>
-                      <label>Variant Option Name</label>
-                      <input
-                        type="text"
-                        className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-                        placeholder={option.variant_option_name}
-                        onChange={(e) =>
-                          handleEditCustomizationChange(
-                            variantIndex,
-                            optionIndex,
-                            "variant_option_name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <label>Price Adjustment</label>
-                      <input
-                        type="text"
-                        className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-                        placeholder={option.price_adjustment}
-                        onChange={(e) =>
-                          handleEditCustomizationChange(
-                            variantIndex,
-                            optionIndex,
-                            "price_adjustment",
-                            e.target.value
-                          )
-                        }
-                      />
+                    <div key={optionIndex} className="flex gap-4">
+                      <div className="w-full">
+                        <label>Variant Option Name</label>
+                        <input
+                          type="text"
+                          className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                          placeholder={option.variant_option_name}
+                          onChange={(e) =>
+                            handleEditCustomizationChange(
+                              variantIndex,
+                              optionIndex,
+                              "variant_option_name",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label>Price Adjustment</label>
+                        <input
+                          type="number"
+                          className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                          placeholder={String(option.price_adjustment)}
+                          value={String(option.price_adjustment)}
+                          onChange={(e) =>
+                            handleEditCustomizationChange(
+                              variantIndex,
+                              optionIndex,
+                              "price_adjustment",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
                     </div>
                   ))}
                   <div className="flex gap-2 mt-4 items-center">
                     <button
                       type="button"
+                      onClick={() => handleAddEditOption(variantIndex)}
+                      className="border px-4 py-2 text-primary border-primary rounded-md text-sm italic transition hover:bg-primary hover:text-white"
+                    >
+                      Add Option
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setEditModeVariantIndex(null)}
-                      className="px-4 py-2 rounded-md border border-primary text-primary"
+                      className="border px-4 py-2 text-primary border-primary rounded-md text-sm italic transition hover:bg-primary hover:text-white"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditModeVariantIndex(null)}
-                      className="px-4 py-2 rounded-md bg-primary text-white"
+                      className="border px-4 py-2 text-primary border-primary rounded-md text-sm italic transition hover:bg-primary hover:text-white"
                     >
                       Save
                     </button>
@@ -404,14 +519,29 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
                 </>
               ) : (
                 <>
-                  <h3>List customization</h3>
-                  <div className="flex justify-between my-8 items-center">
+                  <div className="flex justify-between items-center my-4 p-4 bg-white shadow rounded-md">
                     <div className="flex flex-col">
-                      <label>Nama Variant: {variant.variant_name}</label>
+                      <div className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+                        <label className="font-semibold text-lg">
+                          Variant {variantIndex + 1}
+                        </label>
+                      </div>
+                      <h1 className="pl-4 text-lg text-gray-700">
+                        {variant.variant_name}
+                      </h1>
                       {variant.variant_options.map((option, optionIndex) => (
-                        <div key={optionIndex} className="flex flex-col">
-                          <label>Option: {option.variant_option_name}</label>
-                          <label>Price: {option.price_adjustment}</label>
+                        <div
+                          key={optionIndex}
+                          className="flex flex-col ml-4 mt-2"
+                        >
+                          <label className="text-sm text-gray-600">
+                            Variant Option {optionIndex + 1}:{" "}
+                            {option.variant_option_name}
+                          </label>
+                          <label className="text-sm text-gray-600">
+                            Price:{" "}
+                            {formatCurrency(Number(option.price_adjustment))}
+                          </label>
                         </div>
                       ))}
                     </div>
@@ -421,14 +551,14 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
                         onClick={() =>
                           handleDeleteCustomization(variant.variant_id!)
                         }
-                        className="px-4 py-2 rounded-md border border-primary text-primary"
+                        className="border px-4 py-2 text-red-500 border-red-500 rounded-md text-sm italic transition hover:bg-red-500 hover:text-white"
                       >
-                        Delete
+                        Delete Variant
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditModeVariantIndex(variantIndex)}
-                        className="px-4 py-2 rounded-md bg-primary text-white"
+                        className="border px-4 py-2 text-primary border-primary rounded-md text-sm italic transition hover:bg-primary hover:text-white"
                       >
                         Edit
                       </button>
@@ -438,92 +568,119 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
               )}
             </div>
           ))}
-        {addCustomization.variants.map((variant, variantIndex) => (
-          <div key={variantIndex}>
-            <h3>Add Customization</h3>
-            <label>Variant Name</label>
-            <input
-              type="text"
-              className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-              onChange={(e) =>
-                setAddCustomization((prevState) => ({
-                  ...prevState,
-                  variants: prevState.variants.map((item, idx) =>
-                    idx === variantIndex
-                      ? { ...item, variant_name: e.target.value }
-                      : item
-                  ),
-                }))
-              }
-            />
-            {variant.variant_options.map((option, optionIndex) => (
-              <div key={optionIndex}>
-                <label>Variant Option Name</label>
+
+        <div className="flex justify-between items-center">
+          <button
+            type="button"
+            onClick={handleAddCustomization}
+            className="border px-4 py-2 text-primary border-primary rounded-md text-sm italic transition hover:bg-primary hover:text-white"
+          >
+            Add Another Variant
+          </button>
+        </div>
+        <div>
+          <div className="absolute top-0"></div>
+          {addCustomization.variants.map((variant, variantIndex) => (
+            <div key={variantIndex} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <div className="w-full flex justify-between items-center">
+                  <label
+                    htmlFor="product_name"
+                    className="block font-medium leading-6 text-gray-900"
+                  >
+                    Variant {variantIndex + 1}
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteVariant(variantIndex)}
+                      className="border px-4 py-2 text-red-500 border-red-500 rounded-md text-sm italic transition hover:bg-red-500 hover:text-white"
+                    >
+                      Delete Variant
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAddOption(variantIndex)}
+                      className="border px-4 py-2 text-primary border-primary rounded-md text-sm italic transition hover:bg-primary hover:text-white"
+                    >
+                      Add Option
+                    </button>
+                  </div>
+                </div>
                 <input
                   type="text"
-                  className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                  placeholder="Variant Name"
+                  value={variant.variant_name}
                   onChange={(e) =>
-                    setAddCustomization((prevState) => ({
-                      ...prevState,
-                      variants: prevState.variants.map((item, idx) =>
-                        idx === variantIndex
-                          ? {
-                              ...item,
-                              variant_options: item.variant_options.map(
-                                (opt, oIdx) =>
-                                  oIdx === optionIndex
-                                    ? {
-                                        ...opt,
-                                        variant_option_name: e.target.value,
-                                      }
-                                    : opt
-                              ),
-                            }
-                          : item
-                      ),
-                    }))
+                    handleVariantChange(
+                      variantIndex,
+                      "variant_name",
+                      e.target.value
+                    )
                   }
-                />
-                <label>Price Adjustment</label>
-                <input
-                  type="text"
-                     className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
-                  onChange={(e) =>
-                    setAddCustomization((prevState) => ({
-                      ...prevState,
-                      variants: prevState.variants.map((item, idx) =>
-                        idx === variantIndex
-                          ? {
-                              ...item,
-                              variant_options: item.variant_options.map(
-                                (opt, oIdx) =>
-                                  oIdx === optionIndex
-                                    ? {
-                                        ...opt,
-                                        price_adjustment: e.target.value,
-                                      }
-                                    : opt
-                              ),
-                            }
-                          : item
-                      ),
-                    }))
+                  className={
+                    "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400 placeholder:italic"
                   }
+                  required
                 />
               </div>
-            ))}
-            <button type="button" onClick={() => handleAddOption(variantIndex)} className="bg-primary text-white rounded-md px-4 py-2 mt-2">
-              Add Option
-            </button>
-          </div>
-        ))}
-        <button type="button" className="my-4" onClick={handleAddCustomization}>
-          Add Customization
-        </button>
+              <div className="mb-4 ml-4">
+                {variant.variant_options.map((option, optionIndex) => (
+                  <div key={optionIndex}>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="product_name"
+                        className="block font-medium leading-6 text-gray-900"
+                      >
+                        Variant Option {optionIndex + 1}
+                      </label>
+
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          placeholder="Ex. Big, Egg, Red"
+                          value={option.variant_option_name}
+                          onChange={(e) =>
+                            handleOptionChange(
+                              variantIndex,
+                              optionIndex,
+                              "variant_option_name",
+                              e.target.value
+                            )
+                          }
+                          className={
+                            "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400  placeholder:italic"
+                          }
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="Ex. In Rupiah (19.000)"
+                          value={option.price_adjustment}
+                          onChange={(e) =>
+                            handleOptionChange(
+                              variantIndex,
+                              optionIndex,
+                              "price_adjustment",
+                              e.target.value
+                            )
+                          }
+                          className={
+                            "block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-red-500 placeholder:text-gray-400  placeholder:italic"
+                          }
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
-
   const actionLabel = useMemo(() => {
     if (step === STEPS.VARIANT) {
       return "Submit";

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -14,10 +16,11 @@ type Props = {
 
 const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null); // Menggunakan tipe Option | null
 
   const handleSortChange = (option: string) => {
-    setSelectedOption(option);
+    const selected = sortOptions.find((opt) => opt.value === option) || null;
+    setSelectedOption(selected);
     onSortChange(option);
     setIsOpen(false);
   };
@@ -28,7 +31,7 @@ const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
         className="flex gap-6 border rounded-md bg-white shadow-sm px-[16px] py-[7px] items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <p className="text-black font-base">{sortTitle || "Sort"}</p>
+        <p className="text-black font-base">{selectedOption ? selectedOption.label :  sortTitle}</p>
         <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
       </button>
 
@@ -37,7 +40,7 @@ const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
           {/* Menambahkan opsi "All" */}
           <button
             className={`block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-sm ${
-              selectedOption === "" ? "bg-gray-200" : ""
+              !selectedOption ? "bg-gray-200" : ""
             }`}
             onClick={() => handleSortChange("")}
           >
@@ -48,7 +51,7 @@ const DropDown = ({ onSortChange, sortOptions, sortTitle }: Props) => {
             <button
               key={index}
               className={`block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-sm ${
-                selectedOption === option.value ? "bg-gray-200" : ""
+                selectedOption && selectedOption.value === option.value ? "bg-gray-200" : ""
               }`}
               onClick={() => handleSortChange(option.value)}
             >

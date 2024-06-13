@@ -35,9 +35,9 @@ export default function Content({
   daily_earning,
 }: Props) {
   const [isActive, setIsActive] = useState(is_open);
-  const confirmModal = useConfirmModal()
+  const confirmModal = useConfirmModal();
 
-  const merchantSwitch = async () => {
+  const merchantSwitch = async (newIsActive: boolean) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token not found in local storage");
@@ -46,7 +46,6 @@ export default function Content({
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      const newIsActive = !isActive;
       setIsActive(newIsActive);
       await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/merchants/switch/${id}`,
@@ -56,6 +55,15 @@ export default function Content({
     } catch (error) {
       console.error("Error logging in:", error);
     }
+  };
+
+  const handleSwitchClick = () => {
+    confirmModal.onOpen();
+  };
+
+  const handleConfirm = () => {
+    const newIsActive = !isActive;
+    merchantSwitch(newIsActive);
   };
 
   return (
@@ -74,8 +82,8 @@ export default function Content({
             </Link>
             <div className="flex flex-col gap-2 items-end translate-y-2">
               <div className="flex gap-4 items-center">
-                <p className="text-[#212427]/70  font-semibold">Closed</p>
-                <Switch checked={isActive} onClick={merchantSwitch} />
+                <p className="text-[#212427]/70 font-semibold">Closed</p>
+                <Switch checked={isActive} onClick={handleSwitchClick} />
                 <p className="text-primary font-semibold">Open</p>
               </div>
               <div></div>
@@ -130,7 +138,7 @@ export default function Content({
       <section className="flex flex-col gap-6 p-8 bg-white rounded-lg h-full relative">
         <Card params={{ id: id.toString() }} />
       </section>
-      <ConfirmModal />
+      <ConfirmModal onConfirm={handleConfirm} status={isActive} />
     </div>
   );
 }

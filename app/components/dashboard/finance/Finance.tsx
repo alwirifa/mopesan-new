@@ -87,6 +87,7 @@ const Finance = ({
       setLoading(false); // Stop loading indicator on error
     }
   };
+  
 
   const handleDateChange = (date: DateRange | undefined) => {
     setSelectedDateRange(date);
@@ -118,9 +119,12 @@ const Finance = ({
     fetchData();
   }, []);
 
+  console.log(merchantBox)
+
   const handleSelectedMerchant = (newSort: string) => {
     setSelectedMerchants(newSort);
   };
+  
 
   return (
     <div className="">
@@ -129,7 +133,7 @@ const Finance = ({
           <h1 className="text-[42px] font-semibold">Dashboard</h1>
           <div className="flex gap-3 items-center">
             <DropDown
-              sortTitle="Pilih merchant"
+              sortTitle={ "Pilih merchant"}
               onSortChange={handleSelectedMerchant}
               sortOptions={merchantBox}
             />

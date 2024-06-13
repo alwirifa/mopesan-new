@@ -232,7 +232,6 @@ const MenuModal = () => {
     fetchCategories();
   }, []);
 
-  console.log("tes", productInfo.category_id);
   let bodyContent = (
     <div className="flex flex-col gap-4">
       <div>
@@ -272,7 +271,7 @@ const MenuModal = () => {
           htmlFor="description"
           className="block font-medium leading-6 text-gray-900"
         >
-          Description
+          Description <span className="text-primary">*</span>
         </label>
         <textarea
           name="description"
@@ -293,7 +292,7 @@ const MenuModal = () => {
         <input type="file" name="image" onChange={handleImageChange} />
       </div> */}
       <div className="flex flex-col gap-2">
-        <h1>Foto Produk</h1>
+        <h1>Foto Produk <span className="text-primary">*</span></h1>
         <div className="w-24 h-24 border-neutral-300 rounded cursor-pointer">
           <label htmlFor="image" className="cursor-pointer">
             <Image
@@ -361,7 +360,7 @@ const MenuModal = () => {
             htmlFor="price"
             className="block font-medium leading-6 text-gray-900"
           >
-            Harga Produk<span className="text-primary">*</span>
+            Harga Produk <span className="text-primary">*</span>
           </label>
           <input
             type="number"

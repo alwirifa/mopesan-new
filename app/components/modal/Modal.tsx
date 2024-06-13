@@ -13,6 +13,8 @@ interface ModalProps {
   disabled?: boolean;
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
+  cancelLabel?: string;
+  onCancel?: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -25,6 +27,8 @@ const Modal: React.FC<ModalProps> = ({
   onSubmit,
   secondaryAction,
   secondaryActionLabel,
+  cancelLabel,
+  onCancel,
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -45,6 +49,11 @@ const Modal: React.FC<ModalProps> = ({
     secondaryAction();
   }, [secondaryAction, disabled]);
 
+  const handleCancel = useCallback(() => {
+    if (disabled || !onCancel) return;
+    onCancel();
+  }, [onCancel, disabled]);
+
   const handleSubmit = useCallback(() => {
     if (disabled) {
       return;
@@ -58,7 +67,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div className="justify-center items-center flex overflow-x-hidden overflow-hidden fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-800/70 h-full overflow-y-auto">
-      <div className="relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full lg:h-auto md:h-auto">
+      <div className={onCancel ? "relative md:w-4/6 lg:w-1/3 xl:w-1/5 my-6 mx-auto  lg:h-auto md:h-auto" : "relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full lg:h-auto md:h-auto"}>
         <div
           className={`translate duration-300 h-full ${
             showModal ? "translate-y-0" : "translate-y-full"
@@ -81,7 +90,25 @@ const Modal: React.FC<ModalProps> = ({
               <div className="text-[32px] font-semibold">{title}</div>
             </div>
             <div className="relative px-6 pb-6 flex-auto">{body}</div>
-            <div className="flex items-center justify-end gap-4 px-6 pb-6">
+
+            <div
+              className={
+                onCancel
+                  ? "flex items-center justify-between gap-4 px-6 pb-6"
+                  : "flex items-center justify-end gap-4 px-6 pb-6"
+              }
+            >
+              {onCancel && cancelLabel && (
+                <button
+                  disabled={disabled}
+                  onClick={handleCancel}
+                  className="px-4 py-2 border rounded-md border-primary text-primary capitalize font-semibold text-sm"
+                  type="button"
+                >
+                  {cancelLabel}
+                </button>
+              )}
+
               {secondaryAction && secondaryActionLabel && (
                 <button
                   disabled={disabled}

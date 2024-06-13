@@ -12,13 +12,17 @@ import AdminModal from "@/app/components/modal/admin/AdminModal";
 import Heading from "@/app/components/Heading";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
+import { useConfirmModal } from "@/app/hooks/confirm/useConfirmModal";
+import { Loader2 } from "lucide-react";
+import ConfirmModal from "@/app/components/modal/ConfirmModal";
 
 const Page: React.FC = () => {
   const router = useRouter();
   const [admins, setAdmins] = useState<Admin[]>([]);
   const adminModal = useAdminModal();
+  const confirmModal = useConfirmModal();
   const editAdminModal = useEditAdminModal();
-  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const [selectedAdmin, setSelectedAdmin] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +42,12 @@ const Page: React.FC = () => {
     editAdminModal.onOpen();
   };
 
-  const handleSwitch = async (adminId: number, currentStatus: boolean) => {
+  const handleAdminStatusChange = (admin: any) => {
+    setSelectedAdmin(admin);
+    confirmModal.onOpen();
+  };
+
+  const handleConfirm = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token not found in local storage");
@@ -47,23 +56,62 @@ const Page: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      const newStatus = !currentStatus;
+      const newIsActive = !selectedAdmin.is_active;
 
       await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/switch/${adminId}`,
-        { is_active: newStatus },
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/switch/${selectedAdmin.id}`,
+        { is_active: newIsActive },
         config
       );
 
-      setAdmins((prevAdmins) =>
-        prevAdmins.map((admin) =>
-          admin.id === adminId ? { ...admin, is_active: newStatus } : admin
+      setAdmins((prevFees) =>
+        prevFees.map((admin) =>
+          admin.id === selectedAdmin.id
+            ? { ...admin, is_active: newIsActive }
+            : admin
         )
       );
+
+      confirmModal.onClose();
     } catch (error) {
-      console.error("Error updating admin status:", error);
+      console.error("Error updating fee status:", error);
     }
   };
+
+  // const handleSwitch = async (adminId: number, currentStatus: boolean) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) throw new Error("Token not found in local storage");
+
+  //     const config = {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     };
+
+  //     const newStatus = !currentStatus;
+
+  //     await axios.post(
+  //       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/admins/switch/${adminId}`,
+  //       { is_active: newStatus },
+  //       config
+  //     );
+
+  //     setAdmins((prevAdmins) =>
+  //       prevAdmins.map((admin) =>
+  //         admin.id === adminId ? { ...admin, is_active: newStatus } : admin
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating admin status:", error);
+  //   }
+  // };
+
+  if (!admins) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin size-12 text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -77,18 +125,24 @@ const Page: React.FC = () => {
       <section className="flex gap-6">
         <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-10 w-full">
           {admins.map((admin) => (
-            <div key={admin.id} className="flex flex-col gap-2 group relative rounded-lg">
+            <div
+              key={admin.id}
+              className="flex flex-col gap-2 group relative rounded-lg"
+            >
               <div className="flex gap-6 justify-between p-4 items-center rounded-lg bg-white z-40">
                 <div>
                   <p className="font-medium">{admin.email}</p>
                   <p className="text-sm text-textGray">
-                    Last Login: <span className="italic">{formatDate(admin.last_login)}</span>
+                    Last Login:{" "}
+                    <span className="italic">
+                      {formatDate(admin.last_login)}
+                    </span>
                   </p>
                 </div>
                 <div>
                   <Switch
                     checked={admin.is_active}
-                    onClick={() => handleSwitch(admin.id, admin.is_active)}
+                    onClick={() => handleAdminStatusChange(admin)}
                   />
                 </div>
               </div>
@@ -107,6 +161,10 @@ const Page: React.FC = () => {
         </div>
       </section>
       <AdminModal />
+      <ConfirmModal
+        onConfirm={handleConfirm}
+        status={selectedAdmin?.is_active}
+      />
       {selectedAdmin && <EditAdminModal selectedAdmin={selectedAdmin} />}
     </div>
   );

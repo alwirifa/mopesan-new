@@ -112,7 +112,7 @@ export default function Page({
                   <div className="flex justify-between">
                     <p className="text-lg font-semibold">{menu.product_name}</p>
                     <p className="font-semibold text-primary">
-                     {menu.price}
+                     {menu?.price && formatCurrency(Number(menu?.price))}
                     </p>
                   </div>
                   <p className="text-xs text-textGray italic">
