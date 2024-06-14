@@ -19,14 +19,15 @@ type Props = {
 };
 
 const Table: React.FC<Props> = ({ data }) => {
-  const [notifications, setNotifications] = useState<Notification[]>(data);
+  const [notifications, setNotifications] = useState<Notification[]>(data || []);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setNotifications(data); // Update notifications when data prop changes
+    setNotifications(data || []); // Update notifications when data prop changes
   }, [data]);
 
   const handleNotifSwitch = async (id: number, currentIsActive: boolean) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token not found in local storage");
@@ -51,13 +52,15 @@ const Table: React.FC<Props> = ({ data }) => {
         { is_active: newIsActive },
         config
       );
+      setLoading(false);
     } catch (error) {
       console.error("Error logging in:", error);
+      setLoading(false); // Ensure loading is set to false in case of an error
     }
   };
 
   // Show loading indicator if data is empty
-  if (loading || notifications.length === 0) {
+  if (loading) {
     return (
       <div className="w-full h-full flex justify-center items-center">
         <p>Loading...</p>
@@ -80,21 +83,27 @@ const Table: React.FC<Props> = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {notifications.map((notif, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                <td className="border-t border-r border-black px-4 py-2 font-medium text-center">{index + 1}</td>
-                <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.name}</td>
-                <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.description}</td>
-                <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.condition}</td>
-                <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.time && formatDate(notif?.time)}</td>
-                <td className="py-4 px-6 text-sm font-medium border-t border-black text-gray-900 whitespace-nowrap">
-                  <Switch
-                    checked={notif.is_active}
-                    onClick={() => handleNotifSwitch(notif.id, notif.is_active)}
-                  />
-                </td>
+            {notifications.length > 0 ? (
+              notifications.map((notif, index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="border-t border-r border-black px-4 py-2 font-medium text-center">{index + 1}</td>
+                  <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.name}</td>
+                  <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.description}</td>
+                  <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.condition}</td>
+                  <td className="py-4 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">{notif?.time && formatDate(notif?.time)}</td>
+                  <td className="py-4 px-6 text-sm font-medium border-t border-black text-gray-900 whitespace-nowrap">
+                    <Switch
+                      checked={notif.is_active}
+                      onClick={() => handleNotifSwitch(notif.id, notif.is_active)}
+                    />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="py-4 text-center">No notifications available</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

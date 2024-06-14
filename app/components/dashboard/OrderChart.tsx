@@ -67,12 +67,14 @@ const OrderChart = () => {
     },
   ];
 
+  console.log(earning)
+
   return (
     <div className="bg-white h-[300px] w-full flex rounded-xl">
       <ResponsiveLine
         data={chartData}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-        xScale={{ type: "time", format: "%Y-%m-%d", useUTC: false }}
+        xScale={{ type: "time", format: "%Y-%m-%d", useUTC: false }} // Atur skala x sebagai skala waktu
         yScale={{
           type: "linear",
           min: 0,
@@ -83,11 +85,11 @@ const OrderChart = () => {
         axisTop={null}
         axisRight={null}
         axisBottom={{
-          format: "%b %d",
-          tickValues: "every 1 day",
+          format: "%b %d", // Atur format tampilan untuk sumbu bawah
+          tickValues: "every 1 day", // Tampilkan label untuk setiap hari
         }}
         axisLeft={{
-          tickValues: 5,
+          tickValues: 5, // Adjust the tick values for better readability
         }}
         enablePoints={false}
         enableGridX={false}
