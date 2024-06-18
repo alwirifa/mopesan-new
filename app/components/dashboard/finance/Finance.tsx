@@ -109,17 +109,15 @@ const Finance = ({
         );
         const data = response.data.data;
 
-        console.log("Merchants:", data.merchants);
         setMerchantBox(data.merchants);
       } catch (error) {
-        console.log(error);
+        throw error
       }
     };
 
     fetchData();
   }, []);
 
-  console.log(merchantBox)
 
   const handleSelectedMerchant = (newSort: string) => {
     setSelectedMerchants(newSort);

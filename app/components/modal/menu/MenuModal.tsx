@@ -222,7 +222,6 @@ const MenuModal = () => {
     const fetchCategories = async () => {
       try {
         const categoriesData = await getCategories();
-        console.log(categoriesData);
         setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching categories:", error);

@@ -66,7 +66,6 @@ export async function getMenuByID(MenuId: string): Promise<void> {
     );
 
     if (response.status === 200) {
-      console.log("get by id successfully!");
       const { data } = response.data;
       return data;
     } else {
@@ -169,7 +168,6 @@ export async function deleteMenu(menuId: string): Promise<void> {
     );
 
     if (response.status === 200) {
-      console.log("Menu deleted successfully!");
       alert("Menu deleted successfully!");
     } else {
       console.error("Unexpected response status:", response.status);

@@ -24,8 +24,7 @@ const Table = ({
   const limit = Number(searchParams?.limit) || 5;
   const offset = (currentPage - 1) * limit;
 
-  const [totalPages, setTotalPages] = useState(1)
-
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchTabelItem = async () => {
@@ -47,21 +46,21 @@ const Table = ({
           }
         );
         setData(response.data.data.list_activity);
-        setTotalPages(response.data.data.total_pages)
-
+        setTotalPages(response.data.data.total_pages);
       } catch (err) {
-       console.log(err)
+        throw err;
       } finally {
         setLoading(false);
       }
     };
 
     fetchTabelItem();
-  },[searchParams?.page, currentPage]);
+  }, [searchParams?.page, currentPage]);
 
   // Filter data yang tidak kosong
   const filteredData = data.filter(
-    (order) => order && Object.values(order).some((val) => val !== null && val !== "")
+    (order) =>
+      order && Object.values(order).some((val) => val !== null && val !== "")
   );
 
   return (
@@ -76,34 +75,34 @@ const Table = ({
         <div className="w-full overflow-hidden rounded-lg border border-black shadow-md mt-4">
           <table className="w-full">
             <thead>
-            <tr className="text-base font-semibold text-left text-gray-900 bg-gray-100  border-b border-black">
-            <th className="border-r border-black px-2 py-4 text-center">No.</th>
-            <th className="border-r border-black px-6 py-4 text-left">
-              Tanggal
-            </th>
-            <th className="border-r border-black px-6 py-4 text-left">
-              Aktivitas
-            </th>
-            <th className=" border-black px-6 py-4 text-left">Notes</th>
-          </tr>
-
+              <tr className="text-base font-semibold text-left text-gray-900 bg-gray-100  border-b border-black">
+                <th className="border-r border-black px-2 py-4 text-center">
+                  No.
+                </th>
+                <th className="border-r border-black px-6 py-4 text-left">
+                  Tanggal
+                </th>
+                <th className="border-r border-black px-6 py-4 text-left">
+                  Aktivitas
+                </th>
+                <th className=" border-black px-6 py-4 text-left">Notes</th>
+              </tr>
             </thead>
             <tbody>
               {filteredData.map((order, index) => (
                 <tr key={order.id} className="hover:bg-gray-100">
                   <td className="border-t border-r border-black px-4 py-2 font-medium text-center">
-                {index + 1}.
-              </td>
-              <td className="py-2 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                {order?.updated_at && formatDate(order?.updated_at)}
-              </td>
-              <td className="py-4 px-6  font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
-                {order?.activity}
-              </td>
-              <td className="py-4 px-6  font-medium border-t  border-black text-gray-900 whitespace-nowrap">
-                {order?.notes}
-              </td>
-
+                    {index + 1}.
+                  </td>
+                  <td className="py-2 px-6 text-sm font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
+                    {order?.updated_at && formatDate(order?.updated_at)}
+                  </td>
+                  <td className="py-4 px-6  font-medium border-t border-r border-black text-gray-900 whitespace-nowrap">
+                    {order?.activity}
+                  </td>
+                  <td className="py-4 px-6  font-medium border-t  border-black text-gray-900 whitespace-nowrap">
+                    {order?.notes}
+                  </td>
                 </tr>
               ))}
             </tbody>

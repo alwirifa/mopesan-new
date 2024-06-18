@@ -50,7 +50,6 @@ export const getFee = async () => {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/config-fee`
     );
     const { data } = response.data;
-    console.log("admins data:", data);
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);

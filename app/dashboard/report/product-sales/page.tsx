@@ -102,8 +102,6 @@ const Page = ({
 
       const categoryData = responeCategory.data.category_name;
 
-      console.log("tes", categoryData);
-
       const dataTabel = response.data.data.data;
       const totalPages = response.data.data.total_pages;
       setTotalPages(totalPages);
@@ -121,7 +119,7 @@ const Page = ({
         );
         setCategoryFilter(response.data.data.categories);
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     };
 
@@ -134,7 +132,6 @@ const Page = ({
     );
   };
 
-  console.log(dataTabel)
   return (
     <div className="">
       <div className="flex justify-between items-center">
@@ -181,7 +178,6 @@ const Page = ({
                 options={categoryFilter}
                 onSelectionChange={handleCheckboxChange}
               />
-              
             </div>
             <div className="flex flex-col gap-1 justify-center">
               <label

@@ -50,7 +50,6 @@ const Page = () => {
     setMerchantId(merchantId ?? "");
   };
 
-  // console.log(merchantId)
 
   return (
     <div className="rounded-lg bg-white">

@@ -45,7 +45,6 @@ const OrderCard: React.FC = () => {
     fetchData();
   }, []);
 
-  console.log(user);
 
   if (!orderData) {
     return (

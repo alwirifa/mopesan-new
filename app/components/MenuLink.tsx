@@ -17,9 +17,6 @@ interface MenuLinkProps {
 const MenuLink = ({ item }: MenuLinkProps) => {
   const pathname = usePathname();
 
-  //   console.log("Pathname:", pathname);
-  //   console.log("Item Route:", item.route);
-
   return (
     <Link href={item.route} className="w-full flex justify-start text-start">
       <div

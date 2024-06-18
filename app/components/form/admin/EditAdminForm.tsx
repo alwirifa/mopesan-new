@@ -34,7 +34,6 @@ const EditAdminForm: React.FC<{ selectedAdmin: any | null }> = ({ selectedAdmin 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/roles`);
         const data = response.data.data;
         setRoles(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching roles:", error);
       }
@@ -45,7 +44,6 @@ const EditAdminForm: React.FC<{ selectedAdmin: any | null }> = ({ selectedAdmin 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/admins/admin-merchants`);
         const data = response.data.data;
         setAdminMerchants(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching admin merchants:", error);
       }

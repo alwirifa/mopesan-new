@@ -9,7 +9,6 @@ export const getCustomers = async () => {
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/customers`
       );
       const { data } = response.data;
-      console.log("customers data:", data);
       return data;
     } catch (error) {
       console.error("Error fetching data:", error);

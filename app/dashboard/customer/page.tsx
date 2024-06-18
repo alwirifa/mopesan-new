@@ -40,7 +40,6 @@ const Page = ({
     handleSave();
   }, [currentPage, query, sort, currentPage]);
 
-  console.log(currentPage);
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -56,7 +55,6 @@ const Page = ({
       setTotalPages(pages);
       setDataTabel(dataTabel);
 
-      console.log(pages);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }

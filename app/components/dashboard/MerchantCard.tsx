@@ -27,7 +27,6 @@ const MerchantCard: React.FC = () => {
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/merchants`
         );
         const { data } = response.data;
-        console.log("Merchants data:", data);
         setMerchants(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -51,7 +50,6 @@ const MerchantCard: React.FC = () => {
     );
   };
 
-  console.log("tes", merchants);
   return (
     <div className="grid grid-cols-3 gap-4">
       {merchants.slice(0, 3).map((merchant, index) => (

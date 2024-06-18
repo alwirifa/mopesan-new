@@ -35,15 +35,11 @@ const Table = ({ params }: { params: { id: string } }) => {
 
         setData(dataTabel);
         setTotalPages(page);
-        console.log("tabel", response.data);
       } catch (err) {
-        console.log(err);
+        throw err;
       }
     };
 
-    console.log("curentPage", currentPage);
-
-    
     fetchTabelItem();
   }, [params.id, currentPage, limit]);
 

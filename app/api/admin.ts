@@ -53,10 +53,9 @@ export const getAdmins = async () => {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/admins`
     );
     const { data } = response.data;
-    console.log("admins data:", data);
+  
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
     throw new Error("Failed to fetch admins");
   }
 };
@@ -79,7 +78,6 @@ export async function getAdmin(adminId: string): Promise<void> {
     );
 
     if (response.status === 200) {
-      console.log("get by id successfully!");
       const { data } = response.data;
       return data;
     } else {
@@ -154,7 +152,6 @@ export async function deleteAdmin(adminId: string): Promise<void> {
     );
 
     if (response.status === 200) {
-      console.log("Admin deleted successfully!");
       alert("Admin deleted successfully!");
     } else {
       console.error("Unexpected response status:", response.status);

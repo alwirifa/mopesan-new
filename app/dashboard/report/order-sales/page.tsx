@@ -70,7 +70,7 @@ const Page = ({
     selectedPaymentMethods,
     selectedOrderTypes,
     selectedOrderStatus,
-    sort
+    sort,
   ]);
 
   const handleSave = async () => {
@@ -145,19 +145,15 @@ const Page = ({
         );
         const data = response.data.data;
 
-        console.log("Merchants:", data.merchants);
         setMerchantBox(data.merchants);
 
-        console.log("Payment methods:", data.payment_method);
         setPaymentBox(data.payment_method);
 
-        console.log("Order types:", data.order_types);
         setOrderTypesBox(data.order_types);
 
-        console.log("Order status:", data.order_status);
         setOrderStatusBox(data.order_status);
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     };
 

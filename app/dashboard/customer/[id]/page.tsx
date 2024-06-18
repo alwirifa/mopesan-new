@@ -42,7 +42,7 @@ export default function Home({
         );
         setCustomer(response.data.data);
       } catch (err) {
-        console.log(err);
+        throw err;
       }
     };
 
@@ -63,13 +63,12 @@ export default function Home({
         );
         setTabelItem(response.data.data);
       } catch (err) {
-        console.log(err);
+        throw err;
       }
     };
 
     fetchTabelItem();
   }, [params.id]);
-
 
   return (
     <div className="flex flex-col gap-6 h-full">

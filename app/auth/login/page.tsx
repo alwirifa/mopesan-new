@@ -37,7 +37,6 @@ const Login = () => {
       const token = response.data.data.token;
       const userData = response.data.data.admin.Role;
 
-      console.log("Login Response:", response.data.data);
 
       setUser(userData);
       localStorage.setItem("token", token);

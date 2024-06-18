@@ -17,7 +17,6 @@ const Chart = ({
   earning,
   transactions,
 }: Props) => {
-  // console.log(dataTransations)
 
   return (
     <div className="flex gap-8  ">

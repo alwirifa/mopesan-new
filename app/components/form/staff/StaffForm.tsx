@@ -64,7 +64,6 @@ const StaffForm: React.FC = () => {
     fetchRoles();
     fetchAdminMerchants();
   }, []);
-  console.log(roleID);
 
   return (
     <div className="rounded-lg bg-white">

@@ -26,7 +26,6 @@ const EarningChart = ({ data }: Props) => {
     },
   ];
 
-  console.log("data earning", data)
   return (
     <div className="bg-white h-[300px] w-full flex rounded-xl ">
       <ResponsiveLine

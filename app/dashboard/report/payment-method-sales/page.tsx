@@ -30,8 +30,6 @@ const Page = (props: Props) => {
 
         const firstData = response.data.data.first_data;
         const secondData = response.data.data.second_data;
-        console.log(firstData);
-        console.log(secondData);
 
         setPaymentData(firstData);
         setPaymentType(secondData);

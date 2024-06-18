@@ -40,10 +40,9 @@ export default function Home({
           }
         );
         const data = response.data.data;
-        console.log("headerd", data);
         setCustomer(data);
       } catch (err) {
-        console.log(err);
+        throw err;
       }
     };
 

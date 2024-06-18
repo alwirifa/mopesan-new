@@ -54,15 +54,12 @@ const Finance = (props: Props) => {
       try {
         const adminToken = localStorage.getItem("token");
 
-        // Log dates for debugging
-        console.log("Fetching data with startDate:", startDate, "endDate:", endDate);
 
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/params?type=order-sales`
         );
         const data = response.data.data;
 
-        console.log("Merchants:", data);
         setMerchantData(data.merchants);
 
         if (adminToken) {
@@ -109,7 +106,6 @@ const Finance = (props: Props) => {
     return <div>Loading...</div>;
   }
 
-  console.log("check startdate and enddate",startDate, endDate)
 
   return (
     <div>

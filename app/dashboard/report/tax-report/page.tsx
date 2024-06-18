@@ -66,10 +66,8 @@ const Page = ({
       const page = response.data.data.total_pages
       setTotalPages(page);
 
-      console.log(dataTabel);
       setTabelData(dataTabel);
       setTaxData(data);
-      console.log(dataTabel)
     } catch (error) {
       console.error("Error fetching roles:", error);
     }

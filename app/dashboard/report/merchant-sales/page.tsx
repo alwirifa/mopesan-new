@@ -16,7 +16,6 @@ const sortOptions = [
   { value: "DESC", label: "Descending" },
 ];
 
-
 const Page = ({
   searchParams,
 }: {
@@ -65,10 +64,8 @@ const Page = ({
       const dataTabel = response.data.data.second_data;
       setMerchantData(data);
       setDataCard(dataTabel);
-
-      console.log(dataTabel);
     } catch (error) {
-      console.error("Error fetching roles:", error);
+      throw error;
     }
   };
 
@@ -84,7 +81,6 @@ const Page = ({
     }
   };
 
-  
   const handleSortChange = (selectedSort: string) => {
     setSort(selectedSort);
   };
@@ -115,14 +111,11 @@ const Page = ({
       <div className="h-full w-full mt-8 p-8 bg-white rounded-lg flex flex-col gap-4">
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
-        {/* <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
-            */}
-            <div>
-              
-            </div>
+          {/* <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
+           */}
+          <div></div>
           <div className="flex gap-4 items-center">
             <DatePickerWithRange onDateChange={handleDateChange} />
-          
           </div>
         </div>
         {/* =====================  DATA CARD  ====================== */}

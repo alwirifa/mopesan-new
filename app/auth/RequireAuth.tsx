@@ -15,10 +15,6 @@ const RequireAuth = ({ children }: Props) => {
   const pathname = usePathname();
   const path = pathname;
 
-  // Debug: Log pathname
-  // useEffect(() => {
-  //   console.log("Current pathname:", path);
-  // }, [path]);
 
   useEffect(() => {
     if (ready && !user) {
@@ -38,7 +34,6 @@ const RequireAuth = ({ children }: Props) => {
     return null; // Render nothing while redirecting
   }
 
-  // console.log("User role keyword:", user.role_keyword);
 
   // Define allowed paths for each role, using regular expressions for dynamic segments
   const rolePaths: { [key: string]: (string | RegExp)[] } = {
@@ -77,8 +72,6 @@ const RequireAuth = ({ children }: Props) => {
         ? allowedPath === path
         : allowedPath.test(path)
     );
-    // Debug: Log path checking
-    // console.log(`Checking path for role ${role}:`, allowedPaths, path, allowed);
 
     return allowed;
   };

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 
@@ -13,17 +13,16 @@ interface AdminDetailProps {
 
 const AdminDetailPage: React.FC<AdminDetailProps> = ({ params }) => {
   const [admin, setAdmin] = useState<any>(null);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (params && params.id) {
       getAdmin(params.id)
         .then((data) => {
           setAdmin(data);
-          console.log(data)
         })
         .catch((error) => {
-          console.error("Error fetching admin:", error);
+          throw error;
         });
     }
   }, [params]);
@@ -47,4 +46,3 @@ const AdminDetailPage: React.FC<AdminDetailProps> = ({ params }) => {
 };
 
 export default AdminDetailPage;
-

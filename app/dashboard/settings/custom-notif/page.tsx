@@ -71,7 +71,6 @@ const Page = ({
       // setNotifData(data);
       setNotifTabel(dataCard);
       setTotalPages(totalPages);
-      // console.log(dataCard);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useContext, useEffect, useState } from "react";
 import { getOrderById } from "@/app/api/order";
@@ -20,13 +20,10 @@ export default function Home({ params }: { params: { id: string } }) {
           const data = await getOrderById(params.id);
           if (data !== null && data !== undefined) {
             setOrders(data);
-            console.log(orders?.additional_fees);
-          } else {
-            console.error("No data received for order ID:", params.id);
           }
         }
       } catch (error) {
-        console.error("Error fetching order:", error);
+        throw error;
       }
     };
 

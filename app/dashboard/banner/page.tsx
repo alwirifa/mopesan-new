@@ -45,7 +45,6 @@ const Page = ({
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/banner?sort=${sort}&search=${query}`
         );
         setBanners(response.data.data.banners);
-        console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -30,13 +30,12 @@ const Page = ({
     limit?: string;
   };
 }) => {
-
   const [dataTabel, setDataTabel] = useState<any[]>([]);
   const [sort, setSort] = useState<string>(sortOptions[0].value);
 
   const queryParams = useSearchParams();
   const query = queryParams.get("query") || "";
- 
+
   const currentPage = Number(queryParams.get("page")) || 1;
   const limit = Number(queryParams.get("limit")) || 10;
   const offset = (currentPage - 1) * limit;
@@ -81,8 +80,8 @@ const Page = ({
     { value: "", label: "All" },
   ]);
 
-  const [selectedCheckboxFilter, setSelectedCheckboxFilter] = useState<string>("");
-
+  const [selectedCheckboxFilter, setSelectedCheckboxFilter] =
+    useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,13 +91,12 @@ const Page = ({
         );
         setCheckboxFilter(response.data.data);
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     };
 
     fetchData();
   }, []);
-
 
   const handleCheckboxChange = (selectedValues: string[]) => {
     setSelectedCheckboxFilter(selectedValues.join(","));
@@ -116,7 +114,6 @@ const Page = ({
         {/* =====================  PENGATURAN  ====================== */}
         <div className="w-full flex justify-between">
           <div className="flex gap-4 items-center">
-          
             <Sort onSortChange={handleSortChange} sortOptions={sortOptions} />{" "}
             <div
               className="px-4 pr-6 py-[7px] border rounded-lg text-sm font-semibold bg-primary text-white flex gap-2"
@@ -130,7 +127,6 @@ const Page = ({
               />
               <button className="">Download Report</button>
             </div>
-     
           </div>
           <Search placeholder="Search ..." />
         </div>

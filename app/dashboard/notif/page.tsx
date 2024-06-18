@@ -53,9 +53,6 @@ const Page = ({
       const dataTabel = response.data.data.events;
       const pages = response.data.data.total_pages;
       setTotalPages(pages);
-      console.log(response.data);
-      console.log("data tabel", dataTabel);
-      console.log("pages", pages);
       setDataTabel(dataTabel);
     } catch (error) {
       console.error("Error fetching roles:", error);

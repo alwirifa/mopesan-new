@@ -74,8 +74,6 @@ const Page = ({
       const dataTabel = response.data.data.response_staff;
       const pages = response.data.data.total_page;
       setTotalPages(pages);
-      console.log("pages", pages);
-      console.log("data tabel", dataTabel);
       setDataTabel(dataTabel);
     } catch (error) {
       console.error("Error fetching roles:", error);

@@ -65,7 +65,7 @@ export async function getBannerByID(adminId: string): Promise<void> {
     );
 
     if (response.status === 200) {
-      console.log("get by id successfully!");
+      
       const { data } = response.data;
       return data;
     } else {
@@ -154,7 +154,6 @@ export const deleteBanner = async (id: string): Promise<void> => {
     );
 
     if (response.status === 200) {
-      console.log("banner deleted successfully!");
       alert("banner deleted successfully!");
     } else {
       console.error("Unexpected response status:", response.status);

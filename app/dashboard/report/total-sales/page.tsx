@@ -103,7 +103,6 @@ const Page = ({
       setDataTabel(secondData);
       setFirstData(firstData);
       setTotalPages(firstData.total_page);
-      console.log(firstData.total_page)
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -131,9 +130,7 @@ const Page = ({
 
   const handleDownload = () => {
     window.open(
-      `${
-        process.env.NEXT_PUBLIC_SERVER_URL
-      }/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=total-sales&merchant_id=${selectedMerchants}&period=${periodSort}&sort=${sort}`
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/export?start_date=${startDate}&end_date=${endDate}&type=total-sales&merchant_id=${selectedMerchants}&period=${periodSort}&sort=${sort}`
     );
   };
 
@@ -145,10 +142,9 @@ const Page = ({
         );
         const data = response.data.data;
 
-        console.log("Merchants:", data.merchants);
         setMerchantBox(data.merchants);
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     };
 

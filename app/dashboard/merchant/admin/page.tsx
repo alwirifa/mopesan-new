@@ -30,10 +30,8 @@ export default function Admin() {
         );
 
         setMerchant(response.data.data);
-
-        console.log(response.data);
       } catch (error) {
-        console.error("Error get data by id:", error);
+        throw error;
       }
     };
 
@@ -64,7 +62,6 @@ export default function Admin() {
           daily_order_cancelled={merchant?.daily_order_cancelled}
           daily_earning={merchant?.daily_earning}
         />
-     
       </>
     </>
   );

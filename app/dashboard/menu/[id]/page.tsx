@@ -28,7 +28,6 @@ const Page = ({ params }: { params: { id: string } }) => {
       getMenuByID(params.id)
         .then((data) => {
           setMenu(data);
-          console.log(data);
         })
         .catch((error) => {
           console.error("Error fetching admin:", error);

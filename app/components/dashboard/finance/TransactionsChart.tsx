@@ -11,7 +11,6 @@ const TransactionsChart = ({ data }: Props) => {
     return <div>Tidak ada data</div>;
   }
 
-  console.log("transaction", data);
   const chartData = [
     {
       id: "Earnings",

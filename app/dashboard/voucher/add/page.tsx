@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,17 +6,17 @@ import { createVoucher } from "@/app/api/voucher";
 
 const Page = () => {
   const router = useRouter();
-  const [voucherName, setVoucherName] = useState('');
-  const [description, setDescription] = useState('');
-  const [code, setCode] = useState('');
-  const [minimumOrder, setMinimumOrder] = useState('');
-  const [validFrom, setValidFrom] = useState('');
-  const [validUntil, setValidUntil] = useState('');
-  const [merchantId, setMerchantId] = useState('');
-  const [discountValue, setDiscountValue] = useState('');
-  const [typeVoucher, setTypeVoucher] = useState('');
-  const [maxDiscount, setMaxDiscount] = useState('');
-  const [totalVoucherNumber, setTotalVoucherNumber] = useState('');
+  const [voucherName, setVoucherName] = useState("");
+  const [description, setDescription] = useState("");
+  const [code, setCode] = useState("");
+  const [minimumOrder, setMinimumOrder] = useState("");
+  const [validFrom, setValidFrom] = useState("");
+  const [validUntil, setValidUntil] = useState("");
+  const [merchantId, setMerchantId] = useState("");
+  const [discountValue, setDiscountValue] = useState("");
+  const [typeVoucher, setTypeVoucher] = useState("");
+  const [maxDiscount, setMaxDiscount] = useState("");
+  const [totalVoucherNumber, setTotalVoucherNumber] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,20 +36,21 @@ const Page = () => {
   };
 
   const handleClose = () => {
-    router.push('/dashboard/voucher');
+    router.push("/dashboard/voucher");
   };
 
   const handleMerchantSelect = (merchantId: string | null) => {
-    setMerchantId(merchantId ?? '');
+    setMerchantId(merchantId ?? "");
   };
-
-  // console.log(merchantId)
 
   return (
     <div className="p-8 rounded-lg bg-white">
       <div className="flex justify-between pb-4">
         <h1 className="text-4xl font-semibold">Add new voucher</h1>
-        <div onClick={handleClose} className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer">
+        <div
+          onClick={handleClose}
+          className="h-10 w-10 hover:bg-zinc-100 rounded-full p-2 cursor-pointer"
+        >
           <img src="/icons/close.svg" alt="close" className="h-full w-full" />
         </div>
       </div>
@@ -100,10 +101,8 @@ const Page = () => {
                 className="block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bgRed  focus:outline-none sm:leading-6 placeholder:italic"
               />
             </div>
-{/* 
+            {/* 
               <MerchantPicker label={''} onMerchantSelect={handleMerchantSelect} /> */}
-
-        
 
             <div className="flex flex-col gap-2">
               <label className="font-medium">Jenis Potongan</label>

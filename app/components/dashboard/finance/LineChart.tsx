@@ -30,7 +30,6 @@ const LineChart = ({ data }: Props) => {
             }
           );
           const { data } = response.data;
-          console.log(data);
           setEarning(data);
         } else {
           console.error("Admin token not found in local storage");

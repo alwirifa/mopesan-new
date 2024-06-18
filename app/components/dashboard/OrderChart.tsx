@@ -36,7 +36,6 @@ const OrderChart = () => {
             },
           });
           const { data } = response.data;
-          console.log(data);
           setEarning(data);
         } else {
           console.error("Admin token not found in local storage");
@@ -66,8 +65,6 @@ const OrderChart = () => {
       })),
     },
   ];
-
-  console.log(earning)
 
   return (
     <div className="bg-white h-[300px] w-full flex rounded-xl">
