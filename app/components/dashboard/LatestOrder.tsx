@@ -71,7 +71,7 @@ export const LatestOrder: React.FC<Props> = () => {
               </td>
               <td className="py-4 px-6 text-sm font-medium border-t border-black text-gray-900 whitespace-nowrap">
                 <Link
-                  href={`/dashboard/order/${order.payment.id}`}
+                  href={`/dashboard/report/order-sales/${order.payment.id}`}
                   className="text-indigo-600 hover:text-indigo-900"
                 >
                   View Detail
