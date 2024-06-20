@@ -49,7 +49,7 @@ const NotifForm: React.FC = () => {
     switch (value) {
       case "fixed":
         setIsActive(true);
-        setDaysInMonth("1");
+        setDaysInMonth("0");
         break;
       case "every 1 day":
         setIsActive(false);
