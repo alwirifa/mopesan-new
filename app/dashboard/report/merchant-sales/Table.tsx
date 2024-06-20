@@ -11,11 +11,14 @@ type Props = {
 const Table: React.FC<Props> = ({ data }) => {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
-  // Filter data yang tidak kosong
-  const filteredData = data.filter(
-    (order) =>
-      order && Object.values(order).some((val) => val !== null && val !== "")
-  );
+
+  if (!data) {
+    return (
+      <div>
+        <h1>Data tidak ditemukan</h1>
+      </div>
+    )
+  }
 
   return (
     <div>

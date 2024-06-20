@@ -46,7 +46,7 @@ const Page = ({
 
   useEffect(() => {
     handleSave();
-  }, [currentPage, startDate, endDate]);
+  }, [currentPage, startDate, endDate, sort]);
 
   const handleSave = async () => {
     try {

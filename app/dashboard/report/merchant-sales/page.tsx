@@ -141,7 +141,7 @@ const Page = ({
             </p>
           </div>
           <div className="p-4 rounded-md border flex-1 flex flex-col gap-2">
-            <p className="text-sm text-textGray">Total Product Sold</p>
+            <p className="text-sm text-textGray">Total Merchants</p>
             <p className="text-xl font-semibold">
               {merchantData.total_merchants}
             </p>

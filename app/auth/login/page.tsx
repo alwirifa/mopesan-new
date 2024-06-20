@@ -37,7 +37,6 @@ const Login = () => {
       const token = response.data.data.token;
       const userData = response.data.data.admin.Role;
 
-
       setUser(userData);
       localStorage.setItem("token", token);
       toast.success("Login successful!");
@@ -46,6 +45,11 @@ const Login = () => {
     } catch (error) {
       toast.error("Login failed. Please check your credentials and try again.");
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginUser();
   };
 
   return (
@@ -64,7 +68,7 @@ const Login = () => {
               MoPesan App!
             </h3>
           </div>
-          <form className="p-6 px-8 pt-0 grid gap-4">
+          <form className="p-6 px-8 pt-0 grid gap-4" onSubmit={handleSubmit}>
             <div className="grid gap-2">
               <label
                 htmlFor="email"
@@ -106,21 +110,13 @@ const Login = () => {
                 {showPassword ? <FiEyeOff /> : <FiEye />}
               </span>
             </div>
-          </form>
-          <div className="p-6 px-8 pt-0 grid gap-4">
             <button
-              onClick={loginUser}
-              type="button"
+              type="submit"
               className="w-full py-3 text-sm font-semibold text-white bg-primary rounded-md"
             >
               Login
             </button>
-          </div>
-          {/* <div className="p-6 px-8 pt-0 grid gap-4">
-            <h4>Current User Context:</h4>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-            <p>{user?.role_keyword|| "Role not available"}</p>
-          </div> */}
+          </form>
         </div>
       </div>
     </div>
