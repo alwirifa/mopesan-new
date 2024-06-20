@@ -18,7 +18,7 @@ const Section4 = () => {
             src="/home/section4.svg"
             className="h-[40vh] w-full bg-contain xl:flex hidden"
           />
-          <div className="xl:absolute xl:top-6 xl:right-16 max-w-xl p-4 xl:p-16 flex flex-col gap-4">
+          <div className="xl:absolute xl:top-6 xl:right-32 max-w-xl p-4 xl:p-16 flex flex-col gap-2">
             <h1 className="text-2xl font-semibold xl:text-white text-primary leading-snug">
               Unduh Sekarang dan nikmati promo menarik tiap harinya.
             </h1>
