@@ -73,6 +73,14 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState<string>(category_id);
 
+  useEffect(() => {
+    setProductName(product_name);
+    setMenuPrice(price);
+    setMenuDescription(description);
+    setRewardMenu(rewardMenu);
+setCategoryId(category_id)
+  }, [product_name, price, description, rewardMenu, category_id]);
+
   const customizationKeys = useMemo(
     () => customization_keys.filter((key) => key.customization_values !== null),
     [customization_keys]
