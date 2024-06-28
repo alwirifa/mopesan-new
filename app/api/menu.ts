@@ -178,13 +178,14 @@ export async function deleteMenu(menuId: string): Promise<void> {
   }
 }
 
-
 export const editMenus = async (
   menuData: {
-    product_name?: string;
-    price?: string;
-    description?: string;
-    is_reward_menu?: boolean;
+    menu?: {
+      product_name?: string;
+      price?: string;
+      description?: string;
+      is_reward_menu?: boolean;
+    };
     image?: File | null;
     category_id?: string;
     edit_customization?:
@@ -228,18 +229,17 @@ export const editMenus = async (
 
     const formData = new FormData();
 
-    if (menuData.product_name)
-      formData.append("product_name", menuData.product_name);
-    if (menuData.price) formData.append("price", menuData.price);
-    if (menuData.description)
-      formData.append("description", menuData.description);
-    if (menuData.is_reward_menu !== undefined)
-      formData.append("is_reward_menu", String(menuData.is_reward_menu));
+
+
+    if (menuData.menu) {
+      formData.append(
+        "menu",
+        JSON.stringify(menuData.menu)
+      );
+    }
     if (menuData.image) formData.append("image", menuData.image);
     if (menuData.category_id)
       formData.append("category_id", menuData.category_id);
-
-
 
     if (menuData.edit_customization) {
       formData.append(

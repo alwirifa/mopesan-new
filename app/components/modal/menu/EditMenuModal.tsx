@@ -172,10 +172,12 @@ const EditMenuModal = ({ selectedMenu }: Props) => {
     event.preventDefault();
 
     const menuData = {
-      product_name: productName,
-      price: menuPrice,
-      description: menuDescription,
-      is_reward_menu: rewardMenu,
+      menu: {
+        product_name: productName,
+        price: menuPrice,
+        description: menuDescription,
+        is_reward_menu: rewardMenu,
+      },
       image: image,
       category_id: categoryId,
       edit_customization:
