@@ -207,6 +207,7 @@ setCategoryId(category_id)
       });
 
       editMenuModal.onClose();
+      setStep(STEPS.NAME)
     } catch (error) {
       toast.promise(editMenus(menuData, selectedMenu.id), {
         loading: "Editing menu...",
@@ -304,6 +305,7 @@ setCategoryId(category_id)
             <input
               type="file"
               id="image"
+              className="hidden"
               onChange={(e) =>
                 setImage(e.target.files ? e.target.files[0] : null)
               }
