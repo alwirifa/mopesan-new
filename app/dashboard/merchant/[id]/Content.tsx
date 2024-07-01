@@ -80,14 +80,22 @@ export default function Content({
                 Back to merchant list
               </p>
             </Link>
-            <div className="flex flex-col gap-2 items-end translate-y-2">
+            <Link href={`/dashboard/merchant/edit/${id}`} className="flex flex-col gap-4 items-end translate-y-2">
+              <div className="flex gap-2 items-center hover:bg-neutral-100 px-4 py-2 rounded-full cursor-pointer">
+                <p>Edit</p>
+                <img
+                  src="/icons/merchant/edit.svg"
+                  alt=""
+                  className="h-4 w-4"
+                />
+              </div>
               <div className="flex gap-4 items-center">
                 <p className="text-[#212427]/70 font-semibold">Closed</p>
                 <Switch checked={isActive} onClick={handleSwitchClick} />
                 <p className="text-primary font-semibold">Open</p>
               </div>
               <div></div>
-            </div>
+            </Link>
           </div>
           <h1 className="text-4xl font-semibold">{merchant_name}</h1>
           <p className="italic text-textGray">{address}</p>
